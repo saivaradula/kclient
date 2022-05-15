@@ -1,0 +1,52 @@
+// Here you can add other styles
+
+table.table th {
+  font-weight: 700;
+}
+table.prlist td {
+  vertical-align: middle;
+  padding: 3px !important;
+}
+
+table td.money,
+th.money {
+  text-align: right;
+  padding-right: 50px;
+}
+
+div.caption {
+  font-size: 12px;
+  font-family: 'Helvetica Neue', Helvetica, Arial;
+}
+
+.pagebreak {
+  break-after: always !important;
+  page-break-after: always !important;
+  page-break-inside: avoid !important;
+}
+
+.cricon {
+  height: 30px;
+  width: 30px;
+}
+
+/** custom for fieldset **/
+fieldset {
+  border: 1px solid #ccc !important;
+  padding: 0 1.4em 1.4em 1.4em !important;
+  margin: 0 0 1.5em 0 !important;
+  // box-shadow: 1px 1px 1px 1px #ccc;
+  border-radius: 6px;
+}
+
+legend {
+  padding: 9px 10px;
+  font-size: 14px;
+  width: auto;
+  margin-top: -21px;
+  font-weight: 800;
+}
+
+hr {
+  color: #ccc;
+}
