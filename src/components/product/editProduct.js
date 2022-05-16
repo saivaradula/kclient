@@ -77,7 +77,8 @@ const EditProduct = (props) => {
                     model: p.model,
                     prtype: p.prtype,
                     unit: p.unit,
-                    prodimage: p.image
+                    prodimage: p.image,
+                    secretCode: p.code
                 }));
                 getCategories()
             })
@@ -154,6 +155,34 @@ const EditProduct = (props) => {
         }));
     }
 
+    const getFirstLetter = (words) => {
+        let matches = words.match(/\b(\w)/g);
+        return matches.join('').toUpperCase();
+    }
+
+    const setSubC = (e) => {
+        if (e.target.value !== '') {
+            let categoryFL = getFirstLetter(state.category)
+            let fLetters = getFirstLetter(e.target.value);
+            fLetters = categoryFL + fLetters;
+            const first3 = state.secretCode.substring(0, 3);
+
+            if (first3 !== fLetters) {
+                axios.get(`${process.env.REACT_APP_API_URL}/products/getNextCode/${fLetters}`).then((res) => {
+                    setState(prevState => ({
+                        ...prevState,
+                        code: res.data
+                    }))
+                })
+            }
+        } else {
+            setState(prevState => ({
+                ...prevState,
+                code: state.secretCode
+            }))
+        }
+    }
+
     return setResultLoaded ? (
         <CForm
             className="row g-3 needs-validation"
@@ -183,7 +212,8 @@ const EditProduct = (props) => {
                                             onChange={(e) =>
                                                 setState(prevState => ({
                                                     ...prevState,
-                                                    category: e.target.value
+                                                    category: e.target.value,
+                                                    subcategory: ''
                                                 }))
                                             }
                                         >
@@ -212,6 +242,7 @@ const EditProduct = (props) => {
                                                 subcategory: e.target.value
                                             }))
                                         }
+                                        onBlur={(e) => setSubC(e)}
                                         placeholder="Enter Sub Category"
                                     />
                                 </div>

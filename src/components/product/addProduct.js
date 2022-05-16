@@ -122,7 +122,7 @@ const AddProducts = (props) => {
   }
 
   const changeCode = (e) => {
-    setCode(e.target.value)
+    // setCode(e.target.value)
   }
 
   const listOptions = () => {
@@ -134,6 +134,27 @@ const AddProducts = (props) => {
     setCost(c)
     c = parseFloat(c + (c * 0.1)).toFixed(2)
     setPrice(c)
+  }
+
+  const getFirstLetter = (words) => {
+    let matches = words.match(/\b(\w)/g);
+    return matches.join('').toUpperCase();
+  }
+
+  const setC = (e) => {
+    setCategory(e.target.value)
+    setSubCategory('')
+  }
+
+  const setSubC = (e) => {
+    setCode('')
+    let categoryFL = getFirstLetter(category)
+    let fLetters = getFirstLetter(e.target.value);
+    setSubCategory(e.target.value)
+    fLetters = categoryFL + fLetters;
+    axios.get(`${process.env.REACT_APP_API_URL}/products/getNextCode/${fLetters}`).then((res) => {
+      setCode(res.data);
+    })
   }
 
   return setResultLoaded ? (
@@ -161,7 +182,7 @@ const AddProducts = (props) => {
                     <CFormSelect
                       required
                       id="category"
-                      onChange={(e) => setCategory(e.target.value)}
+                      onChange={(e) => setC(e)}
                     >
                       <option value="">Choose Category</option>
                       {listOptions()}
@@ -181,7 +202,7 @@ const AddProducts = (props) => {
                     type="text"
                     autocomplete="off"
                     id="subcategory"
-                    onChange={(e) => setSubCategory(e.target.value)}
+                    onBlur={(e) => setSubC(e)}
                     placeholder="Enter Sub Category"
                   />
                 </div>
@@ -193,10 +214,12 @@ const AddProducts = (props) => {
                 <div className="col-sm-3">
                   <CFormInput
                     required
+                    readOnly
+                    value={code}
                     autocomplete="off"
                     type="text"
                     id="productCode"
-                    onChange={changeCode}
+                    // onChange={changeCode}
                     placeholder="Enter Product Code(Ex: PR-12345)"
                   />
                   <CFormFeedback invalid>Please provide product code.</CFormFeedback>
