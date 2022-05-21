@@ -29,28 +29,31 @@ const DraftList = () => {
   const handleUClose = () => setShowUpdateInvModel(() => false)
 
   const reducer = (state, action) => {
+    console.log(action)
     switch (action.type) {
       case ACTIONS.ADD_NEW: {
-        let toaddress = action.payload.data[0].to_name
+        let toaddress = action.payload.data.length
           ? action.payload.data[0].to_name + ' - ' + action.payload.data[0].to_city
           : ''
+
 
         return {
           ...state,
           inv: action.payload.inv,
           to_details: toaddress,
-          toName: action.payload.data[0].to_name,
-          city: action.payload.data[0].to_city,
-          address: action.payload.data[0].to_address,
-          gst: action.payload.data[0].gst,
-          dated: action.payload.data[0].rents_start_on,
+          toName: action.payload.data.length ? action.payload.data[0].to_name : '',
+          city: action.payload.data.length ? action.payload.data[0].to_city : '',
+          address: action.payload.data.length ? action.payload.data[0].to_address : '',
+          gst: action.payload.data.length ? action.payload.data[0].gst : '',
+          dated: action.payload.data.length ? action.payload.data[0].rents_start_on : '',
           data: action.payload.data,
-          finalamount: action.payload.data[0].finalamount,
-          discount: action.payload.data[0].discount,
-          gstpercentage: action.payload.data[0].gstpercentage,
-          payableamount: action.payload.data[0].payableamount,
-          vendoraddress: action.payload.data[0].vendoraddress
+          finalamount: action.payload.data.length ? action.payload.data[0].finalamount : '',
+          discount: action.payload.data.length ? action.payload.data[0].discount : '',
+          gstpercentage: action.payload.data.length ? action.payload.data[0].gstpercentage : '',
+          payableamount: action.payload.data.length ? action.payload.data[0].payableamount : '',
+          vendoraddress: action.payload.data.length ? action.payload.data[0].vendoraddress : ''
         }
+
       }
 
       case ACTIONS.UPDATE_ADDRESS: {

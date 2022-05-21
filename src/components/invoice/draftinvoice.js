@@ -16,6 +16,7 @@ const DraftInvoice = (props) => {
     NEW: 'new',
     OLD: 'old',
     ANTIQUE: 'antique',
+    DAMAGE: 'damage'
   }
 
   const PROPRECEIVER = [
@@ -136,6 +137,7 @@ const DraftInvoice = (props) => {
             parseInt(product.quantity)).toFixed(2)
         )
       }
+      case PRTYPES.DAMAGE:
       case PRTYPES.OLD: {
         return (
           (((parseInt(product.price) * getPercentagesForOld(parseInt(product.days))) / 100) *

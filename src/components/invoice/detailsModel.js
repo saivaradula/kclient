@@ -23,7 +23,7 @@ const PAY_TYPE = [
 const PAY_METHOD = ['Google Pay', 'Paytm', 'PhonePe', 'Internet Banking', 'Cheque', 'Cash']
 
 const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb }) => {
-  console.log(invoice)
+  console.log("invoice details", invoice)
   const [modalInvoice, setModalInvoice] = useState(invoice)
   const invoiceData = invoice.data[0]
   const logoSize = {
@@ -123,7 +123,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
             <div className="row mt-4">
               <div className="col-sm-6">
                 <strong>M/s</strong>&nbsp;&nbsp;
-                <span className="border-bottom">{invoiceData.to_name}</span>
+                <span className="border-bottom">{invoiceData.to_name ? invoiceData.to_name : ''}</span>
               </div>
 
               <div className="col-sm-6">
@@ -157,7 +157,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
               <div className="col-sm-6">
                 <strong>Received By / Phone</strong>&nbsp;&nbsp;
                 <span className="border-bottom">
-                  {invoiceData.prop_receiver} / {invoiceData.prop_receiver}
+                  {invoiceData.prop_receiver} / {invoiceData.art_phone}
                 </span>
               </div>
             </div>
@@ -168,19 +168,19 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th width="3%">Image</th>
-                    <th width="5%">Code</th>
-                    <th width="15%">Name</th>
-                    <th width="10%">Qty</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Days</th>
-                    <th className="money">Hire Cost</th>
-                    <th>Actions</th>
+                    <th width="4%">Image</th>
+                    <th width="10%">Code</th>
+                    <th width="25%">Name</th>
+                    <th width="5%">Qty</th>
+                    <th width="10%">From</th>
+                    <th width="10%">To</th>
+                    <th width="2%">Days</th>
+                    <th width="10%" className="money">Hire Cost</th>
+                    {/* <th width="5%">Actions</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                  {modalInvoice.data.map((p) => (
+                  {invoice.data.map((p) => (
                     <tr key={p.product_code}>
                       <td>
                         <img src={p.product_image} width="30" height="30" />
@@ -191,54 +191,58 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                       <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
                       <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
                       <td className="money">{p.rent_days}</td>
-                      <td className="money">{p.cost}</td>
-                      <td>
-                        {/* <button
+                      <td className="money">{p.cost.toFixed(2)}</td>
+                      {/*<td>
+                        <button
                           className="btn btn-secondary"
                           onClick={() => removeItemFromInvoice(modalInvoice.inv, p.product_code)}
                         >
                           Remove
-                        </button> */}
-                      </td>
+                        </button>
+                      </td> */}
                     </tr>
                   ))}
+                </tbody>
+              </table>
+              <table className="table table-striped">
+                <tbody>
                   <tr>
-                    <td className="money">
+                    <td className="">
                       <strong>Cost&nbsp;:&nbsp;</strong>
-                      {modalInvoice.data.reduce((a, b) => a + b.cost, 0)}
+                      {modalInvoice.data.reduce((a, b) => a + b.cost, 0).toFixed(2)}
                     </td>
-                    <td className="money">
+                    <td className="">
                       <strong>Discount&nbsp;:&nbsp;</strong>
                       {modalInvoice.discount} %
                     </td>
-                    <td className="money">
+                    <td className="">
                       <strong>GST&nbsp;:&nbsp;</strong>
                       {modalInvoice.gstpercentage} %
                     </td>
-                    <td className="money" colSpan={3}>
+                    <td className="money">
                       <strong>Payable Amount</strong>
                     </td>
                     <td className="money">{modalInvoice.payableamount}</td>
-                    <td>&nbsp;</td>
+                    {/* <td>&nbsp;</td> */}
                   </tr>
                   {isInvoice ? (
                     <>
                       <tr>
-                        <td className="money" colSpan={6}>
+                        <td className="money" colSpan={4}>
                           <strong>Total Paid till now</strong>
                         </td>
                         <td className="money">{payments.reduce((a, b) => a + b.amount, 0).toFixed(2)}</td>
-                        <td>&nbsp;</td>
+
                       </tr>
                       <tr>
-                        <td className="money" colSpan={6}>
+                        <td className="money" colSpan={4}>
                           <strong>Remaining / Refund</strong>
                         </td>
                         <td className="money">
                           {(modalInvoice.payableamount -
                             payments.reduce((a, b) => a + b.amount, 0)).toFixed(2)}
                         </td>
-                        <td>&nbsp;</td>
+                        {/* <td>&nbsp;</td> */}
                       </tr>
                     </>
                   ) : (
