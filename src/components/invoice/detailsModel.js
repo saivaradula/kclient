@@ -43,7 +43,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
       .delete(`${process.env.REACT_APP_API_URL}/invoice/${id}/${code}`)
       .then(async (response) => {
         cb()
-        let vni = [...modalInvoice.data.filter((p) => p.product_code !== code)]
+        let vni = [...invoice.data.filter((p) => p.product_code !== code)]
         setModalInvoice((oldDate) => ({ ...oldDate, data: vni }))
       })
   }
@@ -209,20 +209,20 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                   <tr>
                     <td className="">
                       <strong>Cost&nbsp;:&nbsp;</strong>
-                      {modalInvoice.data.reduce((a, b) => a + b.cost, 0).toFixed(2)}
+                      {invoice.data.reduce((a, b) => a + b.cost, 0).toFixed(2)}
                     </td>
                     <td className="">
                       <strong>Discount&nbsp;:&nbsp;</strong>
-                      {modalInvoice.discount} %
+                      {invoice.discount} %
                     </td>
                     <td className="">
                       <strong>GST&nbsp;:&nbsp;</strong>
-                      {modalInvoice.gstpercentage} %
+                      {invoice.gstpercentage} %
                     </td>
                     <td className="money">
                       <strong>Payable Amount</strong>
                     </td>
-                    <td className="money">{modalInvoice.payableamount}</td>
+                    <td className="money">{invoice.payableamount}</td>
                     {/* <td>&nbsp;</td> */}
                   </tr>
                   {isInvoice ? (
@@ -239,7 +239,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                           <strong>Remaining / Refund</strong>
                         </td>
                         <td className="money">
-                          {(modalInvoice.payableamount -
+                          {(invoice.payableamount -
                             payments.reduce((a, b) => a + b.amount, 0)).toFixed(2)}
                         </td>
                         {/* <td>&nbsp;</td> */}
