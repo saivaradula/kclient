@@ -59,6 +59,7 @@ const DraftInvoice = (props) => {
     artPhone: '',
     contentType: '',
     propReceiver: '',
+    propReceiverName: '',
     gst: '',
     showAddressForm: false,
     startDate: new Date(),
@@ -791,6 +792,20 @@ const DraftInvoice = (props) => {
 
                         <div className="col">
                           <input
+                            value={state.propReceiverName}
+                            onChange={(e) =>
+                              setState(prevState => ({
+                                ...prevState, propReceiverName: e.target.value
+                              }))
+                            }
+                            type="text"
+                            className="form-control"
+                            placeholder="Receiver Name"
+                          />
+                        </div>
+
+                        <div className="col">
+                          <input
                             value={state.artPhone}
                             onChange={(e) =>
                               setState(prevState => ({
@@ -799,7 +814,7 @@ const DraftInvoice = (props) => {
                             }
                             type="text"
                             className="form-control"
-                            placeholder="Phone number"
+                            placeholder="Receiver Phone"
                           />
                         </div>
                       </div>
@@ -1007,6 +1022,7 @@ const DraftInvoice = (props) => {
       artDirector: state.artDirector,
       contentType: state.contentType,
       receiver: state.propReceiver,
+      receiver_name: state.propReceiverName,
       artPhone: state.artPhone,
       gst: state.gst,
       method: state.paymentMethod,

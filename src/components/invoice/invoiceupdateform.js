@@ -41,6 +41,7 @@ const UpdateForm = ({ invoice, show, handleClose, isInvoice, isPaid, cb }) => {
         artPhone: moreData.art_phone,
         contentType: moreData.content_type,
         propReceiver: moreData.prop_receiver,
+        propReceiverName: moreData.prop_receiver_name,
         gst: moreData.gst,
         showAddressForm: false,
         startDate: new Date(moreData.startDate),
@@ -181,13 +182,10 @@ const UpdateForm = ({ invoice, show, handleClose, isInvoice, isPaid, cb }) => {
                                                 placeholder="Responsible Person Name"
                                             />
                                         </div>
-
-                                    </div>
-                                    <div className="row mt-3">
-                                        <div className="col-sm-3 mt-2">
-                                            <label><strong>Responsible Person Name</strong></label>
+                                        <div className="col-sm-2 mt-2">
+                                            <label><strong>Phone Number</strong></label>
                                         </div>
-                                        <div className="col-sm-4">
+                                        <div className="col-sm-2">
                                             <input
                                                 value={updateInv.contactPhone}
                                                 type="text"
@@ -202,10 +200,23 @@ const UpdateForm = ({ invoice, show, handleClose, isInvoice, isPaid, cb }) => {
                                         </div>
                                     </div>
                                     <div className="row mt-3">
-                                        <div className="col-sm-2 mt-2">
-                                            <label><strong>Property Receiver</strong></label>
+                                        <div className="col-sm-1 mt-2">
+                                            <label><strong>Receiver</strong></label>
                                         </div>
-                                        <div className="col-sm-4">
+                                        <div className="col-sm-3">
+                                            <input
+                                                value={updateInv.propReceiverName}
+                                                onChange={(e) =>
+                                                    setUpdatedInv(prevState => ({
+                                                        ...prevState, propReceiverName: e.target.value
+                                                    }))
+                                                }
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Receiver Name"
+                                            />
+                                        </div>
+                                        <div className="col-sm-3">
                                             <select
                                                 value={updateInv.propReceiver}
                                                 className="form-control"
@@ -224,7 +235,7 @@ const UpdateForm = ({ invoice, show, handleClose, isInvoice, isPaid, cb }) => {
                                         <div className="col-sm-2 mt-2">
                                             <label><strong>Phone Number</strong></label>
                                         </div>
-                                        <div className="col-sm-4">
+                                        <div className="col-sm-2">
                                             <input
                                                 value={updateInv.artPhone}
                                                 onChange={(e) =>
@@ -270,7 +281,7 @@ const UpdateForm = ({ invoice, show, handleClose, isInvoice, isPaid, cb }) => {
                                                 }
                                                 type="text"
                                                 className="form-control"
-                                                placeholder="GST/TIN"
+                                                placeholder="Vendor Address"
                                             />
                                         </div>
                                     </div>
@@ -358,6 +369,7 @@ const UpdateForm = ({ invoice, show, handleClose, isInvoice, isPaid, cb }) => {
             artDirector: updateInv.artDirector,
             contentType: updateInv.contentType,
             receiver: updateInv.propReceiver,
+            receiverName: updateInv.propReceiverName,
             artPhone: updateInv.artPhone,
             gst: updateInv.gst,
             startDate:

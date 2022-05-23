@@ -23,6 +23,9 @@ import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
 
 import axios from 'axios'
 require('dotenv').config()
+import DisplayHtml from './Displayhtml'
+
+const parser = new DOMParser();
 
 const Products = (props) => {
   const history = useHistory()
@@ -248,7 +251,8 @@ const Products = (props) => {
                 <td>{p.code}</td>
                 <td>{p.name}</td>
                 <td>{p.nickname}</td>
-                <td>{p.brand}</td>
+                {/* <td>{p.brand}</td> */}
+                <td><DisplayHtml text={p.brand} /></td>
                 <td>{p.model}</td>
                 <td>{p.category}</td>
                 <td>{p.subcategory}</td>
@@ -308,10 +312,10 @@ const Products = (props) => {
   }
 
   const deleteProd = (c, n) => {
-    if (window.confirm(`Deleting product ${n}`) ) {
+    if (window.confirm(`Deleting product ${n}`)) {
       axios.post(`${process.env.REACT_APP_API_URL}/products/delete/${c}`).then((data) => {
         fetchData(page)
-      }) 
+      })
     }
   }
 

@@ -157,7 +157,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
               <div className="col-sm-6">
                 <strong>Received By / Phone</strong>&nbsp;&nbsp;
                 <span className="border-bottom">
-                  {invoiceData.prop_receiver} / {invoiceData.art_phone}
+                  {invoiceData.prop_receiver_name}({invoiceData.prop_receiver}) / {invoiceData.art_phone}
                 </span>
               </div>
             </div>
