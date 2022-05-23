@@ -1008,7 +1008,6 @@ const DraftInvoice = (props) => {
     )
   }
 
-
   const addDraftInvoice = () => {
 
     let invId = Date.now()
@@ -1045,12 +1044,13 @@ const DraftInvoice = (props) => {
     }
 
     axios.post(`${process.env.REACT_APP_API_URL}/invoice/new`, p).then((response) => {
+      console.log(response)
       state.formValues.map(async (product) => {
         if (product.code !== '') {
           let s = product.from
           let t = product.to
           let payload = {
-            invoice_id: invId,
+            invoice_id: response.data,
             code: product.code,
             days: product.days,
             quantity: product.quantity,
