@@ -23,12 +23,13 @@ const PAY_TYPE = [
 const PAY_METHOD = ['Google Pay', 'Paytm', 'PhonePe', 'Internet Banking', 'Cheque', 'Cash']
 
 const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb }) => {
-  console.log("invoice details", invoice)
+
+  console.log("invoice details", payments)
   const [modalInvoice, setModalInvoice] = useState(invoice)
   const invoiceData = invoice.data[0]
   const logoSize = {
-    height: 80,
-    width: 250,
+    height: 120,
+    width: 350,
   }
   const [showPaymentModel, setShowPM] = useState(() => false)
   const [advancePay, setAdvancePay] = useState(() => 0)
@@ -100,99 +101,98 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
   return (
     <>
       <Modal show={show} onHide={handleClose} size="xl">
-        <Modal.Header closeButton></Modal.Header>
+        <Modal.Header className="logo-color" closeButton>
+          {/* <div className="row"> */}
+          <div className="col-sm-9 float-left logo-color">
+            <img src={logo} style={logoSize} />
+          </div>
+          <div className="col-sm-3 logo-color textColorWhite">
+            <div className="textright">
+              <strong>From:</strong>&nbsp;&nbsp;
+              {moment.utc(invoiceData.startDate).format('dddd - MMM Do, YYYY')}
+            </div>
+            <div className="textright">
+              <strong>To:</strong>&nbsp;&nbsp;
+              {moment.utc(invoiceData.endDate).format('dddd - MMM Do, YYYY')}
+            </div>
+          </div>
+          {/* </div> */}
+        </Modal.Header>
         <Modal.Body>
           <div className="container-fluid">
-            <div className="row">
-              <div className="col-sm"></div>
-              <div className="col-sm-6 text-center">
-                <img src={logo} style={logoSize} />
-              </div>
-              <div className="col-sm-3 text-right">
-                <div className="text-right">
-                  <strong>From:</strong>&nbsp;&nbsp;
-                  {moment.utc(invoiceData.startDate).format('dddd - MMM Do, YYYY')}
-                </div>
-                <div className="text-right">
-                  <strong>To:</strong>&nbsp;&nbsp;
-                  {moment.utc(invoiceData.endDate).format('dddd - MMM Do, YYYY')}
-                </div>
-              </div>
-            </div>
+
             <hr />
-            <div className="row mt-4">
-              <div className="col-sm-6">
-                <strong>M/s</strong>&nbsp;&nbsp;
-                <span className="border-bottom">{invoiceData.to_name ? invoiceData.to_name : ''}</span>
+            <div>
+              <div className="row mt-4">
+                <div className="col-sm-6">
+                  <strong>M/s</strong>&nbsp;&nbsp;
+                  <span className="border-bottom">{invoiceData.to_name ? invoiceData.to_name : ''}</span>
+                </div>
+
+                <div className="col-sm-6">
+                  <strong>Location</strong>&nbsp;&nbsp;
+                  <span className="border-bottom">{invoiceData.to_address}</span>
+                </div>
               </div>
 
-              <div className="col-sm-6">
-                <strong>Location</strong>&nbsp;&nbsp;
-                <span className="border-bottom">{invoiceData.to_address}</span>
+              <div className="row mt-4">
+                <div className="col-sm-4">
+                  <strong>Art Director</strong>&nbsp;&nbsp;
+                  <span className="border-bottom">{invoiceData.art_director_name}</span>
+                </div>
+                <div className="col-sm-4">
+                  <strong>Hero/Director</strong>&nbsp;&nbsp;
+                  <span className="border-bottom">{invoiceData.name}({invoiceData.herodirector})</span>
+                </div>
+                <div className="col-sm-3">
+                  <strong>Content Type</strong>&nbsp;&nbsp;
+                  <span className="border-bottom">{invoiceData.content_type}</span>
+                </div>
               </div>
-            </div>
+              <div className="row mt-4">
+                <div className="col-sm-6">
+                  <strong>Contact Name / Phone</strong>&nbsp;&nbsp;
+                  <span className="border-bottom">
+                    {invoiceData.contactName} / {invoiceData.contactPhone}
+                  </span>
+                </div>
+                <div className="col-sm-6">
+                  <strong>Received By / Phone</strong>&nbsp;&nbsp;
+                  <span className="border-bottom">
+                    {invoiceData.prop_receiver_name}({invoiceData.prop_receiver}) / {invoiceData.art_phone}
+                  </span>
+                </div>
+              </div>
 
-            <div className="row mt-4">
-              <div className="col-sm-4">
-                <strong>Art Director</strong>&nbsp;&nbsp;
-                <span className="border-bottom">{invoiceData.art_director_name}</span>
-              </div>
-              <div className="col-sm-4">
-                <strong>Hero/Director</strong>&nbsp;&nbsp;
-                <span className="border-bottom">{invoiceData.name}({invoiceData.herodirector})</span>
-              </div>
-              <div className="col-sm-3">
-                <strong>Content Type</strong>&nbsp;&nbsp;
-                <span className="border-bottom">{invoiceData.content_type}</span>
-              </div>
-            </div>
-
-            <div className="row mt-4">
-              <div className="col-sm-6">
-                <strong>Contact Name / Phone</strong>&nbsp;&nbsp;
-                <span className="border-bottom">
-                  {invoiceData.contactName} / {invoiceData.contactPhone}
-                </span>
-              </div>
-              <div className="col-sm-6">
-                <strong>Received By / Phone</strong>&nbsp;&nbsp;
-                <span className="border-bottom">
-                  {invoiceData.prop_receiver_name}({invoiceData.prop_receiver}) / {invoiceData.art_phone}
-                </span>
-              </div>
-            </div>
-
-
-
-            <div className="row mt-5">
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th width="4%">Image</th>
-                    <th width="10%">Code</th>
-                    <th width="25%">Name</th>
-                    <th width="5%">Qty</th>
-                    <th width="10%">From</th>
-                    <th width="10%">To</th>
-                    <th width="2%">Days</th>
-                    <th width="10%" className="money">Hire Cost</th>
-                    {/* <th width="5%">Actions</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {invoice.data.map((p) => (
-                    <tr key={p.product_code}>
-                      <td>
-                        <img src={p.product_image} width="30" height="30" />
-                      </td>
-                      <td>{p.product_code}</td>
-                      <td>{p.product_name}</td>
-                      <td>{p.quantity}</td>
-                      <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
-                      <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
-                      <td className="money">{p.rent_days}</td>
-                      <td className="money">{p.cost.toFixed(2)}</td>
-                      {/*<td>
+              <div className="row mt-5">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th width="4%">Image</th>
+                      <th width="10%">Code</th>
+                      <th width="25%">Name</th>
+                      <th width="5%">Qty</th>
+                      <th width="10%">From</th>
+                      <th width="10%">To</th>
+                      <th width="2%">Days</th>
+                      <th width="10%" className="money">Hire Cost</th>
+                      {/* <th width="5%">Actions</th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {invoice.data.map((p) => (
+                      <tr key={p.product_code}>
+                        <td>
+                          <img src={p.product_image} width="30" height="30" />
+                        </td>
+                        <td>{p.product_code}</td>
+                        <td>{p.product_name}</td>
+                        <td>{p.quantity}</td>
+                        <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
+                        <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
+                        <td className="money">{p.rent_days}</td>
+                        <td className="money">{p.cost.toFixed(2)}</td>
+                        {/*<td>
                         <button
                           className="btn btn-secondary"
                           onClick={() => removeItemFromInvoice(modalInvoice.inv, p.product_code)}
@@ -200,94 +200,98 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                           Remove
                         </button>
                       </td> */}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <table className="table table-striped">
-                <tbody>
-                  <tr>
-                    <td className="">
-                      <strong>Cost&nbsp;:&nbsp;</strong>
-                      {invoice.data.reduce((a, b) => a + b.cost, 0).toFixed(2)}
-                    </td>
-                    <td className="">
-                      <strong>Discount&nbsp;:&nbsp;</strong>
-                      {invoice.discount} %
-                    </td>
-                    <td className="">
-                      <strong>GST&nbsp;:&nbsp;</strong>
-                      {invoice.gstpercentage} %
-                    </td>
-                    <td className="money">
-                      <strong>Payable Amount</strong>
-                    </td>
-                    <td className="money">{invoice.payableamount}</td>
-                    {/* <td>&nbsp;</td> */}
-                  </tr>
-                  {isInvoice ? (
-                    <>
-                      <tr>
-                        <td className="money" colSpan={4}>
-                          <strong>Total Paid till now</strong>
-                        </td>
-                        <td className="money">{payments.reduce((a, b) => a + b.amount, 0).toFixed(2)}</td>
-
-                      </tr>
-                      <tr>
-                        <td className="money" colSpan={4}>
-                          <strong>Remaining / Refund</strong>
-                        </td>
-                        <td className="money">
-                          {(invoice.payableamount -
-                            payments.reduce((a, b) => a + b.amount, 0)).toFixed(2)}
-                        </td>
-                        {/* <td>&nbsp;</td> */}
-                      </tr>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </tbody>
-              </table>
-            </div>
-            {isInvoice ? (
-              <div className="row mt-5">
-                <table className="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>S.No.</th>
-                      <th>Payment Type</th>
-                      <th>Payment Method</th>
-                      <th>Amount</th>
-                      <th>Paid On</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {payments.map((p, index) => (
-                      <tr>
-                        <td>{index + 1}</td>
-                        <td>{p.paidby}</td>
-                        <td>
-                          {p.method}
-                          {p.method == 'cheque' ? (
-                            <span>
-                              &nbsp; / {p.cheque_no} / {p.bank}{' '}
-                            </span>
-                          ) : (
-                            <></>
-                          )}
-                        </td>
-                        <td>{p.amount}</td>
-                        <td>{moment.utc(p.paid_on).format('DD/MM/yyyy')}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                <table className="table table-striped">
+                  <tbody>
+                    <tr>
+                      <td className="">
+                        <strong>Cost&nbsp;:&nbsp;</strong>
+                        {invoice.data.reduce((a, b) => a + b.cost, 0).toFixed(2)}
+                      </td>
+                      <td className="">
+                        <strong>Discount&nbsp;:&nbsp;</strong>
+                        {invoice.discount} %
+                      </td>
+                      <td className="">
+                        <strong>GST&nbsp;:&nbsp;</strong>
+                        {invoice.gstpercentage} %
+                      </td>
+                      <td className="money">
+                        <strong>Payable Amount</strong>
+                      </td>
+                      <td className="money">{invoice.payableamount}</td>
+                      {/* <td>&nbsp;</td> */}
+                    </tr>
+                    {isInvoice ? (
+                      <>
+                        <tr>
+                          <td className="money" colSpan={4}>
+                            <strong>Total Paid till now</strong>
+                          </td>
+                          <td className="money">{payments.reduce((a, b) => a + b.amount, 0).toFixed(2)}</td>
+
+                        </tr>
+                        <tr>
+                          <td className="money" colSpan={4}>
+                            <strong>Remaining / Refund</strong>
+                          </td>
+                          <td className="money">
+                            {(invoice.payableamount -
+                              payments.reduce((a, b) => a + b.amount, 0)).toFixed(2)}
+                          </td>
+                          {/* <td>&nbsp;</td> */}
+                        </tr>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                  </tbody>
+                </table>
               </div>
-            ) : (
-              <></>
-            )}
+
+              {isInvoice ? (
+                <div className="row mt-5">
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>S.No.</th>
+                        <th>Payment Type</th>
+                        <th>Payment Method</th>
+                        <th>Transaction Id</th>
+                        <th>Amount</th>
+                        <th>Paid On</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {payments.map((p, index) => (
+                        <tr>
+                          <td>{index + 1}</td>
+                          <td>{p.paidby}</td>
+                          <td>
+                            {p.method}
+                            {p.method == 'cheque' ? (
+                              <span>
+                                &nbsp; / {p.cheque_no} / {p.bank}{' '}
+                              </span>
+                            ) : (
+                              <></>
+                            )}
+                          </td>
+                          <td>{p.transaction_id}</td>
+                          <td>{p.amount}</td>
+                          <td>{moment.utc(p.paid_on).format('DD/MM/yyyy')}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </Modal.Body>
         <Modal.Footer>

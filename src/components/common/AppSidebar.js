@@ -5,9 +5,7 @@ import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/r
 import CIcon from '@coreui/icons-react'
 
 import { AppSidebarNav } from './AppSidebarNav'
-
-import { logoNegative } from 'src/assets/brand/logo-negative'
-import { sygnet } from 'src/assets/brand/sygnet'
+import logo from '../../../src/assets/images/logo.png'
 
 import SimpleBar from 'simplebar-react'
 import 'simplebar/dist/simplebar.min.css'
@@ -16,6 +14,13 @@ import 'simplebar/dist/simplebar.min.css'
 import navigation from './_nav'
 
 const AppSidebar = () => {
+
+  const logoSize = {
+    height: 100,
+    width: 250,
+  }
+
+
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
@@ -30,7 +35,7 @@ const AppSidebar = () => {
       }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
-        <h1>KB</h1>
+        <img src={logo} style={logoSize} />
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
