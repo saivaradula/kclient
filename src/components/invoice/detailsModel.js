@@ -24,13 +24,15 @@ const PAY_METHOD = ['Google Pay', 'Paytm', 'PhonePe', 'Internet Banking', 'Chequ
 
 const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb }) => {
 
-  console.log("invoice details", payments)
+  console.log("invoice: ", invoice)
   const [modalInvoice, setModalInvoice] = useState(invoice)
+  modalInvoice.data = invoice.data;
   const invoiceData = invoice.data[0]
   const logoSize = {
     height: 120,
     width: 350,
   }
+
   const [showPaymentModel, setShowPM] = useState(() => false)
   const [advancePay, setAdvancePay] = useState(() => 0)
   const [chequeNo, setChequeNo] = useState(() => '')
@@ -39,13 +41,22 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
   const [paymentMethod, setPaymentMethod] = useState(() => '')
   const [paymenttype, setPaymentType] = useState(() => '')
 
-  const removeItemFromInvoice = (id, code) => {
+  const removeItemFromInvoice = (id, code, cost) => {
     axios
-      .delete(`${process.env.REACT_APP_API_URL}/invoice/${id}/${code}`)
+      .delete(`${process.env.REACT_APP_API_URL}/invoice/${id}/${code}/${cost}`)
       .then(async (response) => {
         cb()
+        handleClose()
         let vni = [...invoice.data.filter((p) => p.product_code !== code)]
-        setModalInvoice((oldDate) => ({ ...oldDate, data: vni }))
+        setModalInvoice((oldDate) => (
+          {
+            ...oldDate,
+            finalamount: vni[0].finalamount,
+            payableamount: vni[0].payableamount,
+            totalCost: vni[0].totalCost,
+            data: vni
+          }))
+        modalInvoice.data = vni;
       })
   }
 
@@ -61,7 +72,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
       chequeno: chequeNo,
       bank: bank,
       transId: transactionId,
-      invoice_id: invoice.inv,
+      invoice_id: modalInvoice.inv,
     }
     axios
       .post(`${process.env.REACT_APP_API_URL}/invoice/payment/${invoice.inv}`, payLoad)
@@ -176,11 +187,13 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                       <th width="10%">To</th>
                       <th width="2%">Days</th>
                       <th width="10%" className="money">Hire Cost</th>
-                      {/* <th width="5%">Actions</th> */}
+                      {
+                        (!isPaid) ? <th width="5%">Actions</th> : <></>
+                      }
                     </tr>
                   </thead>
                   <tbody>
-                    {invoice.data.map((p) => (
+                    {modalInvoice.data.map((p) => (
                       <tr key={p.product_code}>
                         <td>
                           <img src={p.product_image} width="30" height="30" />
@@ -192,14 +205,19 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                         <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
                         <td className="money">{p.rent_days}</td>
                         <td className="money">{p.cost.toFixed(2)}</td>
-                        {/*<td>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => removeItemFromInvoice(modalInvoice.inv, p.product_code)}
-                        >
-                          Remove
-                        </button>
-                      </td> */}
+
+                        {
+                          (!isPaid) ?
+                            <td><button
+                              className="btn btn-secondary"
+                              onClick={() => removeItemFromInvoice(modalInvoice.inv, p.product_code, p.cost.toFixed(2))}
+                            >
+                              Remove
+                            </button></td> :
+                            <></>
+                        }
+
+
                       </tr>
                     ))}
                   </tbody>
@@ -297,10 +315,10 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
         <Modal.Footer>
           {isInvoice && !isPaid ? (
             <>
-              {invoice.data !== undefined && invoice.data.length > 0 ? (
+              {modalInvoice.data !== undefined && modalInvoice.data.length > 0 ? (
                 <>
-                  {invoice.data[0].invoice_status == INVOICE_ACCEPTED ||
-                    invoice.data[0].invoice_status == INVOICE_PENDING ? (
+                  {modalInvoice.data[0].invoice_status == INVOICE_ACCEPTED ||
+                    modalInvoice.data[0].invoice_status == INVOICE_PENDING ? (
                     <button
                       className="btn btn-secondary"
                       onClick={() => markStatusChange('rejected')}
@@ -311,8 +329,8 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                     <></>
                   )}
 
-                  {invoice.data[0].invoice_status == INVOICE_REJECTED ||
-                    invoice.data[0].invoice_status == INVOICE_PENDING ? (
+                  {modalInvoice.data[0].invoice_status == INVOICE_REJECTED ||
+                    modalInvoice.data[0].invoice_status == INVOICE_PENDING ? (
                     <button
                       className="btn btn-primary"
                       onClick={() => markStatusChange('accepted')}
@@ -323,7 +341,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                     <></>
                   )}
 
-                  {invoice.data[0].invoice_status == INVOICE_ACCEPTED ? (
+                  {modalInvoice.data[0].invoice_status == INVOICE_ACCEPTED ? (
                     <button className="btn btn-primary" onClick={() => addMorePayments()}>
                       Add More Payments
                     </button>

@@ -333,7 +333,7 @@ const EditProduct = (props) => {
                                     >
                                         <option value="">Choose...</option>
                                         <option value="new">New</option>
-                                        <option value="old">Old</option>
+                                        <option value="old">Used</option>
                                         <option value="antique">Antique</option>
                                         <option value="damage">Damage</option>
                                     </CFormSelect>
