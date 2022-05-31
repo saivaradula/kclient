@@ -97,6 +97,7 @@ const DraftList = () => {
     finalamount: 0,
     discount: 0,
     gstpercentage: 0,
+    totalCost: 0,
     data: [],
   })
 
@@ -192,6 +193,17 @@ const DraftList = () => {
       })
   }
 
+  const deleteInvoice = (id) => {
+    if (window.confirm('Are you sure you want to delete this invoice ?')) {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/invoice/${id}/delete`)
+        .then(async (response) => {
+          getDrafts()
+        })
+    }
+
+  }
+
   return (
     <>
       <CRow>
@@ -264,7 +276,9 @@ const DraftList = () => {
                           overlay={<Tooltip id="button-tooltip-2">Delete Invoice</Tooltip>}
                         >
                           <Link to="#" path="#">
-                            <CIcon icon={cilDelete} className="cricon" />
+                            <CIcon icon={cilDelete}
+                              onClick={() => deleteInvoice(inv.invoice)}
+                              className="cricon" />
                           </Link>
                         </OverlayTrigger>
                       </td>
