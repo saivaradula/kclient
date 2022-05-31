@@ -185,6 +185,16 @@ const Invoices = () => {
       })
   }
 
+  const deleteInvoice = (id) => {
+    if (window.confirm('Are you sure you want to delete this invoice ?')) {
+      axios
+        .delete(`${process.env.REACT_APP_API_URL}/invoice/${id}/delete`)
+        .then(async (response) => {
+          getInvoiceList()
+        })
+    }
+  }
+
   return (
     <>
       <div className="row">
@@ -253,7 +263,8 @@ const Invoices = () => {
                       overlay={<Tooltip id="button-tooltip-2">Delete Invoice</Tooltip>}
                     >
                       <Link to="#" path="#">
-                        <CIcon icon={cilDelete} className="cricon" />
+                        <CIcon onClick={() => deleteInvoice(inv.invoice)}
+                          icon={cilDelete} className="cricon" />
                       </Link>
                     </OverlayTrigger>
                   </td>

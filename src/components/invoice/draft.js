@@ -201,7 +201,6 @@ const DraftList = () => {
           getDrafts()
         })
     }
-
   }
 
   return (
