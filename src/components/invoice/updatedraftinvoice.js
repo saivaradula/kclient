@@ -10,7 +10,7 @@ import Alert from 'react-bootstrap/Alert'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
-const DraftInvoice = (props) => {
+const UpdateDraftInvoice = (props) => {
   const history = useHistory()
   const PRTYPES = {
     NEW: 'new',
@@ -582,7 +582,7 @@ const DraftInvoice = (props) => {
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
-                <strong>Create Quotation Invoice</strong>
+                <strong>Update Quotation Invoice</strong>
               </CCardHeader>
               <CCardBody>
                 <CRow>
@@ -1120,4 +1120,4 @@ const DraftInvoice = (props) => {
     </>
   )
 }
-export default DraftInvoice
+export default UpdateDraftInvoice

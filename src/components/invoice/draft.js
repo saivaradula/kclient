@@ -261,6 +261,19 @@ const DraftList = () => {
                           placement="top"
                           overlay={
                             <Tooltip id="button-tooltip-2">
+                              Edit Items
+                            </Tooltip>
+                          }
+                        >
+                          <Link to="/invoice/updatedraft" path="/invoice/updatedraft" onClick={() => updateInvoice(inv.invoice)}>
+                            <CIcon icon={cilPen} className="cricon" />
+                          </Link>
+                        </OverlayTrigger>
+                        &nbsp;&nbsp;| &nbsp;&nbsp;
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
                               Update Invoice
                             </Tooltip>
                           }
