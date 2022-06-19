@@ -24,7 +24,6 @@ const PAY_METHOD = ['Google Pay', 'Paytm', 'PhonePe', 'Internet Banking', 'Chequ
 
 const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb }) => {
 
-  console.log(invoice)
   const [modalInvoice, setModalInvoice] = useState(() => invoice)
   modalInvoice.inv = invoice.inv
   modalInvoice.data = invoice.data;
@@ -173,27 +172,28 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
     return (
       <>
         <Modal show={show} onHide={handleClose} size="xl">
-          <Modal.Header className="logo-color" closeButton>
-            {/* <div className="row"> */}
-            <div className="col-sm-9 float-left logo-color">
+          <Modal.Header className="logo-color logo" closeButton>
+            <div className="logo-color">
               <img src={logo} style={logoSize} />
             </div>
-            <div className="col-sm-3 logo-color textColorWhite">
-              <div className="textright">
-                <strong>From:</strong>&nbsp;&nbsp;
-                {moment.utc(invoiceData.startDate).format('dddd - MMM Do, YYYY')}
-              </div>
-              <div className="textright">
-                <strong>To:</strong>&nbsp;&nbsp;
-                {moment.utc(invoiceData.endDate).format('dddd - MMM Do, YYYY')}
-              </div>
-            </div>
-            {/* </div> */}
           </Modal.Header>
           <Modal.Body>
             <div className="container-fluid">
-
               <hr />
+              <div className="row mt-4">
+                <div className="col-sm-4">
+                  <strong>Invoice Number:</strong>&nbsp;&nbsp;
+                  {invoice.inv}
+                </div>
+                <div className="col-sm-4">
+                  <strong>From:</strong>&nbsp;&nbsp;
+                  {moment.utc(invoiceData.startDate).format('dddd - MMM Do, YYYY')}
+                </div>
+                <div className="col-sm-4">
+                  <strong>To:</strong>&nbsp;&nbsp;
+                  {moment.utc(invoiceData.endDate).format('dddd - MMM Do, YYYY')}
+                </div>
+              </div>
               <div>
                 <div className="row mt-4">
                   <div className="col-sm-6">

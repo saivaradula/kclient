@@ -51,6 +51,11 @@ hr {
   color: #ccc;
 }
 
+.logo {
+  display: inline;
+  text-align: center;
+}
+
 .logo-color {
   background-color: #193a59
 }
@@ -61,4 +66,23 @@ hr {
 
 .textColorWhite {
   color: #fff
+}
+
+.addressclass {
+  font-weight: 800;
+  text-align: center;
+}
+
+.fbold {
+  font-weight: 800;
+}
+
+.addressTable {
+  padding: 0px;
+  width: 100%;
+}
+
+.addressTable td {
+  padding-left: 10px;
+  border: 1px solid;
 }
