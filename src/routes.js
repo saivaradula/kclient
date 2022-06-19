@@ -11,6 +11,7 @@ const ProductsPrint = React.lazy(() => import('./components/product/print'))
 const addCategory = React.lazy(() => import('./components/category/addCategory'))
 const Categories = React.lazy(() => import('./components/category/list'))
 const DraftInvoice = React.lazy(() => import('./components/invoice/draftinvoice'))
+const UpdateDraftInvoice = React.lazy(() => import('./components/invoice/updatedraftinvoice'))
 const DraftList = React.lazy(() => import('./components/invoice/draft'))
 const Invoices = React.lazy(() => import('./components/invoice/list'))
 const PaidInvoices = React.lazy(() => import('./components/invoice/paidinvoices'))
@@ -19,6 +20,7 @@ const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/invoice/draft', name: 'Rent Product', component: DraftInvoice },
+  { path: '/invoice/updatedraft', name: 'Rent Product', component: UpdateDraftInvoice },
   { path: '/invoice/quotation', name: 'Rent Product', component: DraftList },
   { path: '/invoice/list', name: 'Rent Product', component: Invoices },
   { path: '/invoice/paid', name: 'Rent Product', component: PaidInvoices },
