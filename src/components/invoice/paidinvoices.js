@@ -150,7 +150,20 @@ const PaidInvoices = () => {
   }, [])
 
   const printFinalInvoice = id => {
-    setFI(true)
+    // get the details of the invoice
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/payments`)
+      .then(async (response) => {
+        setPayments(response.data)
+      })
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/details`)
+      .then(async (response) => {
+        dispatch({ type: ACTIONS.ADD_NEW, payload: { data: response.data, inv: id } })
+        setFI(true)
+        console.clear()
+        console.log("invoice details:", invoiceDetails)
+      })
   }
 
   return (
@@ -240,6 +253,7 @@ const PaidInvoices = () => {
 
 
         <div className="row">
+
           <Modal show={showPF} onHide={closePForm} size="lg">
             <form method="post" onSubmit={addPayment}>
               <Modal.Header closeButton>
@@ -279,71 +293,76 @@ const PaidInvoices = () => {
               </Modal.Footer>
             </form>
           </Modal>
+
         </div>
       </div>
 
       <div className="row">
-        <Modal show={showFI} onHide={() => setFI(false)} size="xl">
-          <Modal.Header className="logo-color logo" closeButton>
-            <div className="logo-color" style={styles}>
-              <img src={logo} style={logoSize} />
-            </div>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="addressclass">
-              H.No: 3-517/1, ADITYA NAGAR, NEW HAFEEZPET, MEDCHAL MALKAJGIRI, HYDERABAD - 500049
-              <br />
-              Mobile: +91 8886112321, Mail ID: rightchoiceprops@gmail.com
-            </div>
-            <hr />
-            <div className="addressclass">
-              <h3>INVOICE DETAILS</h3>
-            </div>
-            <div>
-              <table className="addressTable">
-                <tr>
-                  <td>
-                    <div className="fbold">Right Choice</div>
-                    <div>H.No: 3-517/1,</div>
-                    <div>ADITYA NAGAR, NEW HAFEEZPET</div>
-                    <div>MEDCHAL MALKAJGIRI, </div>
-                    <div>HYDERABAD - 500049</div>
-                    <div>GTIN: 36ATUPK0654P2ZV</div>
-                  </td>
-                  <td>
-                    <div>Invoice Serial Number: 178</div>
-                    <div>Invoice date: 02, May, 2022</div>
-                    <div>Place of Supply: Hyderabad</div>
-                    <div>Description: Set Property Rent</div>
-                    <div>Terms of Payment: Immediate</div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Details of receiver(billed to)</td>
-                  <td>Details of receiver(shipped to)</td>
-                </tr>
-                <tr>
-                  <td>
-                    <div>Right Choice</div>
-                    <div>H.No: 3-517/1,</div>
-                    <div>ADITYA NAGAR, NEW HAFEEZPET</div>
-                    <div>MEDCHAL MALKAJGIRI, </div>
-                    <div>HYDERABAD - 500049</div>
-                    <div>GTIN: 36ATUPK0654P2ZV</div>
-                  </td>
-                  <td>
-                    <div>Invoice Serial Number: 178</div>
-                    <div>Invoice date: 02, May, 2022</div>
-                    <div>Place of Supply: Hyderabad</div>
-                    <div>Description: Set Property Rent</div>
-                    <div>Terms of Payment: Immediate</div>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          </Modal.Body>
-
-        </Modal>
+        {invoiceDetails.data[0] != undefined ? (
+          <Modal show={showFI} onHide={() => setFI(false)} size="xl">
+            <Modal.Header className="logo-color logo" closeButton>
+              <div className="logo-color" style={styles}>
+                <img src={logo} style={logoSize} />
+              </div>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="addressclass">
+                H.No: 3-517/1, ADITYA NAGAR, NEW HAFEEZPET, MEDCHAL MALKAJGIRI, HYDERABAD - 500049
+                <br />
+                Mobile: +91 8886112321, Mail ID: rightchoiceprops@gmail.com
+              </div>
+              <hr />
+              <div className="addressclass">
+                <h3>INVOICE DETAILS</h3>
+              </div>
+              <div>
+                <table className="addressTable">
+                  <tr>
+                    <td>
+                      <div className="fbold">Right Choice</div>
+                      <div>H.No: 3-517/1,</div>
+                      <div>ADITYA NAGAR, NEW HAFEEZPET</div>
+                      <div>MEDCHAL MALKAJGIRI, </div>
+                      <div>HYDERABAD - 500049</div>
+                      <div>GTIN: 36ATUPK0654P2ZV</div>
+                    </td>
+                    <td>
+                      <div>Invoice Serial Number: 178</div>
+                      <div>Invoice date: 02, May, 2022</div>
+                      <div>Place of Supply: Hyderabad</div>
+                      <div>Description: Set Property Rent</div>
+                      <div>Terms of Payment: Immediate</div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Details of receiver(billed to)</td>
+                    <td>Details of receiver(shipped to)</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div className="fbold">{invoiceDetails.toName}</div>
+                      <div>H.No: 3-517/1,</div>
+                      <div>ADITYA NAGAR, NEW HAFEEZPET</div>
+                      <div>MEDCHAL MALKAJGIRI, </div>
+                      <div>HYDERABAD - 500049</div>
+                      <div>GTIN: 36ATUPK0654P2ZV</div>
+                    </td>
+                    <td>
+                      <div>Invoice Serial Number: 178</div>
+                      <div>Invoice date: 02, May, 2022</div>
+                      <div>Place of Supply: Hyderabad</div>
+                      <div>Description: Set Property Rent</div>
+                      <div>Terms of Payment: Immediate</div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </Modal.Body>
+            <Modal.Footer>
+              Footer of the modal
+            </Modal.Footer>
+          </Modal>
+        ) : <></>}
       </div>
     </>
   )

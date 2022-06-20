@@ -30,7 +30,7 @@ const AddProducts = (props) => {
   const [brand, setBrand] = useState('')
   const [category, setCategory] = useState('')
   const [subCategory, setSubCategory] = useState('')
-  const [cost, setCost] = useState('')
+  const [cost, setCost] = useState(0)
   const [price, setPrice] = useState('')
   const [quantity, setQuantity] = useState('')
   const [alertNum, setAlertNum] = useState('')
@@ -330,8 +330,9 @@ const AddProducts = (props) => {
                     autocomplete="off"
                     id="cost"
                     required
+                    value={cost}
                     onChange={(e) => updateFinalPrice(e)}
-                    placeholder="Purchased Price"
+                    placeholder="Purchase Price"
                   />
                 </div>
                 <div className="col-sm-3">
