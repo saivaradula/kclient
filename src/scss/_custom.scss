@@ -77,12 +77,20 @@ hr {
   font-weight: 800;
 }
 
+.fitalic {
+  font-style: italic;
+}
+
 .addressTable {
   padding: 0px;
   width: 100%;
 }
 
-.addressTable td {
+.addressTable td, .addressTable th {
   padding-left: 10px;
   border: 1px solid;
+}
+
+.addressTable th {
+  font-weight: 700;
 }

@@ -11,8 +11,16 @@ import CIcon from '@coreui/icons-react'
 import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
 import InvoiceDetailsModal from './detailsModel'
 import logo from '../../../src/assets/images/logo.png'
+var converter = require('number-to-words');
 
 const PaidInvoices = () => {
+
+  const inWords = (num) => {
+    let n = num.split('.');
+    let r = converter.toWords(n[0])
+    let p = converter.toWords(n[1])
+    return `${r} and ${p} paise`;
+  }
 
   const logoSize = {
     height: 120,
@@ -70,7 +78,9 @@ const PaidInvoices = () => {
           discount: action.payload.data[0].discount,
           gstpercentage: action.payload.data[0].gstpercentage,
           payableamount: action.payload.data[0].payableamount,
-          vendoraddress: action.payload.data[0].vendoraddress
+          vendoraddress: action.payload.data[0].vendoraddress,
+          finalamount: action.payload.data[0].finalamount,
+          payableamount: action.payload.data[0].payableamount
         }
       }
     }
@@ -220,7 +230,7 @@ const PaidInvoices = () => {
                       placement="top"
                       overlay={
                         <Tooltip id="button-tooltip-2">
-                          Print QR Codes
+                          Final Invoice details
                         </Tooltip>
                       }
                     >
@@ -318,7 +328,7 @@ const PaidInvoices = () => {
               <div>
                 <table className="addressTable">
                   <tr>
-                    <td>
+                    <td width="500">
                       <div className="fbold">Right Choice</div>
                       <div>H.No: 3-517/1,</div>
                       <div>ADITYA NAGAR, NEW HAFEEZPET</div>
@@ -341,18 +351,75 @@ const PaidInvoices = () => {
                   <tr>
                     <td>
                       <div className="fbold">{invoiceDetails.toName}</div>
-                      <div>H.No: 3-517/1,</div>
-                      <div>ADITYA NAGAR, NEW HAFEEZPET</div>
-                      <div>MEDCHAL MALKAJGIRI, </div>
-                      <div>HYDERABAD - 500049</div>
-                      <div>GTIN: 36ATUPK0654P2ZV</div>
+                      <div className="">{invoiceDetails.vendoraddress}</div>
                     </td>
                     <td>
-                      <div>Invoice Serial Number: 178</div>
-                      <div>Invoice date: 02, May, 2022</div>
-                      <div>Place of Supply: Hyderabad</div>
-                      <div>Description: Set Property Rent</div>
-                      <div>Terms of Payment: Immediate</div>
+                      <div className="fbold">{invoiceDetails.toName}</div>
+                      <div className="">{invoiceDetails.vendoraddress}</div>
+                    </td>
+                  </tr>
+                </table>
+                <table className="addressTable">
+                  <tr>
+                    <th>S.No</th>
+                    <th>Description</th>
+                    <th>HSN CODE</th>
+                    <th>TAXABLE VALUE</th>
+                    <th>CGST @ 9%</th>
+                    <th>SGST @ 9%</th>
+                    <th>TOTAL</th>
+                  </tr>
+                  <tr>
+                    <td>1</td>
+                    <td>Set Property Rent</td>
+                    <td>00440076</td>
+                    <td>{((invoiceDetails.finalamount) / 1).toFixed(2)}</td>
+                    <td>{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                    <td>{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                    <td>{(invoiceDetails.payableamount / 1).toFixed(2)}</td>
+                  </tr>
+                </table>
+                <table className="addressTable">
+                  <tr>
+                    <td>
+                      <span className="fbold">Rupees:</span>
+                      &nbsp;&nbsp; {inWords((invoiceDetails.payableamount / 1).toFixed(2))}
+                    </td>
+                    <td>
+                      <table className="addressTable">
+                        <tr>
+                          <td className="fbold">Taxable Value</td>
+                          <td className="fbold">{((invoiceDetails.finalamount) / 1).toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                          <td className="fbold">CGST @ 9%</td>
+                          <td className="fbold">{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                          <td className="fbold">SGST @ 9%</td>
+                          <td className="fbold">{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                        </tr>
+                        <tr>
+                          <td className="fbold">Total</td>
+                          <td className="fbold">{(invoiceDetails.payableamount / 1).toFixed(2)}</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+                <table className="addressTable">
+                  <tr>
+                    <td width="500">
+                      <div>Remarks: Set Property Rent From</div>
+                      <div className="fbold">M/s. {invoiceDetails.toName}</div>
+                      <br />
+                      <div className="fitalic">All trasactions are subjected to Telangana Jurisdiction under GST ACT</div>
+                    </td>
+                    <td>
+
+                      <div className="fbold">Right Choice</div>
+                      <br /><br />
+                      <div className="fbold">Authority Signature</div>
                     </td>
                   </tr>
                 </table>
