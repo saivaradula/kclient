@@ -218,7 +218,7 @@ const PaidInvoices = () => {
                     {inv.contactName} - {inv.contactPhone}
                   </td>
                   <td className="money">{inv.totalProducts}</td>
-                  <td className="money">{inv.totalCost}</td>
+                  <td className="money">{inv.totalCost.toFixed(2)}</td>
                   <td className="money">
                     {moment.utc(inv.startDate).format('ddd - MMM Do, YYYY')}
                   </td>
