@@ -41,11 +41,16 @@ const EditProduct = (props) => {
         prtype: '',
         unit: '',
         prodimage: '',
+        godawan: '',
         showOriginalImage: true
     })
 
     const [categoryList, setCategoryList] = useState([])
     const [resultLoaded, setResultLoaded] = useState(false)
+
+    const printGodawns = [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    ]
 
     const getCategories = () => {
         axios.get(`${process.env.REACT_APP_API_URL}/category`).then((data) => {
@@ -77,6 +82,7 @@ const EditProduct = (props) => {
                     model: p.model,
                     prtype: p.prtype,
                     unit: p.unit,
+                    godawan: p.godawan,
                     prodimage: p.image,
                     secretCode: p.code
                 }));
@@ -407,7 +413,15 @@ const EditProduct = (props) => {
                             </CRow>
                             <hr />
                             <CRow className="mb-4">
-                                <div className="col-sm-3">
+                                <div className="col">
+                                    <CFormSelect
+                                        value={state.godawan}
+                                        id="godown"
+                                        onChange={(e) => setGodawn(e.target.value)}>
+                                        {printGodawns.map(i => <option value={i}>GoDawn - {i}</option>)}
+                                    </CFormSelect>
+                                </div>
+                                <div className="col">
                                     <CFormInput
                                         type="number"
                                         value={state.cost}
@@ -418,7 +432,7 @@ const EditProduct = (props) => {
                                         placeholder="Purchased Price"
                                     />
                                 </div>
-                                <div className="col-sm-3">
+                                <div className="col">
                                     <CFormInput
                                         type="number"
                                         autocomplete="off"
@@ -429,7 +443,7 @@ const EditProduct = (props) => {
                                         placeholder="Final Price "
                                     />
                                 </div>
-                                <div className="col-sm-3">
+                                <div className="col">
                                     <CFormInput
                                         type="number"
                                         autocomplete="off"
@@ -446,7 +460,7 @@ const EditProduct = (props) => {
                                         placeholder="Enter Quantity"
                                     />
                                 </div>
-                                <div className="col-sm-3">
+                                <div className="col">
                                     <CFormInput
                                         type="number"
                                         autocomplete="off"

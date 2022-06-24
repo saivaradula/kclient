@@ -37,6 +37,7 @@ const AddProducts = (props) => {
   const [model, setModel] = useState('')
   const [prType, setPrType] = useState('')
   const [unit, setUnit] = useState('unit')
+  const [godawn, setGodawn] = useState(1)
 
   const [prodImage, setProdImage] = useState('')
   const [categoryList, setCategoryList] = useState([])
@@ -78,6 +79,7 @@ const AddProducts = (props) => {
       model: model,
       prtype: prType,
       unit: unit,
+      godawan: godawn,
     }
     axios.post(`${process.env.REACT_APP_API_URL}/products/add`, payLoad).then((response) => {
       if (response.status === 200) {
@@ -156,6 +158,10 @@ const AddProducts = (props) => {
       setCode(res.data);
     })
   }
+
+  const printGodawns = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  ]
 
   return setResultLoaded ? (
     <CForm
@@ -324,7 +330,12 @@ const AddProducts = (props) => {
               </CRow>
               <hr />
               <CRow className="mb-4">
-                <div className="col-sm-3">
+                <div className="col">
+                  <CFormSelect required id="godown" onChange={(e) => setGodawn(e.target.value)}>
+                    {printGodawns.map(i => <option>GoDawn - {i}</option>)}
+                  </CFormSelect>
+                </div>
+                <div className="col">
                   <CFormInput
                     type="number"
                     autocomplete="off"
@@ -335,7 +346,7 @@ const AddProducts = (props) => {
                     placeholder="Purchase Price"
                   />
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                   <CFormInput
                     type="number"
                     autocomplete="off"
@@ -346,7 +357,7 @@ const AddProducts = (props) => {
                     placeholder="Final Price "
                   />
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                   <CFormInput
                     type="number"
                     autocomplete="off"
@@ -356,7 +367,7 @@ const AddProducts = (props) => {
                     placeholder="Enter Quantity"
                   />
                 </div>
-                <div className="col-sm-3">
+                <div className="col">
                   <CFormInput
                     type="number"
                     autocomplete="off"
