@@ -417,7 +417,13 @@ const EditProduct = (props) => {
                                     <CFormSelect
                                         value={state.godawan}
                                         id="godown"
-                                        onChange={(e) => setGodawn(e.target.value)}>
+                                        onChange={(e) =>
+                                            setState(prevState => ({
+                                                ...prevState,
+                                                godawan: e.target.value
+                                            }))
+                                        }
+                                    >
                                         {printGodawns.map(i => <option value={i}>GoDawn - {i}</option>)}
                                     </CFormSelect>
                                 </div>

@@ -331,8 +331,9 @@ const AddProducts = (props) => {
               <hr />
               <CRow className="mb-4">
                 <div className="col">
-                  <CFormSelect required id="godown" onChange={(e) => setGodawn(e.target.value)}>
-                    {printGodawns.map(i => <option>GoDawn - {i}</option>)}
+                  <CFormSelect required id="godown"
+                    onChange={(e) => setGodawn(e.target.value)}>
+                    {printGodawns.map(i => <option value={i}>GoDawn - {i}</option>)}
                   </CFormSelect>
                 </div>
                 <div className="col">
