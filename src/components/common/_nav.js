@@ -51,6 +51,12 @@ const _nav = [
     icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
   },
   {
+    component: CNavItem,
+    name: 'Printed Invoices',
+    to: '/invoice/printed',
+    icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
+  },
+  {
     component: CNavTitle,
     name: 'Products',
   },

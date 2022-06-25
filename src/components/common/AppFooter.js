@@ -3,13 +3,13 @@ import { CFooter } from '@coreui/react'
 
 const AppFooter = () => {
   return (
-    <CFooter>
+    <CFooter className="hideinprint">
       <div>
-        <span className="ms-1">&reg; 2022 Kadali's Store.</span>
+        <span className="ms-1">&reg; 2022 Right Choice.</span>
       </div>
       <div className="ms-auto">
         <span className="me-1">Powered by</span>
-        &copy; Admin panel
+        &copy; Admin - Right Choice
       </div>
     </CFooter>
   )

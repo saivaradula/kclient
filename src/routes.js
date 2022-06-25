@@ -15,6 +15,7 @@ const UpdateDraftInvoice = React.lazy(() => import('./components/invoice/updated
 const DraftList = React.lazy(() => import('./components/invoice/draft'))
 const Invoices = React.lazy(() => import('./components/invoice/list'))
 const PaidInvoices = React.lazy(() => import('./components/invoice/paidinvoices'))
+const PrintedInvoices = React.lazy(() => import('./components/invoice/printedinvoices'))
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -24,6 +25,7 @@ const routes = [
   { path: '/invoice/quotation', name: 'Rent Product', component: DraftList },
   { path: '/invoice/list', name: 'Rent Product', component: Invoices },
   { path: '/invoice/paid', name: 'Rent Product', component: PaidInvoices },
+  { path: '/invoice/printed', name: 'Rent Product', component: PrintedInvoices },
 
   { path: '/products', exact: true, name: 'Products', component: Products },
   { path: '/products/:id/edit', exact: true, name: 'Edit Product', component: EditProduct },

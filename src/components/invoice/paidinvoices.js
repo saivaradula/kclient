@@ -176,6 +176,14 @@ const PaidInvoices = () => {
       })
   }
 
+  const printThisInv = id => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/invoice/${id}/print`)
+      .then(async (response) => {
+        window.print();
+      })
+  }
+
   return (
     <>
       <div className="row">
@@ -426,7 +434,8 @@ const PaidInvoices = () => {
               </div>
             </Modal.Body>
             <Modal.Footer>
-              Footer of the modal
+              <button className="btn btn-primary hideinprint" onClick={() => printThisInv(invoiceDetails.inv)}
+              >Print</button>
             </Modal.Footer>
           </Modal>
         ) : <></>}
@@ -434,5 +443,7 @@ const PaidInvoices = () => {
     </>
   )
 }
+
+
 
 export default PaidInvoices

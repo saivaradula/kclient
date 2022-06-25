@@ -94,3 +94,9 @@ hr {
 .addressTable th {
   font-weight: 700;
 }
+
+@media print {
+  .hideinprint {
+    display: none;
+  }
+}
