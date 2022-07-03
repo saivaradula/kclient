@@ -46,6 +46,8 @@ const PrintedInvoices = () => {
     const closePForm = () => setShowPF(false)
     const [showFI, setFI] = useState(() => false)
 
+    const [sM, setSM] = useState(() => false)
+
     const INVOICE_PENDING = 1
     const INVOICE_ACCEPTED = 2
     const INVOICE_REJECTED = 3
@@ -114,7 +116,7 @@ const PrintedInvoices = () => {
     }
 
     const getInvoices = async () => {
-        return await axios.get(`${process.env.REACT_APP_API_URL}/invoice/printed`, {
+        return await axios.get(`${process.env.REACT_APP_API_URL}/invoice/paid`, {
             params: { page: 1 },
         })
     }
@@ -159,7 +161,15 @@ const PrintedInvoices = () => {
         getInvoiceList()
     }, [])
 
-    const printFinalInvoice = id => {
+
+    const chooseGST = id => {
+        setSM(true)
+        localStorage.setItem('finalInvoiceId', id)
+    }
+
+    const printFinalInvoice = () => {
+        setSM(false)
+        let id = localStorage.getItem('finalInvoiceId')
         // get the details of the invoice
         axios
             .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/payments`)
@@ -171,13 +181,22 @@ const PrintedInvoices = () => {
             .then(async (response) => {
                 dispatch({ type: ACTIONS.ADD_NEW, payload: { data: response.data, inv: id } })
                 setFI(true)
-                console.clear()
-                console.log("invoice details:", invoiceDetails)
             })
     }
 
-    const printThisInv = id => {
-        window.print();
+    const printThisInv = () => {
+        let id = localStorage.getItem('finalInvoiceId')
+        const win = window.open(`#/invoice/print/${id}`, "_blank");
+        win.focus();
+        // axios
+        //     .post(`${process.env.REACT_APP_API_URL}/invoice/${id}/print`)
+        //     .then(async (response) => {
+
+        //     })
+    }
+
+    const selectGSTC = value => {
+        localStorage.setItem('gst_check', value)
     }
 
     return (
@@ -238,7 +257,7 @@ const PrintedInvoices = () => {
                                                 </Tooltip>
                                             }
                                         >
-                                            <Link to="#" path="#" onClick={() => printFinalInvoice(inv.invoice)}>
+                                            <Link to="#" path="#" onClick={() => chooseGST(inv.invoice)}>
                                                 <CIcon icon={cilFingerprint} className="cricon" />
                                             </Link>
                                         </OverlayTrigger>
@@ -265,6 +284,22 @@ const PrintedInvoices = () => {
                     <></>
                 )}
 
+                <div className="row">
+                    <Modal show={sM} onHide={() => setSM(false)}>
+                        <Modal.Header closeButton>
+                            <Modal.Title>GST Checks</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <div><label><input onChange={() => selectGSTC('cgst')} type="radio" name="gstc" />&nbsp;&nbsp;CGST & SGST</label></div>
+                            <div><label><input onClick={() => selectGSTC('igst')} type="radio" name="gstc" />&nbsp;&nbsp;IGST</label></div>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <button className="btn btn-primary hideinprint"
+                                onClick={() => printFinalInvoice()}
+                            >Print</button>
+                        </Modal.Footer>
+                    </Modal>
+                </div>
 
                 <div className="row">
 
@@ -311,7 +346,7 @@ const PrintedInvoices = () => {
                 </div>
             </div>
 
-            <div className="row">
+            <div className="row printdiv">
                 {invoiceDetails.data[0] != undefined ? (
                     <Modal show={showFI} onHide={() => setFI(false)} size="xl">
                         <Modal.Header className="logo-color logo" closeButton>
@@ -369,8 +404,18 @@ const PrintedInvoices = () => {
                                         <th>Description</th>
                                         <th>HSN CODE</th>
                                         <th>TAXABLE VALUE</th>
-                                        <th>CGST @ 9%</th>
-                                        <th>SGST @ 9%</th>
+                                        {
+                                            localStorage.getItem('gst_check') === 'igst' ?
+                                                <>
+                                                    <th>IGST @ 18%</th>
+                                                </>
+                                                :
+                                                <>
+                                                    <th>CGST @ 9%</th>
+                                                    <th>SGST @ 9%</th>
+                                                </>
+                                        }
+
                                         <th>TOTAL</th>
                                     </tr>
                                     <tr>
@@ -378,8 +423,18 @@ const PrintedInvoices = () => {
                                         <td>Set Property Rent</td>
                                         <td>00440076</td>
                                         <td>{((invoiceDetails.finalamount) / 1).toFixed(2)}</td>
-                                        <td>{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
-                                        <td>{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                                        {
+                                            localStorage.getItem('gst_check') === 'igst' ?
+                                                <>
+                                                    <td>{((invoiceDetails.payableamount - invoiceDetails.finalamount)).toFixed(2)}</td>
+                                                </>
+                                                :
+                                                <>
+                                                    <td>{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                                                    <td>{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                                                </>
+                                        }
+
                                         <td>{(invoiceDetails.payableamount / 1).toFixed(2)}</td>
                                     </tr>
                                 </table>
@@ -395,14 +450,28 @@ const PrintedInvoices = () => {
                                                     <td className="fbold">Taxable Value</td>
                                                     <td className="fbold">{((invoiceDetails.finalamount) / 1).toFixed(2)}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td className="fbold">CGST @ 9%</td>
-                                                    <td className="fbold">{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td className="fbold">SGST @ 9%</td>
-                                                    <td className="fbold">{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
-                                                </tr>
+
+                                                {
+                                                    localStorage.getItem('gst_check') === 'igst' ?
+                                                        <>
+                                                            <tr>
+                                                                <td className="fbold">IGST @ 18%</td>
+                                                                <td className="fbold">{((invoiceDetails.payableamount - invoiceDetails.finalamount)).toFixed(2)}</td>
+                                                            </tr>
+                                                        </> :
+                                                        <>
+                                                            <tr>
+                                                                <td className="fbold">CGST @ 9%</td>
+                                                                <td className="fbold">{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td className="fbold">SGST @ 9%</td>
+                                                                <td className="fbold">{((invoiceDetails.payableamount - invoiceDetails.finalamount) / 2).toFixed(2)}</td>
+                                                            </tr>
+                                                        </>
+                                                }
+
+
                                                 <tr>
                                                     <td className="fbold">Total</td>
                                                     <td className="fbold">{(invoiceDetails.payableamount / 1).toFixed(2)}</td>
@@ -430,7 +499,8 @@ const PrintedInvoices = () => {
                             </div>
                         </Modal.Body>
                         <Modal.Footer>
-                            <button className="btn btn-primary hideinprint" onClick={() => printThisInv(invoiceDetails.inv)}
+                            <button className="btn btn-primary hideinprint"
+                                onClick={() => printThisInv()}
                             >Print</button>
                         </Modal.Footer>
                     </Modal>
@@ -439,5 +509,7 @@ const PrintedInvoices = () => {
         </>
     )
 }
+
+
 
 export default PrintedInvoices

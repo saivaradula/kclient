@@ -52,7 +52,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Printed Invoices',
+    name: 'Taxable Invoices',
     to: '/invoice/printed',
     icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
   },

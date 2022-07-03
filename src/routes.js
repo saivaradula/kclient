@@ -20,6 +20,7 @@ const PrintedInvoices = React.lazy(() => import('./components/invoice/printedinv
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
+
   { path: '/invoice/draft', name: 'Rent Product', component: DraftInvoice },
   { path: '/invoice/updatedraft', name: 'Rent Product', component: UpdateDraftInvoice },
   { path: '/invoice/quotation', name: 'Rent Product', component: DraftList },
@@ -33,6 +34,7 @@ const routes = [
   { path: '/products/add', exact: true, name: 'Add', component: AddProduct },
   { path: '/products/print', exact: true, name: 'Print', component: ProductsPrint },
   { path: '/products/:id', exact: true, name: 'Print', component: PrintPR },
+
   { path: '/category/list', exact: true, name: 'Category', component: Categories },
   { path: '/category/add', exact: true, name: 'Add Category', component: addCategory },
 ]

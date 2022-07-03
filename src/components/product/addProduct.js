@@ -333,7 +333,7 @@ const AddProducts = (props) => {
                 <div className="col">
                   <CFormSelect required id="godown"
                     onChange={(e) => setGodawn(e.target.value)}>
-                    {printGodawns.map(i => <option value={i}>GoDawn - {i}</option>)}
+                    {printGodawns.map(i => <option value={i}>Godown - {i}</option>)}
                   </CFormSelect>
                 </div>
                 <div className="col">

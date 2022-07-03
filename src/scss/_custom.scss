@@ -96,7 +96,14 @@ hr {
 }
 
 @media print {
+  body {-webkit-print-color-adjust: exact; }
+
   .hideinprint {
     display: none;
   }
+
+  .logo-color {
+    background-color: #193a59 !important;
+  }
+
 }

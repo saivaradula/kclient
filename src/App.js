@@ -13,6 +13,7 @@ const loading = (
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 const PrintPreview = React.lazy(() => import('./components/product/preview'))
+const FinalPrint = React.lazy(() => import('./components/invoice/finalprint'))
 
 // Pages
 const Login = React.lazy(() => import('./views/pages/login/Login'))
@@ -41,6 +42,14 @@ class App extends Component {
               name="Print Preview"
               render={(props) => <PrintPreview {...props} />}
             />
+
+            <Route
+              exact
+              path='/invoice/print/:id'
+              name="Print Final Invoice "
+              render={(props) => <FinalPrint {...props} />}
+            />
+
             <Route path="/" name="Home" render={(props) => <DefaultLayout {...props} />} />
           </Switch>
         </React.Suspense>

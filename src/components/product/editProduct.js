@@ -424,7 +424,7 @@ const EditProduct = (props) => {
                                             }))
                                         }
                                     >
-                                        {printGodawns.map(i => <option value={i}>GoDawn - {i}</option>)}
+                                        {printGodawns.map(i => <option value={i}>Godown - {i}</option>)}
                                     </CFormSelect>
                                 </div>
                                 <div className="col">
