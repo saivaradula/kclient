@@ -95,6 +95,14 @@ hr {
   font-weight: 700;
 }
 
+.message {  
+  border: 1px solid #000;
+  padding: 13px;
+  background: #fff;
+  margin: auto;
+  text-align: center;
+}
+
 @media print {
   body {-webkit-print-color-adjust: exact; }
 

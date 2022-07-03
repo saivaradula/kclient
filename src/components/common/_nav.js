@@ -58,6 +58,16 @@ const _nav = [
   },
   {
     component: CNavTitle,
+    name: 'Invoice Return',
+  },
+  {
+    component: CNavItem,
+    name: 'Return',
+    to: '/returns',
+    icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavTitle,
     name: 'Products',
   },
   {

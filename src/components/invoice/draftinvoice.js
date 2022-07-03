@@ -378,20 +378,10 @@ const DraftInvoice = (props) => {
   let removeFormFields = (code, i) => {
     let newFormValues = [...state.formValues];
     newFormValues = newFormValues.filter((p) => p.code != code);
-    // let tcost = updateTotalCost();
-      // tcost = parseFloat(tcost).toFixed(2);
-      // console.log("tcost -", tcost);
-      // setState(prevState => ({
-      //   ...prevState,
-      //   totalCost: tcost,
-      //   finalamount: tcost,
-      //   payableamount: tcost,
-      //   formValues: [...newFormValues]
-      // }));
-      setState(prevState => ({
-        ...prevState,
-        formValues: [...newFormValues]
-      }));
+    setState(prevState => ({
+      ...prevState,
+      formValues: [...newFormValues]
+    }));
   }
 
   const changeEndDateAndCountDays = (date) => {
