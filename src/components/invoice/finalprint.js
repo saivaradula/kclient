@@ -52,7 +52,8 @@ const FinalPrint = (props) => {
 
     const thisPage = {
         width: '1000px',
-        margin: 'auto'
+        margin: 'auto',
+        marginTop: '200px'
     }
     const logoSize = {
         height: 120,
