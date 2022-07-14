@@ -95,12 +95,25 @@ hr {
   font-weight: 700;
 }
 
+.m-10imp {
+  margin-top: 10px !important
+}
+
 .message {  
   border: 1px solid #000;
   padding: 13px;
   background: #fff;
   margin: auto;
   text-align: center;
+}
+
+.error-message {
+  color: darkred;
+  padding-top: 6px;
+  border: 1px solid;
+  text-align: center;
+  background: #ccc;
+  font-weight: 600;
 }
 
 @media print {

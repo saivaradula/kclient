@@ -1,27 +1,55 @@
-import { CCard, CCardBody, CCardHeader, CCol, CFormInput, CRow } from '@coreui/react'
+import { CCard, CCardBody, CCardHeader, CCardFooter, CCol, CFormInput, CRow } from '@coreui/react'
 import axios from 'axios'
 
-const getProductDetails = async (id) => {
-    const results = await axios.get(`${process.env.REACT_APP_API_URL}/products/details/${id}`)
-    return results.data[0]
+const getProductDetails = async (id, pid) => {
+    const results = await axios.get(`${process.env.REACT_APP_API_URL}/invoice/return/${id}/items/${pid}`)
+    return results.data[0] ? results.data[0] : 0;
 }
 
-const changeCode = async (i, e, formValues, setFormValues) => {
-    const details = await getProductDetails(e.target.value);
+const changeCode = async (invoice, i, e, formValues, setFormValues) => {
+    const details = await getProductDetails(invoice, e.target.value);
     let newFormValues = [...formValues];
 
     if (details) {
         newFormValues[i]['code'] = e.target.value
+        newFormValues[i]['error'] = ''
+        newFormValues[i]['rquantity'] = 0
         newFormValues[i]['name'] = details.name
+        newFormValues[i]['quantity'] = details.quantity
+        newFormValues[i + 1] = {
+            code: '',
+            name: '',
+            error: '',
+            quantity: 0,
+            rquantity: 0,
+            isDamaged: false
+        }
+    } else {
+        newFormValues[i]['code'] = e.target.value
+        newFormValues[i]['error'] = "Invalid Code."
     }
-    newFormValues[i + 1] = {
-        code: '',
-        name: '',
-        quantity: 0,
-        isDamaged: false
-    }
-
     setFormValues(prev => [...newFormValues])
+}
+
+const receiveProducts = async (formValues) => {
+    console.log(formValues)
+    let f = formValues.filter(f => f.rquantity)
+    await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/`, {
+        formValues: f
+    })
+}
+
+const updateRvalue = (i, event, formValues, setFormValues) => {
+    let newFormValues = [...formValues];
+    newFormValues[i].rquantity = event.target.value;
+    setFormValues(prev => [...newFormValues])
+}
+
+const isDamagedFun = (i, event, formValues, setFormValues) => {
+    let newFormValues = [...formValues];
+    newFormValues[i].isDamaged = event.target.checked;
+    setFormValues(prev => [...newFormValues])
+    console.log(formValues)
 }
 
 export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
@@ -31,7 +59,7 @@ export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
                 <CCol xs={12}>
                     <CCard className="mb-4">
                         <CCardHeader>
-                            <strong>Return Invoice Items for {returnInvoice.invoice}</strong>
+                            <strong>Receive Invoice Items for {returnInvoice.invoice}</strong>
                         </CCardHeader>
                         <CCardBody>
                             {
@@ -43,28 +71,65 @@ export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
                                                 autoComplete="off"
                                                 type="text"
                                                 id="productCode"
-                                                onChange={(e) => changeCode(index, e, formValues, setFormValues)}
+                                                onChange={(e) => changeCode(returnInvoice.invoice, index, e, formValues, setFormValues)}
                                                 placeholder="Code(Ex: PR-12345)"
                                             />
                                         </div>
-                                        <div className="col-sm-3">
-                                            <CFormInput
-                                                name="name"
-                                                autoComplete="off"
-                                                type="text"
-                                                id="name"
-                                                readOnly={true}
-                                                value={element.name || ''}
-                                                placeholder="Product Name"
-                                            />
-                                        </div>
+                                        {
+                                            element.error != '' ?
+                                                <>
+                                                    <div className="col-sm-6 error-message">
+                                                        Product code is invalid OR does not exist in this Invoice
+                                                    </div>
+                                                </> :
+                                                <>
+                                                    <div className="col-sm-3">
+                                                        <CFormInput
+                                                            name="name"
+                                                            autoComplete="off"
+                                                            type="text"
+                                                            id="name"
+                                                            readOnly={true}
+                                                            value={element.name || ''}
+                                                            placeholder="Product Name"
+                                                        />
+                                                    </div>
+                                                    <div className="col-sm-2">
+                                                        <CFormInput
+                                                            name="quantity"
+                                                            onChange={e => updateRvalue(index, e, formValues, setFormValues)}
+                                                            autoComplete="off"
+                                                            type="text"
+                                                            placeholder={`Max ${element.quantity || ''} Products`}
+                                                        />
+                                                    </div>
+                                                    <div className="col-sm-4 m-10imp">
+                                                        <label>
+                                                            <input type="checkbox"
+                                                                onChange={e => isDamagedFun(index, e, formValues, setFormValues)}
+                                                                name="isDamaged" /> Is Damaged
+                                                        </label>
+                                                    </div>
+                                                </>
+                                        }
                                     </CRow>
                                 ))
                             }
                         </CCardBody>
+                        <CCardFooter>
+                            <CRow>
+                                <div className="col-sm-6"></div>
+                                <div className="col-sm-6 float-right">
+                                    <button className="btn btn-primary" onClick={() => receiveProducts(formValues)}>Recieve Products</button>
+                                    &nbsp;&nbsp;
+                                    <button className="btn btn-secondary">Cancel</button>
+                                </div>
+                            </CRow>
+                        </CCardFooter>
                     </CCard>
+
                 </CCol>
-            </CRow>
+            </CRow >
 
         </>
     )
@@ -113,11 +178,11 @@ export const searchInvoices = (setSearchString, getInvoices) => {
                         <CCardHeader>
                             <CRow className="p-2">
                                 <div className="col-sm-10">
-                                    <h4>Return Invoice form</h4>
+                                    <h4>Receive Invoice form</h4>
                                 </div>
                                 <div className="col-sm-2 float-right">
                                     <button className="btn btn-primary">
-                                        Returned List
+                                        Received List
                                     </button>
                                 </div>
                             </CRow>
@@ -131,7 +196,7 @@ export const searchInvoices = (setSearchString, getInvoices) => {
                                             setSearchString(e.target.value)
                                         }}
                                         className="form-control"
-                                        placeholder="Search by Company Name/Director/Hero"
+                                        placeholder="Search by Company Name/Invoice Number/Director/Hero"
                                     />
                                 </div>
                                 <div className="col-sm-5">
@@ -143,7 +208,6 @@ export const searchInvoices = (setSearchString, getInvoices) => {
                                 </div>
                             </CRow>
                         </CCardBody>
-
                     </CCard>
                 </CCol>
             </CRow>

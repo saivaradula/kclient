@@ -17,6 +17,7 @@ const ReturnInvoice = props => {
     const [formValues, setFormValues] = useState(() => [{
         code: '',
         name: '',
+        error: '',
         quantity: 0,
         isDamaged: false
     }])
