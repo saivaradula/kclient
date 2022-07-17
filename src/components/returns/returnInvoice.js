@@ -8,8 +8,6 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { searchInvoices, loadOptions, loadDataTable } from './searchItems'
 
 const ReturnInvoice = props => {
-    const history = useHistory()
-
     const [searchString, setSearchString] = useState('')
     const [ss, setSS] = useState(false)
     const [invoices, setInvoices] = useState(() => [])
