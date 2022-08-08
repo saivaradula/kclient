@@ -1,13 +1,67 @@
 import React, { useEffect, useState, useReducer } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import moment from 'moment'
 require('dotenv').config()
 import axios from 'axios'
 import Modal from 'react-bootstrap/Modal'
+import ItemsModel from './ItemsModel'
 import { CCard, CCardBody, CCardHeader, CCol, CFormInput, CRow } from '@coreui/react'
 import 'react-datepicker/dist/react-datepicker.css'
 
 const RetList = ({ type }) => {
+
+    const [show, setShow] = useState(() => false)
+    const handleClose = () => setShow(() => false)
+    const handleShow = () => setShow(() => true)
+
+    const ACTIONS = {
+        ADD_NEW: 'new',
+        UPDATE_ADDRESS: 'address',
+        RESET: 'reset',
+    }
+
+    const reducer = (state, action) => {
+        switch (action.type) {
+            case ACTIONS.ADD_NEW: {
+                let toaddress = action.payload.data[0].to_name
+                    ? action.payload.data[0].to_name + ' - ' + action.payload.data[0].to_city
+                    : ''
+
+                return {
+                    ...state,
+                    inv: action.payload.inv,
+                    to_details: toaddress,
+                    toName: action.payload.data[0].to_name,
+                    city: action.payload.data[0].to_city,
+                    address: action.payload.data[0].to_address,
+                    gst: action.payload.data[0].gst,
+                    dated: action.payload.data[0].rents_start_on,
+                    data: action.payload.data,
+                    status: action.payload.data[0].is_value,
+                    payment: action.payload.data[0].ip_value,
+                    discount: action.payload.data[0].discount,
+                    gstpercentage: action.payload.data[0].gstpercentage,
+                    payableamount: action.payload.data[0].payableamount,
+                    vendoraddress: action.payload.data[0].vendoraddress,
+                    finalamount: action.payload.data[0].finalamount,
+                    payableamount: action.payload.data[0].payableamount
+                }
+            }
+        }
+    }
+
+    const [invoiceDetails, dispatch] = useReducer(reducer, {
+        inv: '',
+        to_details: '',
+        toName: '',
+        city: '',
+        address: '',
+        status: '',
+        payment: '',
+        gst: '',
+        dated: '',
+        data: [],
+    })
 
     const [state, setState] = useState(() => ({
         isLoaded: false,
@@ -22,6 +76,20 @@ const RetList = ({ type }) => {
             ...p,
             isLoaded: true, inventory: listOfInvoices.data
         }))
+    }
+
+    const getDetail = (invoice) => {
+        // axios
+        //     .get(`${process.env.REACT_APP_API_URL}/invoice/${invoice}/payments`)
+        //     .then(async (response) => {
+        //         // setPayments(response.data)
+        //     })
+        axios
+            .get(`${process.env.REACT_APP_API_URL}/invoice/return/${invoice}/${type}`)
+            .then(async (response) => {
+                dispatch({ type: ACTIONS.ADD_NEW, payload: { data: response.data, inv: invoice } })
+                handleShow()
+            })
     }
 
     useEffect(() => {
@@ -48,7 +116,14 @@ const RetList = ({ type }) => {
                             inventory.map((inv, index) => {
                                 return (<tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td>{inv.invoice}</td>
+                                    <td>
+                                        <Link
+                                            to="#"
+                                            path="#"
+                                            onClick={() => getDetail(inv.invoice)}>
+                                            {inv.invoice}
+                                        </Link>
+                                    </td>
                                     <td>{inv.to_name}</td>
                                     <td>{inv.to_address}</td>
                                     <td>{inv.content_type}</td>
@@ -63,7 +138,6 @@ const RetList = ({ type }) => {
             </>
         )
     }
-
     return (
         <div>
             <CRow>
@@ -93,6 +167,19 @@ const RetList = ({ type }) => {
                         </CCardBody>
                     </CCard>
                 </CCol>
+            </CRow>
+            <CRow>
+
+                {invoiceDetails.data[0] != undefined ? (
+                    <ItemsModel
+                        invoice={invoiceDetails}
+                        show={show}
+                        handleClose={handleClose}
+                        type={type}
+                    />
+                ) : (
+                    <></>
+                )}
             </CRow>
         </div >
     )
