@@ -2,6 +2,7 @@ import { CCard, CCardBody, CCardHeader, CCardFooter, CCol, CFormInput, CRow } fr
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 
+
 const getProductDetails = async (id, pid) => {
     const results = await axios.get(`${process.env.REACT_APP_API_URL}/invoice/return/${id}/items/${pid}`)
     return results.data[0] ? results.data[0] : 0;
@@ -33,18 +34,6 @@ const changeCode = async (invoice, i, e, formValues, setFormValues) => {
     }
     setFormValues(prev => [...newFormValues])
 }
-
-const receiveProducts = async (e, formValues, returnInvoice) => {
-    e.preventDefault()
-    let f = formValues.filter(f => f.rquantity)
-    await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/`, {
-        formValues: f,
-        invoice_id: returnInvoice.invoice
-    })
-
-    history.push('/returns/list')
-}
-
 const updateRvalue = (i, event, formValues, setFormValues) => {
     let newFormValues = [...formValues];
     newFormValues[i].rquantity = event.target.value;
@@ -65,13 +54,22 @@ const isDamagedFun = (i, event, formValues, setFormValues) => {
     console.log(formValues)
 }
 
+const receiveProducts = async (e, formValues, returnInvoice, h) => {
+    e.preventDefault()
+    let f = formValues.filter(f => f.rquantity)
+    await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/`, {
+        formValues: f,
+        invoice_id: returnInvoice.invoice
+    }).then(() => h.push('/returns/list'))
+}
+
 export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
     const history = useHistory()
     return (
         <>
             <CRow>
                 <CCol xs={12}>
-                    <form onSubmit={e => receiveProducts(e, formValues, returnInvoice)}>
+                    <form method="post" onSubmit={e => receiveProducts(e, formValues, returnInvoice, history)}>
                         <CCard className="mb-4">
                             <CCardHeader>
                                 <strong>Receive Invoice Items for {returnInvoice.invoice}</strong>
