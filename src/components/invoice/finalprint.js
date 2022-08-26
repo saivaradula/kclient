@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useReducer } from 'react'
 import axios from 'axios'
 require('dotenv').config()
-import logo from '../../../src/assets/images/logo.png'
+import logo from '../../../src/assets/images/logop.png'
 var converter = require('number-to-words');
 
 const FinalPrint = (props) => {
@@ -53,7 +53,7 @@ const FinalPrint = (props) => {
     const thisPage = {
         width: '1000px',
         margin: 'auto',
-        marginTop: '200px'
+        // marginTop: '200px'
     }
     const logoSize = {
         height: 120,
@@ -85,17 +85,21 @@ const FinalPrint = (props) => {
         await window.print()
     }, [id])
 
+    const replaceCommaLine = (data) => {
+        return data.split(',').map(item => item.trim());
+    }
+
     return (
         <>
             {invoiceDetails.data[0] != undefined ?
                 (<>
                     <div className="row printdiv mragin-auto" style={thisPage}>
                         <div className="row">
-                            <div className="col-3 logo-color"></div>
+                            {/* <div className="col-3 logo-color"></div> */}
                             <div className="col-6 logo-color" style={styles}>
                                 <img src={logo} style={logoSize} />
                             </div>
-                            <div className="col-3 logo-color"></div>
+                            <div className="col-6 logo-color"></div>
                         </div>
                         <div className="row">&nbsp;</div>
                         <div>
@@ -115,15 +119,15 @@ const FinalPrint = (props) => {
                                     <td width="500">
                                         <div className="fbold">Right Choice</div>
                                         <div>H.No: 3-517/1,</div>
-                                        <div>ADITYA NAGAR, NEW HAFEEZPET</div>
+                                        <div>ADITYA NAGAR, NEW HAFEEZPET,</div>
                                         <div>MEDCHAL MALKAJGIRI, </div>
-                                        <div>HYDERABAD - 500049</div>
+                                        <div>HYDERABAD - 500049.</div>
                                         <div>GTIN: 36ATUPK0654P2ZV</div>
                                     </td>
                                     <td>
                                         <div>Invoice Serial Number: 178</div>
-                                        <div>Invoice date: 02, May, 2022</div>
-                                        <div>Place of Supply: Hyderabad</div>
+                                        <div>Invoice date: 02, May, 2022,</div>
+                                        <div>Place of Supply: Hyderabad.</div>
                                         <div>Description: Set Property Rent</div>
                                         <div>Terms of Payment: Immediate</div>
                                     </td>
@@ -135,11 +139,14 @@ const FinalPrint = (props) => {
                                 <tr>
                                     <td>
                                         <div className="fbold">{invoiceDetails.toName}</div>
-                                        <div className="">{invoiceDetails.vendoraddress}</div>
+                                        <div className="">
+                                            {replaceCommaLine(invoiceDetails.vendoraddress).map((v) => <div>{v}</div>)}</div>
                                     </td>
                                     <td>
                                         <div className="fbold">{invoiceDetails.toName}</div>
-                                        <div className="">{invoiceDetails.vendoraddress}</div>
+                                        <div>
+                                            {replaceCommaLine(invoiceDetails.vendoraddress).map((v) => <div>{v}</div>)}
+                                        </div>
                                     </td>
                                 </tr>
                             </table>

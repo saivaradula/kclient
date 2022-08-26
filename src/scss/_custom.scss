@@ -117,7 +117,7 @@ hr {
 }
 
 @media print {
-  body {-webkit-print-color-adjust: exact; }
+  body {-webkit-print-color-adjust: exact; font-size: 25px;}
 
   .hideinprint {
     display: none;
