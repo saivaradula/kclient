@@ -106,8 +106,8 @@ const AddProducts = (props) => {
     let img = new Image;
     let canvas = document.getElementById("canvas");
     let ctx = canvas.getContext("2d");
-    let maxW = 64;
-    let maxH = 64;
+    let maxW = 512;
+    let maxH = 512;
     img.onload = () => {
       let iw = img.width;
       let ih = img.height;
