@@ -6,6 +6,7 @@ import {
 } from 'react-bootstrap';
 
 import { useHistory, Link } from 'react-router-dom'
+import ImageComponent from './ImageComponent'
 
 import {
   CButton,
@@ -40,6 +41,7 @@ const Products = (props) => {
   let [selectedProductLength, updateSelectedProductLength] = useState(0)
   let [arrChecked, setArrChecked] = useState([])
   let [printingOptions, setPrintingOptions] = useState([])
+  const [showPreview, setShowPreview] = useState(() => '')
 
   let i = 0
 
@@ -210,6 +212,17 @@ const Products = (props) => {
     history.push(`/products/${id}/edit/`)
   }
 
+  const stopPreviewImage = () => {
+    setShowPreview('')
+  }
+
+  const previewImage = (image, name) => {
+
+    setShowPreview(() => name + '&&&' + image)
+    // console.log(showPreview)
+
+  }
+
   const displayProducts = () => {
     return (
       <>
@@ -246,7 +259,7 @@ const Products = (props) => {
                   />
                 </td>
                 <td>
-                  <img src={p.image} width="35" height="35" />
+                  <img onClick={() => previewImage(p.image, p.name)} src={p.image} width="35" height="35" />
                 </td>
                 <td>{p.code}</td>
                 <td>{p.name}</td>
@@ -373,6 +386,17 @@ const Products = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
+      </CRow>
+      <CRow>
+        <div className="row">
+          {
+            showPreview &&
+            <ImageComponent
+              src={showPreview}
+              handleClose={stopPreviewImage}
+            />
+          }
+        </div>
       </CRow>
     </>
   )
