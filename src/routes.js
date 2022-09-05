@@ -18,6 +18,8 @@ const PaidInvoices = React.lazy(() => import('./components/invoice/paidinvoices'
 const PrintedInvoices = React.lazy(() => import('./components/invoice/printedinvoices'))
 
 const ReturnInvoice = React.lazy(() => import('./components/returns/returnInvoice'))
+const PendingInvoice = React.lazy(() => import('./components/returns/pendingInvoice'))
+
 const ReturnList = React.lazy(() => import('./components/returns/recievelist'))
 const ReturnDamaged = React.lazy(() => import('./components/returns/damagelist'))
 
@@ -34,7 +36,9 @@ const routes = [
   { path: '/invoice/printed', name: 'Rent Product', component: PrintedInvoices },
 
   // returns invoices. 
+
   { path: '/returns/', name: 'Return Invoice', exact: true, component: ReturnInvoice },
+  { path: '/returns/pending', name: 'Pending Invoice', exact: true, component: PendingInvoice },
   { path: '/returns/list/', name: 'Return Invoice', exact: true, component: ReturnList },
   { path: '/returns/damaged/', name: 'Return Invoice', exact: true, component: ReturnDamaged },
 

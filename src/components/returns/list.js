@@ -31,7 +31,7 @@ const RetList = ({ type }) => {
                     ...state,
                     inv: action.payload.inv,
                     to_details: toaddress,
-                    toName: action.payload.data[0].to_name,
+                    toName: action.payload.data[0].to_name ? action.payload.data[0].to_name : '',
                     city: action.payload.data[0].to_city,
                     address: action.payload.data[0].to_address,
                     gst: action.payload.data[0].gst,
@@ -70,7 +70,7 @@ const RetList = ({ type }) => {
 
     const getList = async () => {
         let listOfInvoices = await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/list`, {
-            type: type ? type : 'returned'
+            type: type ? type : ''
         })
         setState((p) => ({
             ...p,
@@ -79,11 +79,7 @@ const RetList = ({ type }) => {
     }
 
     const getDetail = (invoice) => {
-        // axios
-        //     .get(`${process.env.REACT_APP_API_URL}/invoice/${invoice}/payments`)
-        //     .then(async (response) => {
-        //         // setPayments(response.data)
-        //     })
+
         axios
             .get(`${process.env.REACT_APP_API_URL}/invoice/return/${invoice}/${type}`)
             .then(async (response) => {

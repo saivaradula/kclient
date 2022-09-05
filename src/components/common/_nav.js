@@ -68,6 +68,12 @@ const _nav = [
   },
   {
     component: CNavItem,
+    name: 'Pending List',
+    to: '/returns/pending',
+    icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
     name: 'Received List',
     to: '/returns/list',
     icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
