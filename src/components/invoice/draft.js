@@ -344,7 +344,6 @@ const DraftList = () => {
           <></>
         )}
       </div>
-
     </>
   )
 }

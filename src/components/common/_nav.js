@@ -34,6 +34,12 @@ const _nav = [
   },
   {
     component: CNavItem,
+    name: 'Blocked List',
+    to: '/invoice/blocked',
+    icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
     name: 'Quotation List',
     to: '/invoice/quotation',
     icon: <CIcon icon={cibProbot} customClassName="nav-icon" />,

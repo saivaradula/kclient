@@ -23,11 +23,14 @@ const PendingInvoice = React.lazy(() => import('./components/returns/pendingInvo
 const ReturnList = React.lazy(() => import('./components/returns/recievelist'))
 const ReturnDamaged = React.lazy(() => import('./components/returns/damagelist'))
 
+const BlockedInvoice = React.lazy(() => import('./components/invoice/blocked'))
+
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
 
   // invoices
+  { path: '/invoice/blocked', name: 'Blocked Invoice', component: BlockedInvoice },
   { path: '/invoice/draft', name: 'Rent Product', component: DraftInvoice },
   { path: '/invoice/updatedraft', name: 'Rent Product', component: UpdateDraftInvoice },
   { path: '/invoice/quotation', name: 'Rent Product', component: DraftList },

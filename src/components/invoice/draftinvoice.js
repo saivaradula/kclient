@@ -79,6 +79,7 @@ const DraftInvoice = (props) => {
     isWhatName: '',
     isWhat: '',
     vendoraddress: '',
+    isBlocked: 0,
     formValues: [{
       code: '',
       name: '',
@@ -565,6 +566,14 @@ const DraftInvoice = (props) => {
     }))
   }
 
+  const isBlocked = (value) => {
+    let v = value ? 1 : 0
+    setState(prevState => ({
+      ...prevState,
+      isBlocked: v,
+    }));
+  }
+
   const renderResults = () => {
     return (
       <>
@@ -599,6 +608,18 @@ const DraftInvoice = (props) => {
                         selected={state.endDate}
                         onChange={(date: Date) => changeEndDateAndCountDays(date)}
                       />
+                    </div>
+                  </div>
+                  <div className="row col-sm-3">
+                    <div className="col-sm-4 align-text-bottom">
+                      <strong className="align-middle">
+                        <input type="checkbox" name="isBlocked"
+                          onChange={(event) => isBlocked(event.target.checked)} />
+                        Block Items
+                      </strong>
+                    </div>
+                    <div className="col-sm-6">
+
                     </div>
                   </div>
                 </CRow>
@@ -1055,7 +1076,8 @@ const DraftInvoice = (props) => {
       payableamount: state.payableamount,
       totalCost: state.totalCost,
       isWhatName: state.isWhatName,
-      isWhat: state.isWhat
+      isWhat: state.isWhat,
+      isBlocked: state.isBlocked,
     }
 
     axios.post(`${process.env.REACT_APP_API_URL}/invoice/new`, p).then((response) => {
@@ -1070,6 +1092,7 @@ const DraftInvoice = (props) => {
             days: product.days,
             quantity: product.quantity,
             cost: product.tcost,
+            isBlocked: state.isBlocked,
             startDate: s.getFullYear() + '-' + (s.getMonth() + 1) + '-' + s.getDate(),
             endDate: t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate(),
           }
