@@ -82,7 +82,9 @@ const FinalPrint = (props) => {
 
     useEffect(async () => {
         await getDetails(id)
-        await window.print()
+        setTimeout(() => {
+            window.print()
+        }, 3000);
     }, [id])
 
     const replaceCommaLine = (data) => {
