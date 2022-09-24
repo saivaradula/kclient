@@ -103,7 +103,7 @@ const EditProduct = (props) => {
 
         axios.post(`${process.env.REACT_APP_API_URL}/products/update`, state).then((response) => {
             if (response.status === 200) {
-                history.push('/products')
+                history.push(`/products/list/${props.match.params.p}`)
             }
         })
     }

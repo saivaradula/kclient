@@ -103,7 +103,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Products List',
-    to: '/products/list',
+    to: '/products/list/1',
     icon: <CIcon icon={cibProbot} customClassName="nav-icon" />,
   },
   {

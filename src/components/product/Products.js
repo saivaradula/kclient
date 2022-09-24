@@ -25,6 +25,7 @@ import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
 import axios from 'axios'
 require('dotenv').config()
 import DisplayHtml from './Displayhtml'
+import SearchOperation from './../common/SearchOperation'
 
 const parser = new DOMParser();
 
@@ -34,23 +35,33 @@ const Products = (props) => {
   let [products, setProducts] = useState([])
   const [resultLoaded, setResultLoaded] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(1)
+
+  const [page, setPage] = useState(() =>
+    props.match.params.p ? props.match.params.p : 1
+  )
   const [totalProd, setTotalProd] = useState(0)
   const [pages, setPages] = useState(1)
-  const [inputPage, setInputPage] = useState(1)
+  const [inputPage, setInputPage] = useState(() =>
+    props.match.params.p ? props.match.params.p : 1
+  )
   let [selectedProductLength, updateSelectedProductLength] = useState(0)
   let [arrChecked, setArrChecked] = useState([])
   let [printingOptions, setPrintingOptions] = useState([])
   const [showPreview, setShowPreview] = useState(() => '')
+  let [searchTerm, setSearchTerm] = useState(() => '')
 
   let i = 0
 
   const fetchData = (p) => {
+    let searchString = searchTerm;
+    console.log(p, searchString.length)
+    // p = searchString == '' ? p : 1
+    console.log(p)
     setPage(p)
-    axios.get(`${process.env.REACT_APP_API_URL}/products/${p}`).then((data) => {
+    setInputPage(p)
+    axios.get(`${process.env.REACT_APP_API_URL}/products/${p}/${searchString}`).then((data) => {
       let numOfProducts = data.data.products.total
       let p = data.data.products.data;
-      console.log(p)
       setTotalProd(numOfProducts)
       setProducts(p)
       setResultLoaded(true)
@@ -60,6 +71,11 @@ const Products = (props) => {
 
   const changePage = (e) => {
     setInputPage(e.target.value)
+    if (e.target.value !== '') {
+      setTimeout(() => {
+        gotoPage(e.target.value)
+      }, 500);
+    }
   }
 
   const setPrinting = (event) => {
@@ -72,7 +88,6 @@ const Products = (props) => {
     p = p <= 1 ? 1 : p
     p = p > pages ? pages : p
     setProducts([])
-    // resetActions()
     setInputPage(p)
     fetchData(p)
   }
@@ -83,6 +98,10 @@ const Products = (props) => {
       fetchData(page)
     }
   })
+
+  useEffect(() => {
+    fetchData(page)
+  }, [searchTerm])
 
   const gotoPrintPage = () => {
     let newArr = { ...arrChecked }
@@ -208,8 +227,8 @@ const Products = (props) => {
     )
   }
 
-  const updateProduct = id => {
-    history.push(`/products/${id}/edit/`)
+  const updateProduct = (id, p) => {
+    history.push(`/products/${id}/edit/${p}`)
   }
 
   const stopPreviewImage = () => {
@@ -284,7 +303,7 @@ const Products = (props) => {
                       </Tooltip>
                     }
                   >
-                    <Link to="#" path="#" onClick={() => updateProduct(p.code)}>
+                    <Link to="#" path="#" onClick={() => updateProduct(p.code, page)}>
                       <CIcon icon={cilPen} className="cricon" />
                     </Link>
                   </OverlayTrigger>
@@ -335,28 +354,38 @@ const Products = (props) => {
   const nextPrevBtns = () => {
     return (
       <div>
-        {page < pages ? (
-          <a href="javascript:void(0)" onClick={() => gotoPage(page + 1)}>
-            Next
-          </a>
-        ) : (
-          <div></div>
-        )}
-        &nbsp; &nbsp;
         {page > 1 ? (
-          <a href="javascript:void(0)" onClick={() => gotoPage(page - 1)}>
+          <a href="javascript:void(0)" onClick={() => gotoPage(Number(page) - 1)}>
             Previous
           </a>
         ) : (
-          <div></div>
+          <></>
+        )}
+        &nbsp; &nbsp;
+        {page < pages ? (
+          <a href="javascript:void(0)" onClick={() => gotoPage(Number(page) + 1)}>
+            Next
+          </a>
+        ) : (
+          <></>
         )}
       </div>
     )
   }
 
+  const addFilters = (filters) => {
+    console.log(filters)
+    setSearchTerm(filters)
+    setPage(1)
+    setInputPage(1)
+  }
+
   return (
     <>
       <CRow>
+        <CCol xs={12}>
+          <SearchOperation searchName={"Name / NickName / Code / Category / SubCateory"} name="Products" actBy={addFilters} />
+        </CCol>
         <CCol xs={12}>
           {selectedProductLength ? operationsTab() : <></>}
 

@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import axios from 'axios'
 require('dotenv').config()
-
-import {
-  Button,
-  Navbar,
-  Nav,
-  NavItem,
-  NavDropdown,
-  MenuItem,
-  Container,
-  MenuDropdown,
-} from 'react-bootstrap'
 
 import {
   CButton,
@@ -28,6 +17,11 @@ import {
   CRow,
   CImage,
 } from '@coreui/react'
+
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
+import CIcon from '@coreui/icons-react'
+import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
 
 const ListCategories = (props) => {
   const [validated, setValidated] = useState(false)
@@ -45,7 +39,16 @@ const ListCategories = (props) => {
     setName(e.target.value)
   }
 
-  const handleSubmit = (event) => {
+  const deleteItem = (id) => {
+    if (window.confirm(`Deleting item with id ${id}`)) {
+      let payLoad = { id: id }
+      axios.post(`${process.env.REACT_APP_API_URL}/category/delete`, payLoad).then((response) => {
+        fetchData(1)
+      })
+    }
+  }
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const form = event.currentTarget
     if (form.checkValidity() === false) {
@@ -54,14 +57,23 @@ const ListCategories = (props) => {
     }
     setValidated(true)
     if (name !== '') {
+
+      // check before adding. 
+
       let payLoad = {
         name: name,
       }
-      axios.post(`${process.env.REACT_APP_API_URL}/category/add`, payLoad).then((response) => {
-        fetchData(1)
-        setName('')
-        setValidated(false)
-      })
+
+      let res = await axios.post(`${process.env.REACT_APP_API_URL}/category/check`, payLoad)
+      if (res.data.length === 0) {
+        await axios.post(`${process.env.REACT_APP_API_URL}/category/add`, payLoad).then((response) => {
+          fetchData(1)
+          setName('')
+          setValidated(false)
+        })
+      } else {
+        alert(`${name}, already exists and cannot be added`)
+      }
     }
   }
 
@@ -109,25 +121,30 @@ const ListCategories = (props) => {
 
   const changePage = (e) => {
     setInputPage(e.target.value)
+    if (e.target.value !== '') {
+      setTimeout(() => {
+        gotoPage(e.target.value)
+      }, 500);
+    }
   }
 
   const nextPrevBtns = () => {
     return (
       <div>
-        {page < pages ? (
-          <a href="javascript:void(0)" onClick={() => gotoPage(page + 1)}>
-            Next
-          </a>
-        ) : (
-          <div></div>
-        )}
-        &nbsp; &nbsp;
         {page > 1 ? (
           <a href="javascript:void(0)" onClick={() => gotoPage(page - 1)}>
             Previous
           </a>
         ) : (
-          <div></div>
+          <></>
+        )}
+        &nbsp; &nbsp;
+        {page < pages ? (
+          <a href="javascript:void(0)" onClick={() => gotoPage(page + 1)}>
+            Next
+          </a>
+        ) : (
+          <></>
         )}
       </div>
     )
@@ -153,7 +170,19 @@ const ListCategories = (props) => {
                 <td>{new Date(p.createdAt).toLocaleDateString()}</td>
 
                 <td>
-                  <Navbar>
+                  <OverlayTrigger
+                    placement="top"
+                    overlay={
+                      <Tooltip id="button-tooltip-2">
+                        Delete <b>{p.name}</b>
+                      </Tooltip>
+                    }
+                  >
+                    <Link to="#" path="#" onClick={() => deleteItem(p.id)}>
+                      <CIcon icon={cilDelete} className="cricon" />
+                    </Link>
+                  </OverlayTrigger>
+                  {/* <Navbar>
                     <Navbar.Collapse id="navbar-dark-example">
                       <Nav>
                         <NavDropdown
@@ -167,7 +196,7 @@ const ListCategories = (props) => {
                         </NavDropdown>
                       </Nav>
                     </Navbar.Collapse>
-                  </Navbar>
+                  </Navbar> */}
                 </td>
               </tr>
             ))}

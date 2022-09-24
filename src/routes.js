@@ -46,9 +46,9 @@ const routes = [
   { path: '/returns/damaged/', name: 'Return Invoice', exact: true, component: ReturnDamaged },
 
   // products
-  { path: '/products', exact: true, name: 'Products', component: Products },
-  { path: '/products/:id/edit', exact: true, name: 'Edit Product', component: EditProduct },
-  { path: '/products/list', exact: true, name: 'List', component: Products },
+  // { path: '/products/:p', exact: true, name: 'Products', component: Products },
+  { path: '/products/:id/edit/:p', exact: true, name: 'Edit Product', component: EditProduct },
+  { path: '/products/list/:p', exact: true, name: 'List', component: Products },
   { path: '/products/add', exact: true, name: 'Add', component: AddProduct },
   { path: '/products/print', exact: true, name: 'Print', component: ProductsPrint },
   { path: '/products/:id', exact: true, name: 'Print', component: PrintPR },
