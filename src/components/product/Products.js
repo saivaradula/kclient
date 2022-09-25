@@ -59,7 +59,7 @@ const Products = (props) => {
     console.log(p)
     setPage(p)
     setInputPage(p)
-    axios.get(`${process.env.REACT_APP_API_URL}/products/${p}/${searchString}`).then((data) => {
+    axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${searchString}`).then((data) => {
       let numOfProducts = data.data.products.total
       let p = data.data.products.data;
       setTotalProd(numOfProducts)
