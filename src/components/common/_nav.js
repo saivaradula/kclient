@@ -107,6 +107,12 @@ const _nav = [
     icon: <CIcon icon={cibProbot} customClassName="nav-icon" />,
   },
   {
+    component: CNavItem,
+    name: 'Item Finder',
+    to: '/products/find',
+    icon: <CIcon icon={cibProbot} customClassName="nav-icon" />,
+  },
+  {
     component: CNavTitle,
     name: 'Category',
   },

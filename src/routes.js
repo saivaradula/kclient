@@ -8,6 +8,7 @@ const AddProduct = React.lazy(() => import('./components/product/addProduct'))
 const EditProduct = React.lazy(() => import('./components/product/editProduct'))
 const PrintPR = React.lazy(() => import('./components/product/printPR'))
 const ProductsPrint = React.lazy(() => import('./components/product/print'))
+const ItemFinder = React.lazy(() => import('./components/product/finder'))
 const addCategory = React.lazy(() => import('./components/category/addCategory'))
 const Categories = React.lazy(() => import('./components/category/list'))
 const DraftInvoice = React.lazy(() => import('./components/invoice/draftinvoice'))
@@ -51,7 +52,9 @@ const routes = [
   { path: '/products/list/:p', exact: true, name: 'List', component: Products },
   { path: '/products/add', exact: true, name: 'Add', component: AddProduct },
   { path: '/products/print', exact: true, name: 'Print', component: ProductsPrint },
+  { path: '/products/find', exact: true, name: 'Find', component: ItemFinder },
   { path: '/products/:id', exact: true, name: 'Print', component: PrintPR },
+
 
   { path: '/category/list', exact: true, name: 'Category', component: Categories },
   { path: '/category/add', exact: true, name: 'Add Category', component: addCategory },
