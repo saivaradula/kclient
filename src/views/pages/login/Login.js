@@ -1,5 +1,8 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import actions from '../../../constants/actionTypes'
 import {
   CButton,
   CCard,
@@ -15,13 +18,44 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import axios from 'axios'
+require('dotenv').config()
 
-const Login = () => {
+const Login = ({ setToken }) => {
+
+  // let navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoggedIn } = useSelector(state => state.auth);
+
+  const [username, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+
+  const login = async (u, p) => {
+    let payLoad = {
+      u: u,
+      p: p
+    }
+
+    let response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, payLoad)
+    let user = response.data.results[0];
+    localStorage.setItem("user", JSON.stringify(user))
+    dispatch({
+      type: actions.LOGIN_SUCCESS,
+      payload: { user: user }
+    });
+  }
+
+  const handleSubmit = () => dispatch(() => login(username, password))
+
+  if (isLoggedIn) {
+    < Redirect to="/" />
+  }
+
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={5}>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
@@ -32,7 +66,10 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        onChange={e => setUserName(e.target.value)} />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,11 +79,14 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        onChange={e => setPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-4"
+                          onClick={handleSubmit}
+                        >
                           Login
                         </CButton>
                       </CCol>
@@ -59,7 +99,7 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              {/* <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
@@ -74,13 +114,17 @@ const Login = () => {
                     </Link>
                   </div>
                 </CCardBody>
-              </CCard>
+              </CCard> */}
             </CCardGroup>
           </CCol>
         </CRow>
       </CContainer>
     </div>
   )
+}
+
+Login.propTypes = {
+  setToken: PropTypes.func.isRequired
 }
 
 export default Login
