@@ -20,6 +20,8 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import axios from 'axios'
 require('dotenv').config()
+import Swal from 'sweetalert2'
+import 'sweetalert2/src/sweetalert2.scss'
 
 const Login = ({ setToken }) => {
 
@@ -37,12 +39,26 @@ const Login = ({ setToken }) => {
     }
 
     let response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, payLoad)
-    let user = response.data.results[0];
-    localStorage.setItem("user", JSON.stringify(user))
-    dispatch({
-      type: actions.LOGIN_SUCCESS,
-      payload: { user: user }
-    });
+    console.log(response)
+    if (response.data.results.length) {
+      let user = response.data.results[0];
+      localStorage.setItem("user", JSON.stringify(user))
+      dispatch({
+        type: actions.LOGIN_SUCCESS,
+        payload: { user: user }
+      });
+    } else {
+
+      dispatch({
+        type: actions.LOGIN_FAILED,
+      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Invalid Username or Password!',
+        footer: 'Try with different credientials'
+      })
+    }
   }
 
   const handleSubmit = () => dispatch(() => login(username, password))

@@ -8,8 +8,6 @@ const initialState = user
 export default function (state = initialState, action) {
     const { type, payload } = action;
 
-    console.log(type)
-
     switch (type) {
         case actions.LOGIN_SUCCESS:
             return {
@@ -19,6 +17,7 @@ export default function (state = initialState, action) {
             };
 
         case actions.LOGOUT:
+        case actions.LOGIN_FAILED:
             localStorage.removeItem("user")
             return {
                 ...state,
