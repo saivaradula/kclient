@@ -22,7 +22,7 @@ const PAY_TYPE = [
 
 const PAY_METHOD = ['Google Pay', 'Paytm', 'PhonePe', 'Internet Banking', 'Cheque', 'Cash']
 
-const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb }) => {
+const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb, isfinder = false }) => {
 
   const [modalInvoice, setModalInvoice] = useState(() => invoice)
   modalInvoice.inv = invoice.inv
@@ -133,7 +133,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
             <th width="2%">Days</th>
             <th width="10%" className="money">Hire Cost</th>
             {
-              (!isPaid) ? <th width="5%">Actions</th> : <></>
+              (!isfinder && !isPaid) ? <th width="5%">Actions</th> : <></>
             }
           </tr>
         </thead>
@@ -152,7 +152,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
               <td className="money">{p.cost.toFixed(2)}</td>
 
               {
-                (!isPaid) ?
+                (!isfinder && !isPaid) ?
                   <td><button
                     className="btn btn-secondary"
                     onClick={() => removeItemFromInvoice(modalInvoice.inv, p.product_code, p.cost.toFixed(2))}
@@ -276,7 +276,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                         <td className="money">{pm}</td>
                         {/* <td>&nbsp;</td> */}
                       </tr>
-                      {isInvoice ? (
+                      {isfinder && isInvoice ? (
                         <>
                           <tr>
                             <td className="money" colSpan={4}>
@@ -303,7 +303,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                   </table>
                 </div>
 
-                {isInvoice ? (
+                {!isfinder && isInvoice ? (
                   <div className="row mt-5">
                     <table className="table table-striped">
                       <thead>
@@ -346,7 +346,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
             </div>
           </Modal.Body>
           <Modal.Footer>
-            {isInvoice && !isPaid ? (
+            {!isfinder && isInvoice && !isPaid ? (
               <>
                 {modalInvoice.data !== undefined && modalInvoice.data.length > 0 ? (
                   <>
@@ -390,7 +390,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
               <></>
             )}
 
-            {!isInvoice && !isPaid ? (
+            {!isfinder && !isInvoice && !isPaid ? (
               <>
                 <button className="btn btn-primary" onClick={() => addMorePayments()}>
                   Mark As Invoice
