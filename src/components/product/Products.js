@@ -4,6 +4,7 @@ import {
   Nav,
   NavDropdown,
 } from 'react-bootstrap';
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 import { useHistory, Link } from 'react-router-dom'
 import ImageComponent from './ImageComponent'
@@ -29,6 +30,22 @@ import SearchOperation from './../common/SearchOperation'
 
 const parser = new DOMParser();
 
+ReactHTMLTableToExcel.format = (s, c) => {
+  if (c && c['table']) {
+    const html = c.table;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const rows = doc.querySelectorAll('tr.selected');
+
+    for (const row of rows) row.removeChild(row.firstChild);
+    for (const row of rows) row.removeChild(row.firstChild);
+
+    c.table = doc.querySelector('table').outerHTML;
+  }
+
+  return s.replace(/{(\w+)}/g, (m, p) => c[p]);
+};
+
 const Products = (props) => {
   const history = useHistory()
   // const arrChecked = []
@@ -49,6 +66,7 @@ const Products = (props) => {
   let [printingOptions, setPrintingOptions] = useState([])
   const [showPreview, setShowPreview] = useState(() => '')
   let [searchTerm, setSearchTerm] = useState(() => '')
+  const [checkbox, setCheckbox] = useState(() => [])
 
   let i = 0
 
@@ -65,7 +83,7 @@ const Products = (props) => {
       setTotalProd(numOfProducts)
       setProducts(p)
       setResultLoaded(true)
-      setPages(Math.ceil(numOfProducts / 10))
+      setPages(Math.ceil(numOfProducts / 25))
     })
   }
 
@@ -108,6 +126,10 @@ const Products = (props) => {
     localStorage.setItem('print', '')
     localStorage.setItem('print', JSON.stringify(newArr))
     history.push('/products/print')
+  }
+
+  const ExportToExcel = () => {
+
   }
 
   const resetActions = () => {
@@ -212,6 +234,19 @@ const Products = (props) => {
                   Print Codes
                 </CButton>
               </div>
+              <div className="col-sm-2">
+                {/* <CButton color="primary" type="button" onClick={ExportToExcel}>
+                  Export to Excel
+                </CButton> */}
+                <ReactHTMLTableToExcel
+                  id="test-table-xls-button"
+                  className="btn btn-primary"
+                  table="table-to-xls"
+                  filename="products"
+                  sheet="tablexls"
+                  buttonText="Export to Excel"
+                />
+              </div>
             </CRow>
             <hr />
             <CRow>
@@ -236,109 +271,111 @@ const Products = (props) => {
   }
 
   const previewImage = (image, name) => {
-
     setShowPreview(() => name + '&&&' + image)
-    // console.log(showPreview)
-
   }
 
   const displayProducts = () => {
     return (
       <>
-        <table className="table prlist">
-          <thead>
-            <tr>
-              <th>&nbsp;</th>
-              <th width="1%">Image</th>
-              <th width="5%">Code</th>
-              <th width="25%">Name</th>
-              <th width="10%">NickName</th>
-              <th>Size</th>
-              <th>Brand</th>
-              <th>Category</th>
-              <th>Sub-Category</th>
-              <th>Type</th>
-              <th>Unit</th>
-              {/* <th>Cost</th> */}
-              <th>Price</th>
-              <th>Qty</th>
-              <th>Alert</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr key={p.code}>
-                <td>
-                  <input
-                    type="checkbox"
-                    className="products"
-                    value={p.code}
-                    onChange={enableOperations(p.nickname, p.price)}
-                  />
-                </td>
-                <td>
-                  <img onClick={() => previewImage(p.image, p.name)} src={p.image} width="35" height="35" />
-                </td>
-                <td>{p.code}</td>
-                <td>{p.name}</td>
-                <td>{p.nickname}</td>
-                {/* <td>{p.brand}</td> */}
-                <td><DisplayHtml text={p.brand} /></td>
-                <td>{p.model}</td>
-                <td>{p.category}</td>
-                <td>{p.subcategory}</td>
-                <td>{p.prtype.charAt(0).toUpperCase() + p.prtype.slice(1)}</td>
-                <td>{p.unit}</td>
-                {/* <td>{p.cost}</td> */}
-                <td>{p.price}</td>
-                <td>{p.quantity}</td>
-                <td>{p.alert}</td>
-                <td>
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="button-tooltip-2">
-                        Update Product
-                      </Tooltip>
-                    }
-                  >
-                    <Link to="#" path="#" onClick={() => updateProduct(p.code, page)}>
-                      <CIcon icon={cilPen} className="cricon" />
-                    </Link>
-                  </OverlayTrigger>
-                  &nbsp;&nbsp;| &nbsp;&nbsp;
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="button-tooltip-2">
-                        Print QR Codes
-                      </Tooltip>
-                    }
-                  >
-                    <Link to="#" path="#" onClick={() => gotoPrint(p.code, p.nickname, p.price)}>
-                      <CIcon icon={cilFingerprint} className="cricon" />
-                    </Link>
-                  </OverlayTrigger>
-                  &nbsp;&nbsp;| &nbsp;&nbsp;
-                  <OverlayTrigger
-                    placement="top"
-                    overlay={
-                      <Tooltip id="button-tooltip-2">
-                        Delete <b>{p.name}</b>
-                      </Tooltip>
-                    }
-                  >
-                    <Link to="#" path="#" onClick={() => deleteProd(p.code, p.name)}>
-                      <CIcon icon={cilDelete} className="cricon" />
-                    </Link>
-                  </OverlayTrigger>
-                </td>
+        <div>
 
+          <table className="table prlist" id="table-to-xls">
+            <thead>
+              <tr>
+                <th>&nbsp;</th>
+                <th width="1%">Image</th>
+                <th width="5%">Code</th>
+                <th width="25%">Name</th>
+                <th width="10%">NickName</th>
+                <th>Size</th>
+                <th>Brand</th>
+                <th>Category</th>
+                <th>Sub-Category</th>
+                <th>Type</th>
+                <th>Unit</th>
+                {/* <th>Cost</th> */}
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Alert</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {products.map((p) => (
+                // <tr key={p.code} className={"" + (checked ? "selectedTr" : "")}>
+                <tr key={p.code}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      className="products"
+                      value={p.code}
+                      onChange={enableOperations(p.nickname, p.price)}
+                    />
+                  </td>
+                  <td>
+                    <img onClick={() => previewImage(p.image, p.name)} src={p.image} width="35" height="35" />
+                  </td>
+                  <td>{p.code}</td>
+                  <td>{p.name}</td>
+                  <td>{p.nickname}</td>
+                  {/* <td>{p.brand}</td> */}
+                  <td><DisplayHtml text={p.brand} /></td>
+                  <td>{p.model}</td>
+                  <td>{p.category}</td>
+                  <td>{p.subcategory}</td>
+                  <td>{p.prtype.charAt(0).toUpperCase() + p.prtype.slice(1)}</td>
+                  <td>{p.unit}</td>
+                  {/* <td>{p.cost}</td> */}
+                  <td>{p.price}</td>
+                  <td>{p.quantity}</td>
+                  <td>{p.alert}</td>
+                  <td>
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={
+                        <Tooltip id="button-tooltip-2">
+                          Update Product
+                        </Tooltip>
+                      }
+                    >
+                      <Link to="#" path="#" onClick={() => updateProduct(p.code, page)}>
+                        <CIcon icon={cilPen} className="cricon" />
+                      </Link>
+                    </OverlayTrigger>
+                    &nbsp;&nbsp;| &nbsp;&nbsp;
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={
+                        <Tooltip id="button-tooltip-2">
+                          Print QR Codes
+                        </Tooltip>
+                      }
+                    >
+                      <Link to="#" path="#" onClick={() => gotoPrint(p.code, p.nickname, p.price)}>
+                        <CIcon icon={cilFingerprint} className="cricon" />
+                      </Link>
+                    </OverlayTrigger>
+                    &nbsp;&nbsp;| &nbsp;&nbsp;
+                    <OverlayTrigger
+                      placement="top"
+                      overlay={
+                        <Tooltip id="button-tooltip-2">
+                          Delete <b>{p.name}</b>
+                        </Tooltip>
+                      }
+                    >
+                      <Link to="#" path="#" onClick={() => deleteProd(p.code, p.name)}>
+                        <CIcon icon={cilDelete} className="cricon" />
+                      </Link>
+                    </OverlayTrigger>
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
       </>
     )
   }
@@ -400,7 +437,7 @@ const Products = (props) => {
                   <tr>
                     <td>
                       Showing &nbsp;
-                      {(page - 1) * 10 + 1} to {totalProd < page * 10 ? totalProd : page * 10}
+                      {(page - 1) * 25 + 1} to {totalProd < page * 25 ? totalProd : page * 25}
                       &nbsp; of {totalProd} Products
                     </td>
                     <td style={{ textAlign: 'center' }}>

@@ -168,19 +168,35 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
     )
   }
 
+  const printThisInvoice = (invoice) => {
+    // console.log(invoice)
+    const win = window.open(`#/invoice/internalprint/${invoice}`, "_blank");
+    win.focus();
+  }
+
   const returnFun = () => {
     return (
       <>
         <Modal show={show} onHide={handleClose} size="xl">
-          <Modal.Header className="logo-color logo" closeButton>
-            <div className="logo-color">
-              <img src={logo} style={logoSize} />
+          <Modal.Header className="logo-color logo">
+            <div className="row">
+              <div className="col-10 logo-color">
+                <img src={logo} style={logoSize} />
+              </div>
+              <div className="col-2 printRight">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => printThisInvoice(invoice.inv)}
+                >
+                  Print
+                </button>
+              </div>
             </div>
+
           </Modal.Header>
           <Modal.Body>
             <div className="container-fluid">
-              <hr />
-              <div className="row mt-4">
+              <div className="lh-3 row mt-1">
                 <div className="col-sm-4">
                   <strong>Invoice Number:</strong>&nbsp;&nbsp;
                   {invoice.inv}
@@ -195,7 +211,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                 </div>
               </div>
               <div>
-                <div className="row mt-4">
+                <div className="lh-3 row mt-4">
                   <div className="col-sm-6">
                     <strong>M/s</strong>&nbsp;&nbsp;
                     <span className="border-bottom">{invoiceData.to_name ? invoiceData.to_name : ''}</span>
@@ -207,7 +223,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                   </div>
                 </div>
 
-                <div className="row mt-4">
+                <div className="lh-3 row mt-4">
                   <div className="col-sm-4">
                     <strong>Art Director</strong>&nbsp;&nbsp;
                     <span className="border-bottom">{invoiceData.art_director_name}</span>
@@ -221,7 +237,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                     <span className="border-bottom">{invoiceData.content_type}</span>
                   </div>
                 </div>
-                <div className="row mt-4">
+                <div className="lh-3 row mt-4">
                   <div className="col-sm-6">
                     <strong>Contact Name / Phone</strong>&nbsp;&nbsp;
                     <span className="border-bottom">

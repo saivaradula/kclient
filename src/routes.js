@@ -31,7 +31,7 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
 
   // invoices
-  { path: '/invoice/blocked', name: 'Blocked Invoice', component: BlockedInvoice },
+  { path: '/invoice/booked', name: 'Booked Invoice', component: BlockedInvoice },
   { path: '/invoice/draft', name: 'Rent Product', component: DraftInvoice },
   { path: '/invoice/updatedraft', name: 'Rent Product', component: UpdateDraftInvoice },
   { path: '/invoice/quotation', name: 'Rent Product', component: DraftList },

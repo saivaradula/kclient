@@ -35,7 +35,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Booked List',
-    to: '/invoice/blocked',
+    to: '/invoice/booked',
     icon: <CIcon icon={cibBitcoin} customClassName="nav-icon" />,
   },
   {

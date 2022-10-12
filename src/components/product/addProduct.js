@@ -59,9 +59,14 @@ const AddProducts = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     const form = event.currentTarget
+    console.clear();
+    console.log("Form validity : ", form.checkValidity())
     if (form.checkValidity() === false) {
+      console.log("should be here...")
+      console.log(event)
       event.preventDefault()
       event.stopPropagation()
+      setValidated(false)
     }
     setValidated(true)
     let payLoad = {
@@ -81,11 +86,14 @@ const AddProducts = (props) => {
       unit: unit,
       godawan: godawn,
     }
+    console.log("subbmitting.. why?")
     axios.post(`${process.env.REACT_APP_API_URL}/products/add`, payLoad).then((response) => {
       if (response.status === 200) {
-        history.push('/products')
+        history.push('/products/list/1')
       }
     })
+
+
   }
 
   const arrayBufferToBase64 = (buffer) => {
@@ -168,7 +176,7 @@ const AddProducts = (props) => {
       className="row g-3 needs-validation"
       noValidate
       validated={validated}
-      onSubmit={handleSubmit}
+      onSubmit={(e) => handleSubmit(e)}
     >
       <CRow>
         <CCol xs={12}>
