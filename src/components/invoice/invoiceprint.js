@@ -107,41 +107,35 @@ const InvoicePrint = (props) => {
                             </div>
                             <div className="col-6 logo-color"></div>
                         </div>
-                        <div className="">
-                            <table className="table table-striped">
+                        <div className="row">
+                            <table className="table printtable">
                                 <tr>
-                                    <th>Invoice Number:</th>
-                                    <td>{invoiceDetails.data[0].invoice_id}</td>
-                                    <th>From:</th>
-                                    <td>{moment.utc(invoiceDetails.data[0].pStartDate).format('dddd - MMM Do, YYYY')}</td>
-                                    <th>To:</th>
-                                    <td>{moment.utc(invoiceDetails.data[0].pEndDate).format('dddd - MMM Do, YYYY')}</td>
+                                    <th width="20%">Invoice Number:</th>
+                                    <td width="15%">{invoiceDetails.data[0].invoice_id}</td>
+                                    <th width="10%">From:</th>
+                                    <td width="20%">{moment.utc(invoiceDetails.data[0].pStartDate).format('dddd - MMM Do, YYYY')}</td>
+                                    <th width="10%">To:</th>
+                                    <td width="20%">{moment.utc(invoiceDetails.data[0].pEndDate).format('dddd - MMM Do, YYYY')}</td>
                                 </tr>
-                            </table>
-                            <table className="table table-striped">
                                 <tr>
                                     <th>M/S:</th>
                                     <td>{invoiceDetails.data[0].to_name ? invoiceDetails.data[0].to_name : ''}</td>
                                     <th>Location:</th>
                                     <td>{invoiceDetails.data[0].to_address}</td>
-                                </tr>
-                            </table>
-                            <table className="table table-striped">
-                                <tr>
-                                    <th>Art Director:</th>
-                                    <td>{invoiceDetails.data[0].art_director_name}</td>
-                                    <th>Hero/Director:</th>
-                                    <td>{invoiceDetails.data[0].name}({invoiceDetails.data[0].herodirector})</td>
-                                    <th>Content Type:</th>
+                                    <th>Content:</th>
                                     <td>{invoiceDetails.data[0].content_type}</td>
                                 </tr>
-                            </table>
-                            <table className="table table-striped">
+                                <tr>
+                                    <th>Art Director:</th>
+                                    <td colspan="2">{invoiceDetails.data[0].art_director_name}</td>
+                                    <th>Hero/Director:</th>
+                                    <td colspan="2">{invoiceDetails.data[0].name}({invoiceDetails.data[0].herodirector})</td>
+                                </tr>
                                 <tr>
                                     <th>Contact Name / Phone:</th>
-                                    <td>{invoiceDetails.data[0].contactName} / {invoiceDetails.data[0].contactPhone}</td>
+                                    <td colspan="2">{invoiceDetails.data[0].contactName} / {invoiceDetails.data[0].contactPhone}</td>
                                     <th>Received By / Phone:</th>
-                                    <td>{invoiceDetails.data[0].prop_receiver_name}({invoiceDetails.data[0].prop_receiver}) / {invoiceDetails.data[0].art_phone}</td>
+                                    <td colspan="2">{invoiceDetails.data[0].prop_receiver_name}({invoiceDetails.data[0].prop_receiver}) / {invoiceDetails.data[0].art_phone}</td>
                                 </tr>
                             </table>
                         </div>

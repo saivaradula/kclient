@@ -145,4 +145,13 @@ hr {
     background-color: #193a59 !important;
   }
 
+  .printtable {
+    font-size: 16px;
+  }
+
+}
+
+.printtable td, .printtable th {
+  border: 1px solid #ccc;
+  padding: 5px;
 }
