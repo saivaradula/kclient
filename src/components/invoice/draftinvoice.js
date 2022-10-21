@@ -615,7 +615,7 @@ const DraftInvoice = (props) => {
                       <strong className="align-middle">
                         <input type="checkbox" name="isBlocked"
                           onChange={(event) => isBlocked(event.target.checked)} />
-                        Block Items
+                        Booked Items
                       </strong>
                     </div>
                     <div className="col-sm-6">
