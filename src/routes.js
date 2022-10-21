@@ -55,7 +55,6 @@ const routes = [
   { path: '/products/find', exact: true, name: 'Find', component: ItemFinder },
   { path: '/products/:id', exact: true, name: 'Print', component: PrintPR },
 
-
   { path: '/category/list', exact: true, name: 'Category', component: Categories },
   { path: '/category/add', exact: true, name: 'Add Category', component: addCategory },
 ]

@@ -33,7 +33,7 @@ const AddProducts = (props) => {
   const [cost, setCost] = useState(0)
   const [price, setPrice] = useState('')
   const [quantity, setQuantity] = useState('')
-  const [alertNum, setAlertNum] = useState('')
+  const [alertNum, setAlertNum] = useState(1)
   const [model, setModel] = useState('')
   const [prType, setPrType] = useState('')
   const [unit, setUnit] = useState('unit')
@@ -382,6 +382,7 @@ const AddProducts = (props) => {
                     autocomplete="off"
                     required
                     id="alert"
+                    value={alertNum}
                     onChange={(e) => setAlertNum(e.target.value)}
                     placeholder="Enter Alerting Quantity"
                   />

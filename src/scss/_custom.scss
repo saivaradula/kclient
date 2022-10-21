@@ -18,6 +18,16 @@ div.lh-3 {
   line-height: 3px;
 }
 
+table.alignright td {
+  text-align: right;
+  font-weight: 800;
+  padding-right: 30px;
+}
+
+.fw800 {
+  font-weight: 800;
+}
+
 div.printRight {
   float: right;
   padding-top: 100px;
@@ -151,7 +161,28 @@ hr {
 
 }
 
+.printdiv table {
+  line-height: 18px;
+}
+
 .printtable td, .printtable th {
   border: 1px solid #ccc;
   padding: 5px;
+}
+
+.printdiv hr {
+  color: #1b0aa7;
+  height:5px;
+  margin-top: -10px;
+}
+
+.columnLeft {
+  float: left;
+  text-align: left;
+}
+
+.tblheader {
+  margin-left: auto;
+  // width: 95%;
+  align-items: center;
 }

@@ -78,7 +78,6 @@ const InvoicePrint = (props) => {
         await axios
             .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/details`)
             .then(response => {
-                console.log(response)
                 dispatch({ type: 'new', payload: { data: response.data, inv: id } })
             })
 
@@ -107,10 +106,10 @@ const InvoicePrint = (props) => {
                             </div>
                             <div className="col-6 logo-color"></div>
                         </div>
-                        <div className="row">
+                        <div className="row align-center tblheader">
                             <table className="table printtable">
                                 <tr>
-                                    <th width="20%">Invoice Number:</th>
+                                    <th width="20%">{invoiceDetails.payment ? 'Invoice' : 'Quotation'} Number:</th>
                                     <td width="15%">{invoiceDetails.data[0].invoice_id}</td>
                                     <th width="10%">From:</th>
                                     <td width="20%">{moment.utc(invoiceDetails.data[0].pStartDate).format('dddd - MMM Do, YYYY')}</td>
@@ -139,9 +138,7 @@ const InvoicePrint = (props) => {
                                 </tr>
                             </table>
                         </div>
-                        <div>&nbsp;&nbsp;</div>
                         <hr />
-                        <div>&nbsp;&nbsp;</div>
                         <div>
                             <table className="table table-striped">
                                 <thead>

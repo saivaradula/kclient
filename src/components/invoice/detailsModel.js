@@ -174,13 +174,18 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
     win.focus();
   }
 
+  const printImages = (invoice) => {
+    const win = window.open(`#/invoice/imageprint/${invoice}`, "_blank");
+    win.focus();
+  }
+
   const returnFun = () => {
     return (
       <>
         <Modal show={show} onHide={handleClose} size="xl">
           <Modal.Header className="logo-color logo">
             <div className="row">
-              <div className="col-10 logo-color">
+              <div className="col-8 logo-color columnLeft">
                 <img src={logo} style={logoSize} />
               </div>
               <div className="col-2 printRight">
@@ -191,6 +196,14 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                   Print
                 </button>
               </div>
+              <div className="col-2 printRight">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => printImages(invoice.inv)}
+                >
+                  Image Print
+                </button>
+              </div>
             </div>
 
           </Modal.Header>
@@ -198,7 +211,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
             <div className="container-fluid">
               <div className="lh-3 row mt-1">
                 <div className="col-sm-4">
-                  <strong>Invoice Number:</strong>&nbsp;&nbsp;
+                  <strong>{payments.length ? 'Invoice' : 'Quotation'} Number:</strong>&nbsp;&nbsp;
                   {invoice.inv}
                 </div>
                 <div className="col-sm-4">
