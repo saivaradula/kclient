@@ -10,7 +10,7 @@ const PrintImagesScreen = ({ records }) => {
                     <div className="text-center">
                         <img src={p.image} height="120px" width="120px" />
                     </div>
-                    <div className="text-center fw800">{p.nickname} ({p.quantity})</div>
+                    <div className="text-center fw800">{p.hashcode} ({p.quantity})</div>
                 </div>
             </>
         )
@@ -25,7 +25,7 @@ const PrintImagesScreen = ({ records }) => {
                     {
                         records.map((p, i) => {
                             j = i + 1;
-                            return (j % 4 == 0) ?
+                            return (j % 5 == 0) ?
                                 <><td>{loadData(p)}</td><tr></tr></>
                                 : <><td>{loadData(p)}</td></>
 

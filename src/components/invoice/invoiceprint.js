@@ -7,6 +7,7 @@ var converter = require('number-to-words');
 
 const InvoicePrint = (props) => {
     const [id, setId] = useState(props.match.params.id)
+    const [payments, setPayments] = useState([])
 
     // const [pm, setpm] = useState(() => invoice.payableamount)
     // const [tm, settm] = useState(() => invoice.data.reduce((a, b) => a + b.cost, 0).toFixed(2))
@@ -75,6 +76,11 @@ const InvoicePrint = (props) => {
     }
 
     const getDetails = async id => {
+        axios
+            .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/payments`)
+            .then(async (response) => {
+                setPayments(response.data)
+            })
         await axios
             .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/details`)
             .then(response => {
@@ -124,7 +130,7 @@ const InvoicePrint = (props) => {
                                     <th>Content:</th>
                                     <td>{invoiceDetails.data[0].content_type}</td>
                                 </tr>
-                                <tr>
+                                {/* <tr>
                                     <th>Art Director:</th>
                                     <td colspan="2">{invoiceDetails.data[0].art_director_name}</td>
                                     <th>Hero/Director:</th>
@@ -135,7 +141,7 @@ const InvoicePrint = (props) => {
                                     <td colspan="2">{invoiceDetails.data[0].contactName} / {invoiceDetails.data[0].contactPhone}</td>
                                     <th>Received By / Phone:</th>
                                     <td colspan="2">{invoiceDetails.data[0].prop_receiver_name}({invoiceDetails.data[0].prop_receiver}) / {invoiceDetails.data[0].art_phone}</td>
-                                </tr>
+                                </tr> */}
                             </table>
                         </div>
                         <hr />
@@ -155,7 +161,7 @@ const InvoicePrint = (props) => {
                                 <tbody>
                                     {invoiceDetails.data.map((p) => (
                                         <tr key={p.product_code}>
-                                            <td>{p.product_code}</td>
+                                            <td>{p.product_hashcode}</td>
                                             <td>{p.product_name}</td>
                                             <td>{p.quantity}</td>
                                             <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
@@ -208,6 +214,47 @@ const InvoicePrint = (props) => {
 
                                 </tbody>
                             </table>
+                            {
+                                payments[0].amount
+                                    ?
+                                    <div className="row mt-5">
+                                        <table className="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No.</th>
+                                                    <th>Payment Type</th>
+                                                    <th>Payment Method</th>
+                                                    <th>Transaction Id</th>
+                                                    <th>Amount</th>
+                                                    <th>Paid On</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {payments.map((p, index) => (
+                                                    <tr key={index}>
+                                                        <td>{index + 1}</td>
+                                                        <td>{p.paidby}</td>
+                                                        <td>
+                                                            {p.method}
+                                                            {p.method == 'cheque' ? (
+                                                                <span>
+                                                                    &nbsp; / {p.cheque_no} / {p.bank}{' '}
+                                                                </span>
+                                                            ) : (
+                                                                <></>
+                                                            )}
+                                                        </td>
+                                                        <td>{p.transaction_id}</td>
+                                                        <td>{p.amount}</td>
+                                                        <td>{moment.utc(p.paid_on).format('DD/MM/yyyy')}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    :
+                                    <></>
+                            }
                         </div>
                     </div>
                 </>)
