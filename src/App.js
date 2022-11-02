@@ -14,6 +14,7 @@ const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 const PrintPreview = React.lazy(() => import('./components/product/preview'))
 const FinalPrint = React.lazy(() => import('./components/invoice/finalprint'))
 const InvoicePrint = React.lazy(() => import('./components/invoice/invoiceprint'))
+const ReturnPrint = React.lazy(() => import('./components/returns/invoicePrint'))
 const ImagePrint = React.lazy(() => import('./components/invoice/imageprint'))
 
 // Pages
@@ -63,6 +64,13 @@ function App() {
 
             <Route
               exact
+              path='/invoice/received/:id/:type'
+              name="Print Final Invoice"
+              render={(props) => <ReturnPrint {...props} />}
+            />
+
+            <Route
+              exact
               path='/invoice/internalprint/:id'
               name="Print Final Invoice "
               render={(props) => <InvoicePrint {...props} />}
@@ -71,6 +79,13 @@ function App() {
             <Route
               exact
               path='/invoice/imageprint/:id'
+              name="Print Final Invoice "
+              render={(props) => <ImagePrint {...props} />}
+            />
+
+            <Route
+              exact
+              path='/invoice/imageprint/:id/:type'
               name="Print Final Invoice "
               render={(props) => <ImagePrint {...props} />}
             />

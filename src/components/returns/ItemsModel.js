@@ -9,6 +9,16 @@ const logoSize = {
     width: 350,
 }
 
+const printThisInvoice = (invoice, iType) => {
+    const win = window.open(`#/invoice/received/${invoice}/${iType}`, "_blank");
+    win.focus();
+}
+
+const printImages = (invoice, iType) => {
+    const win = window.open(`#/invoice/imageprint/${invoice}/${iType}`, "_blank");
+    win.focus();
+}
+
 const ItemsModel = ({ invoice, show, handleClose, listType = '' }) => {
     const [modalData, setModalData] = useState(() => invoice.data)
 
@@ -52,10 +62,29 @@ const ItemsModel = ({ invoice, show, handleClose, listType = '' }) => {
     return (
         <>
             <Modal show={show} onHide={handleClose} size="xl">
-                <Modal.Header className="logo-color logo" closeButton>
-                    <div className="logo-color">
-                        <img src={logo} style={logoSize} />
+                <Modal.Header className="logo-color logo">
+                    <div className="row">
+                        <div className="col-8 logo-color columnLeft">
+                            <img src={logo} style={logoSize} />
+                        </div>
+                        <div className="col-2 printRight">
+                            <button
+                                className="btn btn-primary"
+                                onClick={() => printThisInvoice(invoice.inv, listType)}
+                            >
+                                Print
+                            </button>
+                        </div>
+                        <div className="col-2 printRight">
+                            {/* <button
+                                className="btn btn-primary"
+                                onClick={() => printImages(invoice.inv)}
+                            >
+                                Image Print
+                            </button> */}
+                        </div>
                     </div>
+
                 </Modal.Header>
                 <Modal.Body>
                     <div className="container-fluid">

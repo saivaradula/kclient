@@ -71,20 +71,26 @@ const Products = (props) => {
   let i = 0
 
   const fetchData = (p) => {
-    let searchString = searchTerm;
-    console.log(p, searchString.length)
-    // p = searchString == '' ? p : 1
-    console.log(p)
-    setPage(p)
-    setInputPage(p)
-    axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${searchString}`).then((data) => {
-      let numOfProducts = data.data.products.total
-      let p = data.data.products.data;
-      setTotalProd(numOfProducts)
-      setProducts(p)
-      setResultLoaded(true)
-      setPages(Math.ceil(numOfProducts / 25))
-    })
+
+    try {
+      let searchString = searchTerm;
+      console.log(p, searchString.length)
+      // p = searchString == '' ? p : 1
+      console.log(p)
+      setPage(p)
+      setInputPage(p)
+      axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${searchString}`).then((data) => {
+        let numOfProducts = data.data.products.total
+        let p = data.data.products.data;
+        setTotalProd(numOfProducts)
+        setProducts(p)
+        setResultLoaded(true)
+        setPages(Math.ceil(numOfProducts / 25))
+      })
+    } catch (error) {
+      console.log(error.message)
+    }
+
   }
 
   const changePage = (e) => {

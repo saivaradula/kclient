@@ -79,7 +79,6 @@ const RetList = ({ type }) => {
     }
 
     const getDetail = (invoice) => {
-
         axios
             .get(`${process.env.REACT_APP_API_URL}/invoice/return/${invoice}/${type}`)
             .then(async (response) => {
@@ -171,7 +170,7 @@ const RetList = ({ type }) => {
                         invoice={invoiceDetails}
                         show={show}
                         handleClose={handleClose}
-                        type={type}
+                        listType={type}
                     />
                 ) : (
                     <></>

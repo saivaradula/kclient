@@ -8,6 +8,7 @@ import PrintImagesScreen from './PrintImagesScreen'
 
 const ImagePrint = (props) => {
     const [id, setId] = useState(props.match.params.id);
+    const iType = props.match.params.type !== undefined ? props.match.params.type : 'invoice'
     const [entity, setEntities] = useState([])
     const [loaded, isLoaded] = useState(false)
 
@@ -27,11 +28,10 @@ const ImagePrint = (props) => {
 
     const getDetails = async id => {
         await axios
-            .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/images`)
+            .get(`${process.env.REACT_APP_API_URL}/invoice/${id}/images/${iType}`)
             .then(response => {
                 setEntities(response.data)
             })
-
     }
 
     console.log(entity)

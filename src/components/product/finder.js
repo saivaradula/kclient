@@ -185,30 +185,32 @@ const ItemFinder = (props) => {
         return (
             <CCard className="mb-4">
                 <CCardHeader>
-                    <CRow>
-                        <div className="col-sm-2">
-                            <strong>Search Items</strong>
-                        </div>
-                        <div className="col-sm-4">
-                            <CFormInput
-                                value={searchTerm}
-                                type="text" onChange={changeTerm}
-                                placeholder={`Search Items by - code/name/nickname`} />
-                        </div>
-                        <div className="col-sm-3">
-                            <CButton color="primary" type="button"
-                                onClick={() => getItem()}
-                            >
-                                Search
-                            </CButton>
-                            &nbsp;&nbsp;&nbsp;
-                            <CButton color="secondary" type="button"
-                                onClick={clearSearch}
-                            >
-                                Reset
-                            </CButton>
-                        </div>
-                    </CRow>
+                    <form>
+                        <CRow>
+                            <div className="col-sm-2">
+                                <strong>Search Items</strong>
+                            </div>
+                            <div className="col-sm-4">
+                                <CFormInput
+                                    value={searchTerm}
+                                    type="text" onChange={changeTerm}
+                                    placeholder={`Search Items by - code/name/nickname`} />
+                            </div>
+                            <div className="col-sm-3">
+                                <CButton color="primary" type="submit"
+                                    onClick={() => getItem()}
+                                >
+                                    Search
+                                </CButton>
+                                &nbsp;&nbsp;&nbsp;
+                                <CButton color="secondary" type="button"
+                                    onClick={clearSearch}
+                                >
+                                    Reset
+                                </CButton>
+                            </div>
+                        </CRow>
+                    </form>
                 </CCardHeader>
             </CCard>
         )
