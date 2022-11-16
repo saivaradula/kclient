@@ -20,7 +20,8 @@ const ReturnInvoice = props => {
         isDamaged: false
     }])
 
-    const getInvoices = async () => {
+    const getInvoices = async (e) => {
+        e.stopPropagation();
         let results = await axios.post(`${process.env.REACT_APP_API_URL}/invoice/search`, { ss: searchString })
         setSS(true)
         setInvoices(prev => [...results.data])

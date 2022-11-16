@@ -216,7 +216,7 @@ const BlockedList = () => {
                 <thead>
                     <tr>
                         <th>&nbsp;</th>
-                        <th>Invoice Number</th>
+                        <th>Quotation Number</th>
                         <th>Quoted To</th>
                         <th>Contact</th>
                         <th className="money">Products</th>
@@ -331,6 +331,7 @@ const BlockedList = () => {
                                     isInvoice={false}
                                     isPaid={false}
                                     cb={getDrafts}
+                                    isQuote={true}
                                 />
                             ) : (
                                 <></>

@@ -68,11 +68,17 @@ const InvoicePrint = (props) => {
         margin: 'auto'
     }
 
+    const camelCase = (str) => {
+        return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+            return index == 0 ? word.toLowerCase() : word.toUpperCase();
+        }).replace(/\s+/g, '');
+    }
+
     const inWords = (num) => {
         let n = num.split('.');
         let r = converter.toWords(n[0])
         let p = converter.toWords(n[1])
-        return `${r} and ${p} paise`;
+        return `${camelCase(r)} And ${camelCase(p)} Paise Only`;
     }
 
     const getDetails = async id => {
@@ -86,7 +92,6 @@ const InvoicePrint = (props) => {
             .then(response => {
                 dispatch({ type: 'new', payload: { data: response.data, inv: id } })
             })
-
     }
 
     useEffect(async () => {
@@ -115,7 +120,7 @@ const InvoicePrint = (props) => {
                         <div className="row align-center tblheader">
                             <table className="table printtable">
                                 <tr>
-                                    <th width="20%">{invoiceDetails.payment ? 'Invoice' : 'Quotation'} Number:</th>
+                                    <th width="20%">{payments[0].amount ? 'Invoice' : 'Quotation'} Number:</th>
                                     <td width="15%">{invoiceDetails.data[0].invoice_id}</td>
                                     <th width="10%">From:</th>
                                     <td width="20%">{moment.utc(invoiceDetails.data[0].pStartDate).format('dddd - MMM Do, YYYY')}</td>
@@ -176,10 +181,18 @@ const InvoicePrint = (props) => {
                             <table className="table table-striped">
                                 <tbody>
                                     <tr>
-                                        <td className="">
-                                            <strong>Cost&nbsp;:&nbsp;</strong>
+                                        <td colspan="2">
+                                            {inWords((invoiceDetails.payableamount / 1).toFixed(2))}
+                                        </td>
+                                        <td className="money">
+                                            <strong>Cost</strong>
+                                        </td>
+                                        <td className="money">
                                             {invoiceDetails.data.reduce((a, b) => a + b.cost, 0).toFixed(2)}
                                         </td>
+                                    </tr>
+                                    <tr>
+
                                         <td className="">
                                             <strong>Discount&nbsp;:&nbsp;</strong>
                                             {invoiceDetails.data[0].discount} %

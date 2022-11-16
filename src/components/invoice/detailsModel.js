@@ -22,7 +22,7 @@ const PAY_TYPE = [
 
 const PAY_METHOD = ['Google Pay', 'Paytm', 'PhonePe', 'Internet Banking', 'Cheque', 'Cash']
 
-const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb, isfinder = false }) => {
+const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, isPaid, cb, isfinder = false, isQuote = false }) => {
 
   const [modalInvoice, setModalInvoice] = useState(() => invoice)
   modalInvoice.inv = invoice.inv

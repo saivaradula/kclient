@@ -76,12 +76,12 @@ const ItemsModel = ({ invoice, show, handleClose, listType = '' }) => {
                             </button>
                         </div>
                         <div className="col-2 printRight">
-                            {/* <button
+                            <button
                                 className="btn btn-primary"
-                                onClick={() => printImages(invoice.inv)}
+                                onClick={() => printImages(invoice.inv, listType)}
                             >
                                 Image Print
-                            </button> */}
+                            </button>
                         </div>
                     </div>
 

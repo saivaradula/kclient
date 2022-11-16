@@ -201,45 +201,48 @@ export const loadOptions = (invoices, displaySelectedInvoice) => {
 export const searchInvoices = (setSearchString, getInvoices) => {
     return (
         <div>
-            <CRow>
-                <CCol xs={12}>
-                    <CCard className="mb-2">
-                        <CCardHeader>
-                            <CRow className="p-2">
-                                <div className="col-sm-10">
-                                    <h4>Receive Invoice form</h4>
-                                </div>
-                                <div className="col-sm-2 float-right">
-                                    <button className="btn btn-primary">
-                                        Received List
-                                    </button>
-                                </div>
-                            </CRow>
-                        </CCardHeader>
-                        <CCardBody>
-                            <CRow>
-                                <div className="col-sm-6">
-                                    <input
-                                        type="text"
-                                        onChange={(e) => {
-                                            setSearchString(e.target.value)
-                                        }}
-                                        className="form-control"
-                                        placeholder="Search by Company Name/Invoice Number/Director/Hero"
-                                    />
-                                </div>
-                                <div className="col-sm-5">
-                                    <button className="btn btn-primary"
-                                        onClick={getInvoices}
-                                    >
-                                        Get Invoices
-                                    </button>
-                                </div>
-                            </CRow>
-                        </CCardBody>
-                    </CCard>
-                </CCol>
-            </CRow>
+            <form onSubmit={getInvoices}>
+                <CRow>
+                    <CCol xs={12}>
+                        <CCard className="mb-2">
+                            <CCardHeader>
+                                <CRow className="p-2">
+                                    <div className="col-sm-10">
+                                        <h4>Receive Invoice form</h4>
+                                    </div>
+                                    <div className="col-sm-2 float-right">
+                                        <button className="btn btn-primary">
+                                            Received List
+                                        </button>
+                                    </div>
+                                </CRow>
+                            </CCardHeader>
+                            <CCardBody>
+                                <CRow>
+
+                                    <div className="col-sm-6">
+                                        <input
+                                            type="text"
+                                            onChange={(e) => {
+                                                setSearchString(e.target.value)
+                                            }}
+                                            className="form-control"
+                                            placeholder="Search by Company Name/Invoice Number/Director/Hero"
+                                        />
+                                    </div>
+                                    <div className="col-sm-5">
+                                        <button type="submit"
+                                            className="btn btn-primary"
+                                        >
+                                            Get Invoices
+                                        </button>
+                                    </div>
+
+                                </CRow>
+                            </CCardBody>
+                        </CCard>
+                    </CCol>
+                </CRow></form>
         </div>
     )
 }

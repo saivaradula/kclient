@@ -8,6 +8,7 @@ import PrintImagesScreen from './PrintImagesScreen'
 
 const ImagePrint = (props) => {
     const [id, setId] = useState(props.match.params.id);
+    console.log(props.match.params)
     const iType = props.match.params.type !== undefined ? props.match.params.type : 'invoice'
     const [entity, setEntities] = useState([])
     const [loaded, isLoaded] = useState(false)
@@ -53,8 +54,8 @@ const ImagePrint = (props) => {
                     </div>
                     <div className="col-6 logo-color"></div>
                 </div>
-                <div className="row">
-                    {entity.length ? <PrintImagesScreen records={entity} /> : <></>}
+                <div>
+                    {entity.length ? <PrintImagesScreen id={id} records={entity} /> : <></>}
                 </div>
             </div>
 

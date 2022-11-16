@@ -426,8 +426,11 @@ const Products = (props) => {
   return (
     <>
       <CRow>
+
         <CCol xs={12}>
-          <SearchOperation searchName={"Name / NickName / Code / Category / SubCateory"} name="Products" actBy={addFilters} />
+          <SearchOperation
+            searchName={"Name / NickName / Code / Category / SubCateory"}
+            name="Products" actBy={addFilters} />
         </CCol>
         <CCol xs={12}>
           {selectedProductLength ? operationsTab() : <></>}
@@ -458,6 +461,7 @@ const Products = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
+
       </CRow>
       <CRow>
         <div className="row">

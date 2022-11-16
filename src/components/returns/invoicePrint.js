@@ -108,7 +108,7 @@ const ReturnPrint = (props) => {
                         <div className="row align-center tblheader">
                             <table className="table printtable">
                                 <tr>
-                                    <th width="20%">{invoiceDetails.payment ? 'Invoice' : 'Quotation'} Number:</th>
+                                    <th width="20%">Invoice Number:</th>
                                     <td width="15%">{invoiceDetails.data[0].invoice_id}</td>
                                     <th width="10%">From:</th>
                                     <td width="20%">{moment.utc(invoiceDetails.data[0].pStartDate).format('dddd - MMM Do, YYYY')}</td>

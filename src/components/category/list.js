@@ -23,6 +23,9 @@ import Tooltip from 'react-bootstrap/Tooltip'
 import CIcon from '@coreui/icons-react'
 import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
 
+import Swal from 'sweetalert2'
+import 'sweetalert2/src/sweetalert2.scss'
+
 const ListCategories = (props) => {
   const [validated, setValidated] = useState(false)
   const [name, setName] = useState('')
@@ -43,7 +46,23 @@ const ListCategories = (props) => {
     if (window.confirm(`Deleting item with id ${id}`)) {
       let payLoad = { id: id }
       axios.post(`${process.env.REACT_APP_API_URL}/category/delete`, payLoad).then((response) => {
-        fetchData(1)
+        console.log(response)
+        if (response.data) {
+          Swal.fire({
+            icon: 'info',
+            title: 'Success',
+            text: 'Category deleted successfully',
+            footer: '-'
+          })
+          fetchData(1)
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed',
+            text: 'Cannot delete category which has products',
+            footer: '-'
+          })
+        }
       })
     }
   }
@@ -72,7 +91,12 @@ const ListCategories = (props) => {
           setValidated(false)
         })
       } else {
-        alert(`${name}, already exists and cannot be added`)
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed',
+          text: `${name}, already exists and cannot be added`,
+          footer: '-'
+        })
       }
     }
   }

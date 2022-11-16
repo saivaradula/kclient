@@ -14,7 +14,7 @@ const DraftInvoice = (props) => {
   const history = useHistory()
   const PRTYPES = {
     NEW: 'new',
-    OLD: 'old',
+    OLD: 'used',
     ANTIQUE: 'antique',
     DAMAGE: 'damage'
   }
@@ -146,7 +146,8 @@ const DraftInvoice = (props) => {
         )
       }
       case PRTYPES.DAMAGE:
-      case PRTYPES.OLD: {
+      case PRTYPES.OLD:
+      default: {
         return (
           (((parseInt(product.price) * getPercentagesForOld(parseInt(product.days))) / 100) *
             parseInt(product.quantity)).toFixed(2)
