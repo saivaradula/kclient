@@ -284,7 +284,7 @@ const AddProducts = (props) => {
                     <option value="new">New</option>
                     <option value="used">Used</option>
                     <option value="antique">Antique</option>
-                    <option value="damage">Damage</option>
+                    <option value="damage">Damaged</option>
                   </CFormSelect>
                   <CFormFeedback invalid>Please select product type.</CFormFeedback>
                 </div>

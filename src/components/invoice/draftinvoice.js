@@ -611,12 +611,14 @@ const DraftInvoice = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="row col-sm-3">
+                  <div className="row col-sm-4">
                     <div className="col-sm-4 align-text-bottom">
                       <strong className="align-middle">
-                        <input type="checkbox" name="isBlocked"
-                          onChange={(event) => isBlocked(event.target.checked)} />
-                        Booked Items
+                        <label>
+                          <input type="checkbox" name="isBlocked"
+                            onChange={(event) => isBlocked(event.target.checked)} />
+                          &nbsp;&nbsp;
+                          Booked Items</label>
                       </strong>
                     </div>
                     <div className="col-sm-6">
@@ -650,7 +652,7 @@ const DraftInvoice = (props) => {
                     <strong>Num of Days</strong>
                   </div>
                   <div className="col-sm-1">
-                    <strong>Hire</strong>
+                    <strong>Hire Cost</strong>
                   </div>
                 </CRow>
 

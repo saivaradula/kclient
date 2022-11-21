@@ -26,6 +26,7 @@ const changeCode = async (invoice, i, e, formValues, setFormValues) => {
             quantity: 0,
             rquantity: 0,
             damaged_cost: 0,
+            damaged_type: '',
             isDamaged: false
         }
     } else {
@@ -37,6 +38,12 @@ const changeCode = async (invoice, i, e, formValues, setFormValues) => {
 const updateRvalue = (i, event, formValues, setFormValues) => {
     let newFormValues = [...formValues];
     newFormValues[i].rquantity = event.target.value;
+    setFormValues(prev => [...newFormValues])
+}
+
+const updateDamageType = (i, event, formValues, setFormValues) => {
+    let newFormValues = [...formValues];
+    newFormValues[i].damaged_type = event.target.value;
     setFormValues(prev => [...newFormValues])
 }
 
@@ -128,15 +135,25 @@ export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
                                                         {
                                                             element.isDamaged
                                                                 ?
-                                                                <div className="col-sm-3">
-                                                                    <CFormInput
-                                                                        required={element.isDamaged}
-                                                                        onChange={e => updateDamageCost(index, e, formValues, setFormValues)}
-                                                                        autoComplete="off"
-                                                                        type="text"
-                                                                        placeholder={`Enter damaged cost`}
-                                                                    />
-                                                                </div>
+                                                                <>
+                                                                    <div className="col-sm-2">
+                                                                        <select className="form-control"
+                                                                            onChange={e => updateDamageType(index, e, formValues, setFormValues)}
+                                                                        >
+                                                                            <option value="partial">Partially Damaged</option>
+                                                                            <option value="full">Full Damaged</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="col-sm-2">
+                                                                        <CFormInput
+                                                                            required={element.isDamaged}
+                                                                            onChange={e => updateDamageCost(index, e, formValues, setFormValues)}
+                                                                            autoComplete="off"
+                                                                            type="text"
+                                                                            placeholder={`Enter damaged cost`}
+                                                                        />
+                                                                    </div>
+                                                                </>
                                                                 : null
                                                         }
 
