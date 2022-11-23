@@ -138,8 +138,10 @@ export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
                                                                 <>
                                                                     <div className="col-sm-2">
                                                                         <select className="form-control"
+                                                                            required
                                                                             onChange={e => updateDamageType(index, e, formValues, setFormValues)}
                                                                         >
+                                                                            <option value="">Select</option>
                                                                             <option value="partial">Partially Damaged</option>
                                                                             <option value="full">Full Damaged</option>
                                                                         </select>
