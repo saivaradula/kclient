@@ -70,16 +70,15 @@ const Products = (props) => {
 
   let i = 0
 
-  const fetchData = (p) => {
+  const fetchData = (p, s = 1) => {
 
     try {
       let searchString = searchTerm;
-      console.log(p, searchString.length)
       // p = searchString == '' ? p : 1
       console.log(p)
       setPage(p)
       setInputPage(p)
-      axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${searchString}`).then((data) => {
+      axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${s}/${searchString}`).then((data) => {
         let numOfProducts = data.data.products.total
         let p = data.data.products.data;
         setTotalProd(numOfProducts)
@@ -417,10 +416,14 @@ const Products = (props) => {
   }
 
   const addFilters = (filters) => {
-    console.log(filters)
     setSearchTerm(filters)
     setPage(1)
     setInputPage(1)
+  }
+
+  const changeView = (e) => {
+    console.log(e.target.checked)
+    e.target.checked ? fetchData(1, 0) : fetchData(1)
   }
 
   return (
@@ -437,7 +440,21 @@ const Products = (props) => {
 
           <CCard className="mb-4">
             <CCardHeader>
-              <strong>Products</strong>
+              <CRow>
+                <CCol xs={6}><strong>Products</strong></CCol>
+                <CCol xs={6}>
+                  <div className="alignright">
+                    <label>
+                      <input type="checkbox"
+                        onClick={e => changeView(e)} />
+                      &nbsp;&nbsp;
+                      Show Fully Damaged Products
+                    </label>
+                  </div>
+                </CCol>
+              </CRow>
+
+
             </CCardHeader>
             <CCardBody>
               {displayProducts()}

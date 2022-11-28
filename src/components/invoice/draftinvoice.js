@@ -7,6 +7,8 @@ import { CCard, CCardBody, CCardHeader, CCol, CFormInput, CRow } from '@coreui/r
 import { getPercentagesForNew, getPercentagesForOld } from './daycounter'
 import DatePicker from 'react-datepicker'
 import Alert from 'react-bootstrap/Alert'
+import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+
 
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -49,6 +51,8 @@ const DraftInvoice = (props) => {
 
   const ADVANCE_PAY = 4 // PAYMENT TYPE FROM DB. 1. NOT PAID, 2. PAID, 3. PARTIALLY PAID, 4. ADVANCE PAY
 
+  const [items, setItems] = useState([]);
+
   const [state, setState] = useState({
     toName: '',
     companyPhone: '',
@@ -80,6 +84,7 @@ const DraftInvoice = (props) => {
     isWhat: '',
     vendoraddress: '',
     isBlocked: 0,
+    isProceed: false,
     formValues: [{
       code: '',
       name: '',
@@ -95,7 +100,6 @@ const DraftInvoice = (props) => {
       consumed: 0,
       remaining: 0,
       showalert: false,
-      isProceed: false
     }]
   })
 
@@ -164,11 +168,12 @@ const DraftInvoice = (props) => {
   }
 
   const changeCode = async (i, e) => {
-    const details = await getProductDetails(e.target.value)
+    let p = e.target.value.toLowerCase();
+    const details = await getProductDetails(p)
     let remaining = 0;
     let consumed = 0;
     if (details) {
-      consumed = await getProductAvailiablity(e.target.value, state.startDate, state.endDate);
+      consumed = await getProductAvailiablity(p, state.startDate, state.endDate);
       remaining = parseInt(details.quantity - consumed);
       remaining = (remaining < 1) ? 0 : remaining;
     }
@@ -213,7 +218,6 @@ const DraftInvoice = (props) => {
           consumed: 0,
           remaining: 0,
           showalert: false,
-          isProceed: false
         })
       }
     }
@@ -232,16 +236,27 @@ const DraftInvoice = (props) => {
   const calculateCostByQuantity = (product, index) => (event) => {
     // TODO:: add validation for availability 
     if (product.remaining < event.target.value) {
-      alert(`Maximum quantity allowed is ${product.remaining}`)
+      // alert(`Maximum quantity allowed is ${product.remaining}`)
+      // element.showalert
+      state.formValues[index].showalert = true
+
+      setState(prevState => ({
+        ...prevState,
+        isProceed: false,
+        formValues: [...state.formValues]
+      }));
+
     } else {
-      state.formValues[index].isProceed = true
+      // state.formValues[index].isProceed = true
       state.formValues[index].quantity = event.target.value
+      state.formValues[index].showalert = false
       state.formValues[index].tcost = calculateCostByType(product)
       let tcost = updateTotalCost();
       tcost = parseFloat(tcost).toFixed(2);
 
       setState(prevState => ({
         ...prevState,
+        isProceed: true,
         totalCost: tcost,
         finalamount: tcost,
         payableamount: tcost,
@@ -395,12 +410,11 @@ const DraftInvoice = (props) => {
     return (<>
       <CRow className="mb-4" key={index}>
         <div className="col-sm-2">
-          {element.name !== '' ? (
+          {/* {element.name !== '' ? (
             <CFormInput
               name="code"
               autoComplete="off"
               type="text"
-              readOnly={true}
               id="productCode"
               value={element.code}
               onChange={(e) => editCode(index, e)}
@@ -414,7 +428,40 @@ const DraftInvoice = (props) => {
               onChange={(e) => changeCode(index, e, element)}
               placeholder="Code(Ex: PR-12345)"
             />
-          )}
+          )} */}
+
+          {/* <div style={{ width: 400 }}>
+            <ReactSearchAutocomplete
+              items={items}
+              onChange={(e) => changeCode(index, e, element)}
+              autoFocus
+              styling={{
+                // height: "34px",
+                // margin: "0px",
+                border: "1px solid darkgreen",
+                borderRadius: "4px",
+                backgroundColor: "white",
+                boxShadow: "none",
+                hoverBackgroundColor: "lightgreen",
+                color: "darkgreen",
+                fontSize: "12px",
+                fontFamily: "Courier",
+                iconColor: "green",
+                lineColor: "lightgreen",
+                placeholderColor: "darkgreen",
+                clearIconMargin: "3px 8px 0 0",
+                zIndex: 9999,
+              }}
+            /></div> */}
+
+          <CFormInput
+            name="code"
+            autoComplete="off"
+            type="text"
+            id="productCode"
+            onChange={(e) => changeCode(index, e, element)}
+            placeholder="Code(Ex: PR-12345)"
+          />
         </div>
         <div className="col-sm-3">
           <CFormInput
@@ -433,7 +480,7 @@ const DraftInvoice = (props) => {
             name="prtype"
             autoComplete="off"
             type="text"
-            value={element.prtype || ''}
+            value={element.prtype.charAt(0).toUpperCase() + element.prtype.slice(1) || ''}
           />
         </div>
 
@@ -474,6 +521,9 @@ const DraftInvoice = (props) => {
           {element.price ? (
             <CFormInput
               name="quantity"
+              type="number"
+              min={1}
+              max={`${element.remaining}`}
               required
               autoComplete="off"
               onChange={calculateCostByQuantity(element, index)}
@@ -482,9 +532,14 @@ const DraftInvoice = (props) => {
           ) : (
             <CFormInput
               name="quantity"
-              autoComplete="off"
+              type="number"
               readOnly
-              placeholder="Quantity"
+              min={1}
+              max={`${element.remaining}`}
+              required
+              autoComplete="off"
+              onChange={calculateCostByQuantity(element, index)}
+              placeholder={`Max ${element.remaining}`}
             />
           )}
         </div>
@@ -662,15 +717,12 @@ const DraftInvoice = (props) => {
                     <>
                       {displayRecords(element, index)}
                       {
-                        // alert(element.showalert)
-                        // element.showalert === true ?
-                        //   <Alert variant="danger"
-                        //     onClose={() => closeAlert(index)} dismissible>
-                        //     The requested product <strong>({element.name})</strong> is not
-                        //     available with dates specified.
-                        //     Try on other dates or quantity for product availability.
-                        //   </Alert>
-                        //   : <></>
+                        element.showalert === true ?
+                          <Alert variant="danger"
+                            onClose={() => closeAlert(index)} dismissible>
+                            There are only <strong>{element.remaining}</strong> items remaining between <strong>{state.startDate.toLocaleDateString()}</strong> and <strong>{state.endDate.toLocaleDateString()}</strong>
+                          </Alert>
+                          : <></>
                       }
                     </>
                   ))
@@ -1124,12 +1176,17 @@ const DraftInvoice = (props) => {
             />
           </div>
         </CRow>
-        {state.formValues.length > 1 ? (
+
+        {state.formValues.length > 1 && state.isProceed ? (
           <div className="text-right">
             <input type="submit" value="Create Quotation" className="btn btn-primary" />
           </div>
         ) : (
-          <></>
+          <>
+            <div className="text-right">
+              <input type="submit" value="Create Quotation" disabled className="btn btn-secondary" />
+            </div>
+          </>
         )}
       </form>
       {DetailsPopUp()}

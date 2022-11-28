@@ -54,6 +54,7 @@ const SearchOperation = (props) => {
                                     Reset
                                 </CButton>
                             </div>
+
                         </CRow>
                     </CCardHeader>
                 </CCard>

@@ -18,13 +18,13 @@ div.lh-3 {
   line-height: 3px;
 }
 
-table td.alignLeft {
+table td.alignLeft, div.alignLeft {
   text-align: left;
   font-weight: 800;
   padding-right: 30px;
 }
 
-table td.alignright {
+table td.alignright, div.alignright {
   text-align: right;
   font-weight: 800;
   padding-right: 30px;
