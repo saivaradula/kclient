@@ -741,8 +741,10 @@ const DraftInvoice = (props) => {
   const DetailsPopUp = () => {
     return (
       <>
+
         <div>
           <CRow>
+
             <CCol xs={12}>
               <div className="col-sm-12">
                 <Modal show={state.showAddressForm}
@@ -754,352 +756,393 @@ const DraftInvoice = (props) => {
                     <Modal.Title>Details</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                    <fieldset>
-                      <legend>Company details</legend>
-                      <div className="row">
-                        <div className="col">
-                          <input
-                            value={state.toName}
-                            type="text"
-                            onChange={(e) => setState(prevState => ({
-                              ...prevState, toName: e.target.value
-                            }))}
-                            className="form-control"
-                            placeholder="Company Name"
-                          />
-                        </div>
-                        <div className="col-sm-12 mt-2">
-                          <input
-                            placeholder="Location"
-                            value={state.toAddress}
-                            onChange={(e) => setState(prevState => ({
-                              ...prevState, toAddress: e.target.value
-                            }))}
-                            className="form-control col-sm-12"
-                          />
-                        </div>
-                      </div>
-                      <div className="row mt-2">
-                        <div className="col">
-                          <input
-                            value={state.artDirector}
-                            type="text"
-                            onChange={(e) => setState(prevState => ({
-                              ...prevState, artDirector: e.target.value
-                            }))}
-                            className="form-control"
-                            placeholder="Art Director Name"
-                          />
-                        </div>
-                        <div className="col">
-                          <select
-                            className="form-control"
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, contentType: e.target.value
-                              }))
-                            }
-                          >
-                            <option>Select Content Type</option>
-                            {PROPTO.map((i) => (
-                              <option value={i}>{i}</option>
-                            ))}
-                          </select>
-
-                        </div>
-                      </div>
-                      <div className="row mt-2">
-                        <div className="col">
-                          <select
-                            className="form-control"
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, isWhat: e.target.value
-                              }))
-                            }
-                          >
-                            <option>Hero/Director</option>
-                            <option value="hero">Hero</option>
-                            <option value="director">Director</option>
-                          </select>
-                        </div>
-                        <div className="col">
-                          <input
-                            value={state.isWhatName}
-                            type="text"
-                            onChange={(e) => setState(prevState => ({
-                              ...prevState, isWhatName: e.target.value
-                            }))}
-                            className="form-control"
-                            placeholder={`${state.isWhat} Name`}
-                          />
-                        </div>
-
-                      </div>
-                      <div className="row mt-2">
-
-                        <div className="col">
-                          <input
-                            value={state.contactName}
-                            type="text"
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, contactName: e.target.value
-                              }))
-                            }
-                            className="form-control"
-                            placeholder="Responsible Person Name"
-                          />
-                        </div>
-                        <div className="col">
-                          <input
-                            value={state.contactPhone}
-                            onChange={(e) => setState(prevState => ({
-                              ...prevState, contactPhone: e.target.value
-                            }))}
-                            type="text"
-                            className="form-control"
-                            placeholder="Responsible Person Phone Number"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="row mt-2">
-                        <div className="col">
-                          <select
-                            className="form-control"
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, propReceiver: e.target.value
-                              }))
-                            }
-                          >
-                            <option>Select Property Receiver</option>
-                            {PROPRECEIVER.map((i) => (
-                              <option value={i}>{i}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div className="col">
-                          <input
-                            value={state.propReceiverName}
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, propReceiverName: e.target.value
-                              }))
-                            }
-                            type="text"
-                            className="form-control"
-                            placeholder="Receiver Name"
-                          />
-                        </div>
-
-                        <div className="col">
-                          <input
-                            value={state.artPhone}
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, artPhone: e.target.value
-                              }))
-                            }
-                            type="text"
-                            className="form-control"
-                            placeholder="Receiver Phone"
-                          />
-                        </div>
-                      </div>
-                    </fieldset>
-
-                    <div>&nbsp;</div>
-
-                    <fieldset>
-                      <legend>Amount Details</legend>
-                      <div className="row mt-2">
-                        <div className="col-4">
-                          <input
-                            value={state.totalCost}
-                            type="text"
-                            readOnly
-                            className="form-control"
-                            placeholder="Invoice Amount"
-                          />
-                        </div>
-                        <div className="col-4">
-                          <input
-                            value={state.discount}
-                            type="text"
-                            onChange={(e) => updateFinalAmount(e.target.value)}
-                            className="form-control"
-                            placeholder="Discount Percentage"
-                          />
-                        </div>
-                        <div className="col-4">
-                          <input
-                            value={state.finalamount}
-                            type="text"
-                            readOnly
-                            className="form-control"
-                            placeholder="Final Amount"
-                          />
-                        </div>
-                      </div>
-                      <div className="row mt-2">
-                        <div className="col-4">
-                          <input
-                            value={state.gstpercentage}
-                            type="text"
-                            onChange={(e) =>
-                              updateFinalAmountByGST(e.target.value)
-                            }
-                            className="form-control"
-                            placeholder="GST Percentage"
-                          />
-                        </div>
-                        <div className="col-4">
-                          <input
-                            value={state.payableamount}
-                            type="text"
-                            readOnly
-                            className="form-control"
-                            placeholder="Payable Amount"
-                          />
-                        </div>
-                        <div className="col-4">
-                          <input
-                            value={state.advancePay}
-                            type="text"
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, advancePay: e.target.value
-                              }))
-                            }
-                            className="form-control"
-                            placeholder="Advance Amount"
-                          />
-                        </div>
-                      </div>
-                    </fieldset>
-
-                    <fieldset>
-                      <legend>Payment Details</legend>
-                      <div className="row mt-2">
-                        <div className="col">
-                          <select
-                            onChange={(e) =>
-                              setState(prevState => ({
-                                ...prevState, paymentMethod: e.target.value
-                              }))
-                            }
-                            className="form-control"
-                          >
-                            <option value="">Select Method</option>
-                            {PAY_METHOD.map((i) => (
-                              <option value={i}>{i}</option>
-                            ))}
-                          </select>
-                        </div>
-
-                        {state.paymentMethod !== 'Cheque' ? (
+                    <form onSubmit={addDraftInvoice}>
+                      <fieldset>
+                        <legend>Company details</legend>
+                        <div className="row">
                           <div className="col">
                             <input
-                              value={state.transactionId}
+                              name="companyName"
+                              required
+                              value={state.toName}
                               type="text"
-                              onChange={(e) =>
-                                setState(prevState => ({
-                                  ...prevState, transactionId: e.target.value
-                                }))
-                              }
+                              onChange={(e) => setState(prevState => ({
+                                ...prevState, toName: e.target.value
+                              }))}
                               className="form-control"
-                              placeholder="Transaction Id"
+                              placeholder="Company Name"
                             />
                           </div>
-                        ) : (
-                          <></>
-                        )}
-
-                        {state.paymentMethod === 'Cheque' ? (
-                          <div className="col">
+                          <div className="col-sm-12 mt-2">
                             <input
-                              value={state.chequeNo}
-                              type="text"
-                              onChange={(e) =>
-                                setState(prevState => ({
-                                  ...prevState, chequeNo: e.target.value
-                                }))
-                              }
-                              className="form-control"
-                              placeholder="Cheque No"
+                              required
+                              placeholder="Location"
+                              value={state.toAddress}
+                              onChange={(e) => setState(prevState => ({
+                                ...prevState, toAddress: e.target.value
+                              }))}
+                              className="form-control col-sm-12"
                             />
                           </div>
-                        ) : (
-                          <></>
-                        )}
-                      </div>
-                      {state.paymentMethod === 'Cheque' ? (
+                        </div>
                         <div className="row mt-2">
                           <div className="col">
                             <input
-                              value={state.bank}
+                              required
+                              value={state.artDirector}
+                              type="text"
+                              onChange={(e) => setState(prevState => ({
+                                ...prevState, artDirector: e.target.value
+                              }))}
+                              className="form-control"
+                              placeholder="Art Director Name"
+                            />
+                          </div>
+                          <div className="col">
+                            <select
+                              required
+                              className="form-control"
+                              onChange={(e) =>
+                                setState(prevState => ({
+                                  ...prevState, contentType: e.target.value
+                                }))
+                              }
+                            >
+                              <option>Select Content Type</option>
+                              {PROPTO.map((i) => (
+                                <option value={i}>{i}</option>
+                              ))}
+                            </select>
+
+                          </div>
+                        </div>
+                        <div className="row mt-2">
+                          <div className="col">
+                            <select
+                              required
+                              className="form-control"
+                              onChange={(e) =>
+                                setState(prevState => ({
+                                  ...prevState, isWhat: e.target.value
+                                }))
+                              }
+                            >
+                              <option>Hero/Director</option>
+                              <option value="hero">Hero</option>
+                              <option value="director">Director</option>
+                            </select>
+                          </div>
+                          <div className="col">
+                            <input
+                              required
+                              value={state.isWhatName}
+                              type="text"
+                              onChange={(e) => setState(prevState => ({
+                                ...prevState, isWhatName: e.target.value
+                              }))}
+                              className="form-control"
+                              placeholder={`${state.isWhat} Name`}
+                            />
+                          </div>
+
+                        </div>
+                        <div className="row mt-2">
+
+                          <div className="col">
+                            <input
+                              required
+                              value={state.contactName}
                               type="text"
                               onChange={(e) =>
                                 setState(prevState => ({
-                                  ...prevState, bank: e.target.value
+                                  ...prevState, contactName: e.target.value
                                 }))
                               }
                               className="form-control"
-                              placeholder="Enter Bank Details - Name, Branch"
+                              placeholder="Responsible Person Name"
+                            />
+                          </div>
+                          <div className="col">
+                            <input
+                              required
+                              value={state.contactPhone}
+                              onChange={(e) => setState(prevState => ({
+                                ...prevState, contactPhone: e.target.value
+                              }))}
+                              type="text"
+                              maxlength="10"
+                              className="form-control"
+                              placeholder="Responsible Person Phone Number"
                             />
                           </div>
                         </div>
-                      ) : (
-                        <></>
-                      )}
 
-                      <div className="row mt-2">
-                        <div className="col">
-                          <input
-                            type="text"
-                            value={state.gst}
-                            onChange={(e) => setState(prevState => ({
-                              ...prevState, gst: e.target.value
-                            }))}
-                            className="form-control"
-                            placeholder="Add GST/TIN"
-                          />
+                        <div className="row mt-2">
+                          <div className="col">
+                            <select
+                              required
+                              className="form-control"
+                              onChange={(e) =>
+                                setState(prevState => ({
+                                  ...prevState, propReceiver: e.target.value
+                                }))
+                              }
+                            >
+                              <option>Select Property Receiver</option>
+                              {PROPRECEIVER.map((i) => (
+                                <option value={i}>{i}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          <div className="col">
+                            <input
+                              required
+                              value={state.propReceiverName}
+                              onChange={(e) =>
+                                setState(prevState => ({
+                                  ...prevState, propReceiverName: e.target.value
+                                }))
+                              }
+                              type="text"
+                              className="form-control"
+                              placeholder="Receiver Name"
+                            />
+                          </div>
+
+                          <div className="col">
+                            <input
+                              required
+                              value={state.artPhone}
+                              onChange={(e) =>
+                                setState(prevState => ({
+                                  ...prevState, artPhone: e.target.value
+                                }))
+                              }
+                              type="text"
+                              maxlength="10"
+                              className="form-control"
+                              placeholder="Receiver Phone"
+                            />
+                          </div>
                         </div>
-                        <div className="col">
-                          <input
-                            type="text"
-                            value={state.vendoraddress}
-                            onChange={(e) => setState(prevState => ({
-                              ...prevState, vendoraddress: e.target.value
-                            }))}
-                            className="form-control"
-                            placeholder="Vendor Address"
-                          />
+                      </fieldset>
+
+                      <div>&nbsp;</div>
+
+                      <fieldset>
+                        <legend>Amount Details</legend>
+                        <div className="row mt-2">
+                          <div className="col-4">
+                            <input
+                              required
+                              value={state.totalCost}
+                              type="text"
+                              readOnly
+                              className="form-control"
+                              placeholder="Invoice Amount"
+                            />
+                          </div>
+                          <div className="col-4">
+                            <input
+
+                              value={state.discount}
+                              type="text"
+                              onChange={(e) => updateFinalAmount(e.target.value)}
+                              className="form-control"
+                              placeholder="Discount Percentage"
+                            />
+                          </div>
+                          <div className="col-4">
+                            <input
+                              required
+                              value={state.finalamount}
+                              type="text"
+                              readOnly
+                              className="form-control"
+                              placeholder="Final Amount"
+                            />
+                          </div>
+                        </div>
+                        <div className="row mt-2">
+                          <div className="col-4">
+                            <input
+
+                              value={state.gstpercentage}
+                              type="text"
+                              onChange={(e) =>
+                                updateFinalAmountByGST(e.target.value)
+                              }
+                              className="form-control"
+                              placeholder="GST Percentage"
+                            />
+                          </div>
+                          <div className="col-4">
+                            <input
+                              value={state.payableamount}
+                              type="text"
+                              readOnly
+                              className="form-control"
+                              placeholder="Payable Amount"
+                            />
+                          </div>
+                          <div className="col-4">
+                            <input
+                              value={state.advancePay}
+                              type="number"
+                              onChange={(e) =>
+                                setState(prevState => ({
+                                  ...prevState, advancePay: e.target.value
+                                }))
+                              }
+                              className="form-control"
+                              placeholder="Advance Amount"
+                            />
+                          </div>
+                        </div>
+                      </fieldset>
+
+                      <fieldset>
+                        <legend>Payment Details</legend>
+                        <div className="row mt-2">
+                          <div className="col">
+                            <select
+                              required={state.advancePay > 0 ? true : false}
+                              onChange={(e) =>
+                                setState(prevState => ({
+                                  ...prevState, paymentMethod: e.target.value
+                                }))
+                              }
+                              className="form-control"
+                            >
+                              <option value="">Select Method</option>
+                              {PAY_METHOD.map((i) => (
+                                <option value={i}>{i}</option>
+                              ))}
+                            </select>
+                          </div>
+
+                          {state.paymentMethod !== 'Cheque' ? (
+                            <div className="col">
+                              <input
+                                required={state.advancePay > 0 ? true : false}
+                                value={state.transactionId}
+                                type="text"
+                                onChange={(e) =>
+                                  setState(prevState => ({
+                                    ...prevState, transactionId: e.target.value
+                                  }))
+                                }
+                                className="form-control"
+                                placeholder="Transaction Id"
+                              />
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+
+                          {state.paymentMethod === 'Cheque' ? (
+                            <div className="col">
+                              <input
+                                required={state.advancePay > 0 ? true : false}
+                                value={state.chequeNo}
+                                type="text"
+                                onChange={(e) =>
+                                  setState(prevState => ({
+                                    ...prevState, chequeNo: e.target.value
+                                  }))
+                                }
+                                className="form-control"
+                                placeholder="Cheque No"
+                              />
+                            </div>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                        {state.paymentMethod === 'Cheque' ? (
+                          <div className="row mt-2">
+                            <div className="col">
+                              <input
+                                required={state.advancePay > 0 ? true : false}
+                                value={state.bank}
+                                type="text"
+                                onChange={(e) =>
+                                  setState(prevState => ({
+                                    ...prevState, bank: e.target.value
+                                  }))
+                                }
+                                className="form-control"
+                                placeholder="Enter Bank Details - Name, Branch"
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+
+                        <div className="row mt-2">
+                          <div className="col">
+                            <input
+
+                              type="text"
+                              value={state.gst}
+                              onChange={(e) => setState(prevState => ({
+                                ...prevState, gst: e.target.value
+                              }))}
+                              className="form-control"
+                              placeholder="Add GST/TIN"
+                            />
+                          </div>
+                          <div className="col">
+                            <input
+                              required={state.advancePay ? true : false}
+                              type="text"
+                              value={state.vendoraddress}
+                              onChange={(e) => setState(prevState => ({
+                                ...prevState, vendoraddress: e.target.value
+                              }))}
+                              className="form-control"
+                              placeholder="Vendor Address"
+                            />
+                          </div>
+                        </div>
+
+                      </fieldset>
+                      <div>&nbsp;</div>
+                      <div className="row mt-2 ">
+                        <div className="col alignright">&nbsp;</div>
+                        <div className="col alignright">
+                          <input type="submit" value="Create Quotation" className="btn btn-primary" />
                         </div>
                       </div>
 
-                    </fieldset>
-                    <div>&nbsp;</div>
-
+                    </form>
                   </Modal.Body>
                   <Modal.Footer>
-                    <button onClick={addDraftInvoice} className="btn btn-primary">
-                      Add Details
-                    </button>
+                    <hr />
                   </Modal.Footer>
                 </Modal>
               </div>
             </CCol>
+
           </CRow>
         </div>
+
       </>
     )
   }
 
-  const addDraftInvoice = () => {
+  const addDraftInvoice = async (event) => {
+
+    event.preventDefault()
+    const form = event.currentTarget
+    console.log(form.checkValidity())
+    if (form.checkValidity() === false) {
+      event.preventDefault()
+      event.stopPropagation()
+    }
+    // return false;
 
     let invId = Date.now()
     let p = {
@@ -1116,7 +1159,7 @@ const DraftInvoice = (props) => {
       artPhone: state.artPhone,
       gst: state.gst,
       method: state.paymentMethod,
-      payment_type: state.paymentMethod !== '' ? ADVANCE_PAY : 1,
+      payment_type: state.advancePay > 0 ? ADVANCE_PAY : 1,
       vendoraddress: state.vendoraddress,
       amt: state.advancePay ? state.advancePay : 0,
       startDate:
@@ -1136,7 +1179,6 @@ const DraftInvoice = (props) => {
     }
 
     axios.post(`${process.env.REACT_APP_API_URL}/invoice/new`, p).then((response) => {
-      console.log(response)
       state.formValues.map(async (product) => {
         if (product.code !== '') {
           let s = product.from
@@ -1184,7 +1226,7 @@ const DraftInvoice = (props) => {
         ) : (
           <>
             <div className="text-right">
-              <input type="submit" value="Create Quotation" disabled className="btn btn-secondary" />
+              <input type="button" value="Create Quotation" disabled className="btn btn-secondary" />
             </div>
           </>
         )}

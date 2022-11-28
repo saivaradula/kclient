@@ -289,7 +289,7 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                         <td className="money">{pm}</td>
                         {/* <td>&nbsp;</td> */}
                       </tr>
-                      {isfinder && isInvoice ? (
+                      {!isfinder && isInvoice ? (
                         <>
                           <tr>
                             <td className="money" colSpan={4}>

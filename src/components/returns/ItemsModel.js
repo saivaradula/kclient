@@ -27,6 +27,7 @@ const ItemsModel = ({ invoice, show, handleClose, listType = '' }) => {
     }, [invoice.inv])
 
     const displayItems = (items) => {
+        console.log(items)
         return (
             <table className="table table-striped">
                 <thead>
@@ -34,10 +35,12 @@ const ItemsModel = ({ invoice, show, handleClose, listType = '' }) => {
                         <th width="4%">Image</th>
                         <th width="10%">Code</th>
                         <th width="25%">Name</th>
+                        {listType === 'damaged' ? <th width="25%">D/Type</th> : <></>}
                         <th width="5%">Qty</th>
                         <th width="10%">From</th>
                         <th width="10%">To</th>
                         <th width="2%">Days</th>
+                        {listType === 'damaged' ? <th width="25%">D/Cost</th> : <></>}
                     </tr>
                 </thead>
                 <tbody>
@@ -48,10 +51,12 @@ const ItemsModel = ({ invoice, show, handleClose, listType = '' }) => {
                             </td>
                             <td>{p.product_code}</td>
                             <td>{p.product_name}</td>
+                            {listType === 'damaged' ? <td>{p.damaged_type.charAt(0).toUpperCase() + p.damaged_type.slice(1)}</td> : <></>}
                             <td>{p.quantity}</td>
                             <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
                             <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
                             <td className="money">{p.rent_days}</td>
+                            {listType === 'damaged' ? <td>{p.damage_cost}</td> : <></>}
                         </tr>
                     ))}
                 </tbody>

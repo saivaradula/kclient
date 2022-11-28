@@ -104,7 +104,11 @@ const RetList = ({ type }) => {
                         <th>Content</th>
                         <th>Contact Name</th>
                         <th>Quantity</th>
-                        <th>Returned On</th>
+                        <th>
+                            {
+                                type === 'pending' ? 'Ordered' : type.charAt(0).toUpperCase() + type.slice(1)
+                            } Date
+                        </th>
                     </thead>
                     <tbody>
                         {
@@ -124,7 +128,15 @@ const RetList = ({ type }) => {
                                     <td>{inv.content_type}</td>
                                     <td>{inv.contactname}</td>
                                     <td>{inv.totalProducts}</td>
-                                    <td>{moment.utc(inv.returned_date).format('DD/MM/yyyy')}</td>
+                                    <td>
+                                        {
+                                            type === 'pending'
+                                                ?
+                                                moment.utc(inv.fromDate).format('DD/MM/yyyy')
+                                                :
+                                                moment.utc(inv.returned_date).format('DD/MM/yyyy')
+                                        }
+                                    </td>
                                 </tr>)
                             })
                         }

@@ -71,14 +71,16 @@ const InvoicePrint = (props) => {
     const camelCase = (str) => {
         return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
             return index == 0 ? word.toLowerCase() : word.toUpperCase();
-        }).replace(/\s+/g, '');
+        });
     }
 
     const inWords = (num) => {
         let n = num.split('.');
-        let r = converter.toWords(n[0])
-        let p = converter.toWords(n[1])
-        return `${camelCase(r)} And ${camelCase(p)} Paise Only`;
+        let r = camelCase(converter.toWords(n[0]))
+        let p = camelCase(converter.toWords(n[1]))
+        r = r.charAt(0).toUpperCase() + r.slice(1);
+        p = p.charAt(0).toUpperCase() + p.slice(1);
+        return `${r} and ${p} Paise`;
     }
 
     const getDetails = async id => {
@@ -208,22 +210,22 @@ const InvoicePrint = (props) => {
 
                                     </tr>
 
-                                    {/* <tr>
-                                        <td className="money" colSpan={4}>
+                                    <tr>
+                                        <td className="money" colSpan={3}>
                                             <strong>Total Paid till now</strong>
                                         </td>
-                                        <td className="money">{invoiceDetails.data.reduce((a, b) => a + b.amount, 0).toFixed(2)}</td>
+                                        <td className="money">{payments.reduce((a, b) => a + b.amount, 0).toFixed(2)}</td>
 
                                     </tr>
                                     <tr>
-                                        <td className="money" colSpan={4}>
+                                        <td className="money" colSpan={3}>
                                             <strong>Remaining / Refund</strong>
                                         </td>
                                         <td className="money">
                                             {(invoiceDetails.payableamount -
-                                                invoiceDetails.data.reduce((a, b) => a + b.amount, 0)).toFixed(2)}
+                                                payments.reduce((a, b) => a + b.amount, 0)).toFixed(2)}
                                         </td>
-                                    </tr> */}
+                                    </tr>
 
                                 </tbody>
                             </table>

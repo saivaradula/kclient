@@ -15,11 +15,19 @@ var converter = require('number-to-words');
 
 const PrintedInvoices = () => {
 
+    const camelCase = (str) => {
+        return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+            return index == 0 ? word.toLowerCase() : word.toUpperCase();
+        });
+    }
+
     const inWords = (num) => {
         let n = num.split('.');
-        let r = converter.toWords(n[0])
-        let p = converter.toWords(n[1])
-        return `${r} and ${p} paise`;
+        let r = camelCase(converter.toWords(n[0]))
+        let p = camelCase(converter.toWords(n[1]))
+        r = r.charAt(0).toUpperCase() + r.slice(1);
+        p = p.charAt(0).toUpperCase() + p.slice(1);
+        return `${r} and ${p} Paise`;
     }
 
     const logoSize = {
