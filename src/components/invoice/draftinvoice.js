@@ -1196,7 +1196,10 @@ const DraftInvoice = (props) => {
           await axios.post(`${process.env.REACT_APP_API_URL}/invoice/draft`, payload)
         }
       })
-      history.push('/invoice/quotation')
+      if (state.paymentMethod == '')
+        history.push('/invoice/quotation')
+      else
+        history.push('/invoice/list')
     })
 
   }

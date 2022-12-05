@@ -38,7 +38,7 @@ const ItemsModel = ({ invoice, show, handleClose, listType = '' }) => {
                         {listType === 'damaged' ? <th width="25%">D/Type</th> : <></>}
                         <th width="5%">Qty</th>
                         <th width="10%">From</th>
-                        <th width="10%">To</th>
+                        <th width="10%">Recieved</th>
                         <th width="2%">Days</th>
                         {listType === 'damaged' ? <th width="25%">D/Cost</th> : <></>}
                     </tr>

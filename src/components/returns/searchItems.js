@@ -27,7 +27,8 @@ const changeCode = async (invoice, i, e, formValues, setFormValues) => {
             rquantity: 0,
             damaged_cost: 0,
             damaged_type: '',
-            isDamaged: false
+            isDamaged: false,
+            isRecieved: false
         }
     } else {
         newFormValues[i]['code'] = e.target.value
@@ -61,13 +62,224 @@ const isDamagedFun = (i, event, formValues, setFormValues) => {
     console.log(formValues)
 }
 
-const receiveProducts = async (e, formValues, returnInvoice, h) => {
+const receiveProducts = async (e, i, formValues, recieveProduct, returnInvoice, setFormValues) => {
     e.preventDefault()
-    let f = formValues.filter(f => f.rquantity)
-    await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/`, {
-        formValues: f,
-        invoice_id: returnInvoice.invoice
-    }).then(() => h.push('/returns/list'))
+
+    // let f = formValues.filter(f => f.rquantity)
+
+    let newFormValues = [...formValues];
+    newFormValues[i].isRecieved = true
+    setFormValues(prev => [...newFormValues])
+    try {
+        await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/`, {
+            formValues: recieveProduct,
+            invoice_id: returnInvoice.invoice
+        })
+    } catch (e) {
+
+    }
+
+    // await Promise.all(f.map(async i => {
+    //     return await new Promise(async (resolve, reject) => {
+    //         try {
+    //             await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/`, {
+    //                 formValues: i,
+    //                 invoice_id: returnInvoice.invoice
+    //             })
+    //             return await resolve(0)
+    //         } catch (e) {
+    //             return reject(e);
+    //         }
+    //     })
+    // })).then(() => {
+    //     h.push('/returns/list')
+    // })
+}
+
+const goBack = (h) => {
+    h.push('/returns/list')
+}
+
+const displayReadOnlyForm = (element, index, returnInvoice) => {
+    return (
+        <CRow className="mb-4" key={index}>
+            <div className="col-sm-2">
+                <CFormInput
+                    name="code"
+                    autoComplete="off"
+                    type="text"
+                    id="productCode"
+                    readOnly={true}
+                    placeholder="Code(Ex: PR-12345)"
+                />
+            </div>
+            {
+                element.error != '' ?
+                    <>
+                        <div className="col-sm-6 error-message">
+                            Product code is invalid OR does not exist in this Invoice
+                        </div>
+                    </> :
+                    <>
+                        <div className="col-sm-2">
+                            <CFormInput
+                                name="name"
+                                autoComplete="off"
+                                type="text"
+                                id="name"
+                                readOnly={true}
+                                value={element.name || ''}
+                                placeholder="Product Name"
+                            />
+                        </div>
+                        <div className="col-sm-1">
+                            <CFormInput
+                                name="quantity"
+                                readOnly={true}
+                                autoComplete="off"
+                                type="number"
+                                min="1" max={element.quantity}
+                                placeholder={`${element.quantity || ''} Products`}
+                            />
+                        </div>
+                        <div className="col-sm-1 m-10imp">
+                            <label>
+                                <input type="checkbox"
+                                    readOnly={true}
+                                    name="isDamaged" /> Is Damaged
+                            </label>
+                        </div>
+                        {
+                            element.isDamaged
+                                ?
+                                <>
+                                    <div className="col-sm-2">
+                                        <select className="form-control"
+                                            required
+                                            readOnly={true}
+                                        >
+                                            <option value="">Select</option>
+                                            <option value="partial">Partially Damaged</option>
+                                            <option value="full">Full Damaged</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-sm-2">
+                                        <CFormInput
+                                            required={element.isDamaged}
+                                            readOnly={true}
+                                            autoComplete="off"
+                                            type="text"
+                                            placeholder={`Enter damaged cost`}
+                                        />
+                                    </div>
+                                </>
+                                : null
+                        }
+
+                        <div className="col-sm-1">
+                            <input type="button" value="Received" className="btn btn-secondary" />
+                        </div>
+                    </>
+            }
+        </CRow>
+    );
+}
+
+const displayForm = (element, index, returnInvoice, formValues, setFormValues) => {
+    return (
+        <CRow className="mb-4" key={index}>
+            <div className="col-sm-2">
+                <CFormInput
+                    name="code"
+                    autoComplete="off"
+                    type="text"
+                    id="productCode"
+                    readonly={element.isRecieved ? true : false}
+                    onChange={(e) => changeCode(returnInvoice.invoice, index, e, formValues, setFormValues)}
+                    placeholder="Code(Ex: PR-12345)"
+                />
+            </div>
+            {
+                element.error != '' ?
+                    <>
+                        <div className="col-sm-6 error-message">
+                            Product code is invalid OR does not exist in this Invoice
+                        </div>
+                    </> :
+                    <>
+                        <div className="col-sm-2">
+                            <CFormInput
+                                name="name"
+                                autoComplete="off"
+                                type="text"
+                                id="name"
+                                readOnly={true}
+                                value={element.name || ''}
+                                placeholder="Product Name"
+                            />
+                        </div>
+                        <div className="col-sm-1">
+                            <CFormInput
+                                name="quantity"
+
+                                required={element.name !== ''}
+                                onChange={e => updateRvalue(index, e, formValues, setFormValues)}
+                                autoComplete="off"
+                                type="number"
+                                min="1" max={element.quantity}
+                                placeholder={`${element.quantity || ''} Products`}
+                            />
+                        </div>
+                        <div className="col-sm-1 m-10imp">
+                            <label>
+                                <input type="checkbox"
+
+                                    onChange={e => isDamagedFun(index, e, formValues, setFormValues)}
+                                    name="isDamaged" /> Is Damaged
+                            </label>
+                        </div>
+                        {
+                            element.isDamaged
+                                ?
+                                <>
+                                    <div className="col-sm-2">
+                                        <select className="form-control"
+                                            required
+
+                                            onChange={e => updateDamageType(index, e, formValues, setFormValues)}
+                                        >
+                                            <option value="">Select</option>
+                                            <option value="partial">Partially Damaged</option>
+                                            <option value="full">Full Damaged</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-sm-2">
+                                        <CFormInput
+                                            required={element.isDamaged}
+                                            onChange={e => updateDamageCost(index, e, formValues, setFormValues)}
+                                            autoComplete="off"
+                                            type="text"
+                                            placeholder={`Enter damaged cost`}
+                                        />
+                                    </div>
+                                </>
+                                : null
+                        }
+
+                        <div className="col-sm-1">
+                            {
+                                element.isRecieved ?
+                                    <input type="button" value="Received" className="btn btn-secondary" />
+                                    :
+                                    <input type="button"
+                                        onClick={e => receiveProducts(e, index, formValues, element, returnInvoice, setFormValues)}
+                                        className="btn btn-primary" value="Recieve" />
+                            }
+                        </div>
+                    </>
+            }
+        </CRow>
+    )
 }
 
 export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
@@ -76,7 +288,9 @@ export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
         <>
             <CRow>
                 <CCol xs={12}>
-                    <form method="post" onSubmit={e => receiveProducts(e, formValues, returnInvoice, history)}>
+                    <form method="post"
+                        onSubmit={e => goBack(history)}
+                    >
                         <CCard className="mb-4">
                             <CCardHeader>
                                 <strong>Receive Invoice Items for {returnInvoice.invoice}</strong>
@@ -84,94 +298,19 @@ export const loadDataTable = (formValues, setFormValues, returnInvoice) => {
                             <CCardBody>
                                 {
                                     formValues.map((element, index) => (
-                                        <CRow className="mb-4" key={index}>
-                                            <div className="col-sm-2">
-                                                <CFormInput
-                                                    name="code"
-                                                    autoComplete="off"
-                                                    type="text"
-                                                    id="productCode"
-                                                    onChange={(e) => changeCode(returnInvoice.invoice, index, e, formValues, setFormValues)}
-                                                    placeholder="Code(Ex: PR-12345)"
-                                                />
-                                            </div>
-                                            {
-                                                element.error != '' ?
-                                                    <>
-                                                        <div className="col-sm-6 error-message">
-                                                            Product code is invalid OR does not exist in this Invoice
-                                                        </div>
-                                                    </> :
-                                                    <>
-                                                        <div className="col-sm-3">
-                                                            <CFormInput
-                                                                name="name"
-                                                                autoComplete="off"
-                                                                type="text"
-                                                                id="name"
-                                                                readOnly={true}
-                                                                value={element.name || ''}
-                                                                placeholder="Product Name"
-                                                            />
-                                                        </div>
-                                                        <div className="col-sm-2">
-                                                            <CFormInput
-                                                                name="quantity"
-                                                                required={element.name !== ''}
-                                                                onChange={e => updateRvalue(index, e, formValues, setFormValues)}
-                                                                autoComplete="off"
-                                                                type="number"
-                                                                min="1" max={element.quantity}
-                                                                placeholder={`Max ${element.quantity || ''} Products`}
-                                                            />
-                                                        </div>
-                                                        <div className="col-sm-1 m-10imp">
-                                                            <label>
-                                                                <input type="checkbox"
-                                                                    onChange={e => isDamagedFun(index, e, formValues, setFormValues)}
-                                                                    name="isDamaged" /> Is Damaged
-                                                            </label>
-                                                        </div>
-                                                        {
-                                                            element.isDamaged
-                                                                ?
-                                                                <>
-                                                                    <div className="col-sm-2">
-                                                                        <select className="form-control"
-                                                                            required
-                                                                            onChange={e => updateDamageType(index, e, formValues, setFormValues)}
-                                                                        >
-                                                                            <option value="">Select</option>
-                                                                            <option value="partial">Partially Damaged</option>
-                                                                            <option value="full">Full Damaged</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div className="col-sm-2">
-                                                                        <CFormInput
-                                                                            required={element.isDamaged}
-                                                                            onChange={e => updateDamageCost(index, e, formValues, setFormValues)}
-                                                                            autoComplete="off"
-                                                                            type="text"
-                                                                            placeholder={`Enter damaged cost`}
-                                                                        />
-                                                                    </div>
-                                                                </>
-                                                                : null
-                                                        }
-
-                                                    </>
-                                            }
-                                        </CRow>
+                                        element.isRecieved ?
+                                            displayReadOnlyForm(element, index, returnInvoice)
+                                            :
+                                            displayForm(element, index, returnInvoice, formValues, setFormValues)
                                     ))
                                 }
                             </CCardBody>
                             <CCardFooter>
                                 <CRow>
                                     <div className="col-sm-6"></div>
-                                    <div className="col-sm-6 float-right">
-                                        <input type="submit" className="btn btn-primary" value="Recieve Products" />
-                                        &nbsp;&nbsp;
-                                        <button className="btn btn-secondary">Cancel</button>
+                                    <div className="col-sm-6 alignright">
+                                        <input type="submit" className="btn btn-secondary" value="Go Back to List" />
+
                                     </div>
                                 </CRow>
                             </CCardFooter>
@@ -229,11 +368,7 @@ export const searchInvoices = (setSearchString, getInvoices) => {
                                     <div className="col-sm-10">
                                         <h4>Receive Invoice form</h4>
                                     </div>
-                                    <div className="col-sm-2 float-right">
-                                        <button className="btn btn-primary">
-                                            Received List
-                                        </button>
-                                    </div>
+
                                 </CRow>
                             </CCardHeader>
                             <CCardBody>

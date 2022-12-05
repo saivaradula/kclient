@@ -103,7 +103,7 @@ const RetList = ({ type }) => {
                         <th>Address</th>
                         <th>Content</th>
                         <th>Contact Name</th>
-                        <th>Quantity</th>
+                        <th>Product(s)</th>
                         <th>
                             {
                                 type === 'pending' ? 'Ordered' : type.charAt(0).toUpperCase() + type.slice(1)
