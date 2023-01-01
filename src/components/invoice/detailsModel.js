@@ -138,21 +138,27 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
           </tr>
         </thead>
         <tbody>
-          {items.map((p) => (
-            <tr key={p.product_code}>
-              <td>
-                <img src={p.product_image} width="30" height="30" />
-              </td>
-              <td>{p.product_code}</td>
-              <td>{p.product_name}</td>
-              <td>{p.quantity}</td>
-              <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
-              <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
-              <td className="money">{p.rent_days}</td>
-              <td className="money">{p.cost.toFixed(2)}</td>
+          {
 
-              {
-                (!isfinder && !isPaid) ?
+            items.map((p) => (
+              <tr key={p.product_code}>
+                <td>
+                  <img src={p.product_image} width="30" height="30" />
+                </td>
+                <td>{p.product_code}</td>
+                <td>{p.product_name}</td>
+                <td>{p.quantity}</td>
+                <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
+                <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
+                <td className="money">{p.rent_days}</td>
+                <td className="money">{p.cost.toFixed(2)}</td>
+                {
+                  // TODO: remove below td.
+                }
+                <td>-</td>
+                {
+                  /*
+                  (!isfinder && !isPaid) ?
                   <td><button
                     className="btn btn-secondary"
                     onClick={() => removeItemFromInvoice(modalInvoice.inv, p.product_code, p.cost.toFixed(2))}
@@ -160,9 +166,13 @@ const InvoiceDetailsModal = ({ invoice, payments, show, handleClose, isInvoice, 
                     Remove
                   </button></td> :
                   <></>
-              }
-            </tr>
-          ))}
+                  */
+                }
+
+              </tr>
+            ))
+
+          }
         </tbody>
       </table>
     )

@@ -11,6 +11,7 @@ import CIcon from '@coreui/icons-react'
 import { cilPen, cilLocationPin, cilDelete } from '@coreui/icons'
 import InvoiceDetailsModal from './detailsModel'
 import UpdateForm from './invoiceupdateform'
+import NoDataComponent from '../common/NoDataComponent'
 
 const Invoices = () => {
   const [invoiceList, setInvoiceList] = useState(() => [])
@@ -224,52 +225,56 @@ const Invoices = () => {
               </tr>
             </thead>
             <tbody>
-              {invoiceList.map((inv, index) => (
-                <tr key={inv.invoice}>
-                  <td>{index + 1}</td>
-                  <td>
-                    <Link to="#" path="#" onClick={() => getDetail(inv.invoice)}>
-                      {inv.invoice}
-                    </Link>
-                  </td>
-                  <td>{inv.to_name}</td>
-                  {/* <td>
-                    {inv.contactName} - {inv.contactPhone}
-                  </td> */}
-                  <td className="money">{inv.totalProducts}</td>
-                  <td className="money">{inv.payableamount}</td>
-                  <td className="money">
-                    {moment.utc(inv.startDate).format('ddd - MMM Do, YYYY')}
-                  </td>
-                  <td className="money">{moment.utc(inv.endDate).format('ddd - MMM Do, YYYY')}</td>
-                  <td className="money">{inv.ip_value}</td>
-                  <td className="money">{inv.is_value}</td>
-                  <td>
-                    <OverlayTrigger
-                      placement="top"
-                      overlay={
-                        <Tooltip id="button-tooltip-2">
-                          Update Invoice
-                        </Tooltip>
-                      }
-                    >
-                      <Link to="#" path="#" onClick={() => updateInvoice(inv.invoice)}>
-                        <CIcon icon={cilPen} className="cricon" />
-                      </Link>
-                    </OverlayTrigger>
-                    &nbsp;&nbsp;| &nbsp;&nbsp;
-                    <OverlayTrigger
-                      placement="top"
-                      overlay={<Tooltip id="button-tooltip-2">Delete Invoice</Tooltip>}
-                    >
-                      <Link to="#" path="#">
-                        <CIcon onClick={() => deleteInvoice(inv.invoice)}
-                          icon={cilDelete} className="cricon" />
-                      </Link>
-                    </OverlayTrigger>
-                  </td>
-                </tr>
-              ))}
+              {
+                invoiceList.length ?
+                  invoiceList.map((inv, index) => (
+                    <tr key={inv.invoice}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <Link to="#" path="#" onClick={() => getDetail(inv.invoice)}>
+                          {inv.invoice}
+                        </Link>
+                      </td>
+                      <td>{inv.to_name}</td>
+                      {/* <td>
+                      {inv.contactName} - {inv.contactPhone}
+                    </td> */}
+                      <td className="money">{inv.totalProducts}</td>
+                      <td className="money">{inv.payableamount}</td>
+                      <td className="money">
+                        {moment.utc(inv.startDate).format('ddd - MMM Do, YYYY')}
+                      </td>
+                      <td className="money">{moment.utc(inv.endDate).format('ddd - MMM Do, YYYY')}</td>
+                      <td className="money">{inv.ip_value}</td>
+                      <td className="money">{inv.is_value}</td>
+                      <td>
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
+                              Update Invoice
+                            </Tooltip>
+                          }
+                        >
+                          <Link to="#" path="#" onClick={() => updateInvoice(inv.invoice)}>
+                            <CIcon icon={cilPen} className="cricon" />
+                          </Link>
+                        </OverlayTrigger>
+                        &nbsp;&nbsp;| &nbsp;&nbsp;
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={<Tooltip id="button-tooltip-2">Delete Invoice</Tooltip>}
+                        >
+                          <Link to="#" path="#">
+                            <CIcon onClick={() => deleteInvoice(inv.invoice)}
+                              icon={cilDelete} className="cricon" />
+                          </Link>
+                        </OverlayTrigger>
+                      </td>
+                    </tr>
+                  ))
+                  : <tr><td colspan="10"><NoDataComponent /></td></tr>
+              }
             </tbody>
           </table>
         </CCard>

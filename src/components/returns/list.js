@@ -7,12 +7,16 @@ import Modal from 'react-bootstrap/Modal'
 import ItemsModel from './ItemsModel'
 import { CCard, CCardBody, CCardHeader, CCol, CFormInput, CRow } from '@coreui/react'
 import 'react-datepicker/dist/react-datepicker.css'
+import NoDataComponent from '../common/NoDataComponent'
+import Loader from '../common/loading'
 
 const RetList = ({ type }) => {
 
     const [show, setShow] = useState(() => false)
     const handleClose = () => setShow(() => false)
     const handleShow = () => setShow(() => true)
+
+
 
     const ACTIONS = {
         ADD_NEW: 'new',
@@ -65,6 +69,7 @@ const RetList = ({ type }) => {
 
     const [state, setState] = useState(() => ({
         isLoaded: false,
+        loading: true,
         inventory: []
     }))
 
@@ -74,7 +79,7 @@ const RetList = ({ type }) => {
         })
         setState((p) => ({
             ...p,
-            isLoaded: true, inventory: listOfInvoices.data
+            isLoaded: true, inventory: listOfInvoices.data, loading: false
         }))
     }
 
@@ -92,7 +97,6 @@ const RetList = ({ type }) => {
     }, [state.isLoaded])
 
     const display = inventory => {
-        console.log(inventory)
         return (
             <>
                 <table className="table table-stripped">
@@ -112,33 +116,35 @@ const RetList = ({ type }) => {
                     </thead>
                     <tbody>
                         {
-                            inventory.map((inv, index) => {
-                                return (<tr key={index}>
-                                    <td>{index + 1}</td>
-                                    <td>
-                                        <Link
-                                            to="#"
-                                            path="#"
-                                            onClick={() => getDetail(inv.invoice)}>
-                                            {inv.invoice}
-                                        </Link>
-                                    </td>
-                                    <td>{inv.to_name}</td>
-                                    <td>{inv.to_address}</td>
-                                    <td>{inv.content_type}</td>
-                                    <td>{inv.contactname}</td>
-                                    <td>{inv.totalProducts}</td>
-                                    <td>
-                                        {
-                                            type === 'pending'
-                                                ?
-                                                moment.utc(inv.fromDate).format('DD/MM/yyyy')
-                                                :
-                                                moment.utc(inv.returned_date).format('DD/MM/yyyy')
-                                        }
-                                    </td>
-                                </tr>)
-                            })
+                            inventory.length ?
+                                inventory.map((inv, index) => {
+                                    return (<tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>
+                                            <Link
+                                                to="#"
+                                                path="#"
+                                                onClick={() => getDetail(inv.invoice)}>
+                                                {inv.invoice}
+                                            </Link>
+                                        </td>
+                                        <td>{inv.to_name}</td>
+                                        <td>{inv.to_address}</td>
+                                        <td>{inv.content_type}</td>
+                                        <td>{inv.contactname}</td>
+                                        <td>{inv.totalProducts}</td>
+                                        <td>
+                                            {
+                                                type === 'pending'
+                                                    ?
+                                                    moment.utc(inv.fromDate).format('DD/MM/yyyy')
+                                                    :
+                                                    moment.utc(inv.returned_date).format('DD/MM/yyyy')
+                                            }
+                                        </td>
+                                    </tr>)
+                                })
+                                : <tr><td colspan="8"><NoDataComponent /></td></tr>
                         }
                     </tbody>
                 </table>
@@ -164,12 +170,15 @@ const RetList = ({ type }) => {
                         </CCardHeader>
                         <CCardBody>
                             {
-                                state.inventory.length ?
-                                    <div>
-                                        {display(state.inventory)}
-                                    </div>
+                                state.loading && !state.isLoaded ?
+                                    <Loader />
                                     :
-                                    <></>
+                                    state.inventory.length ?
+                                        <div>
+                                            {display(state.inventory)}
+                                        </div>
+                                        :
+                                        <div><NoDataComponent /></div>
                             }
                         </CCardBody>
                     </CCard>

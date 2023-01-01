@@ -11,6 +11,8 @@ import CIcon from '@coreui/icons-react'
 import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
 import InvoiceDetailsModal from './detailsModel'
 import logo from '../../../src/assets/images/logo.png'
+import NoDataComponent from '../common/NoDataComponent'
+
 var converter = require('number-to-words');
 
 const PrintedInvoices = () => {
@@ -236,42 +238,46 @@ const PrintedInvoices = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {invoiceList.map((inv, index) => (
-                                <tr key={inv.invoice}>
-                                    <td>{index + 1}</td>
-                                    <td>
-                                        <Link to="#" path="#" onClick={() => getDetail(inv.invoice)}>
-                                            {inv.invoice}
-                                        </Link>
-                                    </td>
-                                    <td>{inv.to_name}</td>
-                                    <td>
-                                        {inv.contactName} - {inv.contactPhone}
-                                    </td>
-                                    <td className="money">{inv.totalProducts}</td>
-                                    <td className="money">{inv.totalCost.toFixed(2)}</td>
-                                    <td className="money">
-                                        {moment.utc(inv.startDate).format('ddd - MMM Do, YYYY')}
-                                    </td>
-                                    <td className="money">{moment.utc(inv.endDate).format('ddd - MMM Do, YYYY')}</td>
-                                    <td className="money">{inv.ip_value}</td>
-                                    <td className="money">{inv.is_value}</td>
-                                    <td>
-                                        <OverlayTrigger
-                                            placement="top"
-                                            overlay={
-                                                <Tooltip id="button-tooltip-2">
-                                                    Final Invoice details
-                                                </Tooltip>
-                                            }
-                                        >
-                                            <Link to="#" path="#" onClick={() => chooseGST(inv.invoice)}>
-                                                <CIcon icon={cilFingerprint} className="cricon" />
-                                            </Link>
-                                        </OverlayTrigger>
-                                    </td>
-                                </tr>
-                            ))}
+                            {
+                                invoiceList.length ?
+                                    invoiceList.map((inv, index) => (
+                                        <tr key={inv.invoice}>
+                                            <td>{index + 1}</td>
+                                            <td>
+                                                <Link to="#" path="#" onClick={() => getDetail(inv.invoice)}>
+                                                    {inv.invoice}
+                                                </Link>
+                                            </td>
+                                            <td>{inv.to_name}</td>
+                                            <td>
+                                                {inv.contactName} - {inv.contactPhone}
+                                            </td>
+                                            <td className="money">{inv.totalProducts}</td>
+                                            <td className="money">{inv.totalCost.toFixed(2)}</td>
+                                            <td className="money">
+                                                {moment.utc(inv.startDate).format('ddd - MMM Do, YYYY')}
+                                            </td>
+                                            <td className="money">{moment.utc(inv.endDate).format('ddd - MMM Do, YYYY')}</td>
+                                            <td className="money">{inv.ip_value}</td>
+                                            <td className="money">{inv.is_value}</td>
+                                            <td>
+                                                <OverlayTrigger
+                                                    placement="top"
+                                                    overlay={
+                                                        <Tooltip id="button-tooltip-2">
+                                                            Final Invoice details
+                                                        </Tooltip>
+                                                    }
+                                                >
+                                                    <Link to="#" path="#" onClick={() => chooseGST(inv.invoice)}>
+                                                        <CIcon icon={cilFingerprint} className="cricon" />
+                                                    </Link>
+                                                </OverlayTrigger>
+                                            </td>
+                                        </tr>
+                                    ))
+                                    : <tr><td colspan="11"><NoDataComponent /></td></tr>
+                            }
                         </tbody>
                     </table>
                 </CCard>
