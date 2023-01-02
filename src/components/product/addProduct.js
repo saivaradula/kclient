@@ -42,11 +42,13 @@ const AddProducts = (props) => {
   const [prodImage, setProdImage] = useState('')
   const [categoryList, setCategoryList] = useState([])
   const [resultLoaded, setResultLoaded] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const getCategories = () => {
     axios.get(`${process.env.REACT_APP_API_URL}/category`).then((data) => {
       setCategoryList(data.data)
       setResultLoaded(true)
+      setLoading(false)
     })
   }
 
@@ -69,6 +71,7 @@ const AddProducts = (props) => {
       setValidated(false)
     }
     setValidated(true)
+    setLoading(true)
     let payLoad = {
       code: code,
       name: name,
@@ -157,6 +160,7 @@ const AddProducts = (props) => {
   }
 
   const setSubC = (e) => {
+    setLoading(true)
     setCode('')
     let categoryFL = getFirstLetter(category)
     let fLetters = getFirstLetter(e.target.value);
@@ -164,6 +168,7 @@ const AddProducts = (props) => {
     fLetters = categoryFL + fLetters;
     axios.get(`${process.env.REACT_APP_API_URL}/products/getNextCode/${fLetters}`).then((res) => {
       setCode(res.data);
+      setLoading(false)
     })
   }
 
@@ -216,6 +221,7 @@ const AddProducts = (props) => {
                     type="text"
                     autocomplete="off"
                     id="subcategory"
+                    onChange={() => setLoading(true)}
                     onBlur={(e) => setSubC(e)}
                     placeholder="Enter Sub Category"
                   />
@@ -473,9 +479,16 @@ const AddProducts = (props) => {
             </CButton>
           </div>
           <div className="col-sm-3">
-            <CButton color="primary" type="submit">
-              Submit form
-            </CButton>
+            {
+              loading ?
+                <CButton color="secondary" type="button" disabled>
+                  Add Product
+                </CButton>
+                :
+                <CButton color="primary" type="submit">
+                  Add Product
+                </CButton>
+            }
           </div>
         </CRow>
       </CCol>

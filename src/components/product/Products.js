@@ -22,6 +22,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import CIcon from '@coreui/icons-react'
 import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
+import Loader from '../common/loading'
 
 import axios from 'axios'
 require('dotenv').config()
@@ -51,7 +52,7 @@ const Products = (props) => {
   // const arrChecked = []
   let [products, setProducts] = useState([])
   const [resultLoaded, setResultLoaded] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const [page, setPage] = useState(() =>
     props.match.params.p ? props.match.params.p : 1
@@ -71,7 +72,7 @@ const Products = (props) => {
   let i = 0
 
   const fetchData = (p, s = 1) => {
-
+    setLoading(true)
     try {
       let searchString = searchTerm;
       // p = searchString == '' ? p : 1
@@ -84,9 +85,11 @@ const Products = (props) => {
         setTotalProd(numOfProducts)
         setProducts(p)
         setResultLoaded(true)
+        setLoading(false)
         setPages(Math.ceil(numOfProducts / 25))
       })
     } catch (error) {
+      setLoading(false)
       console.log(error.message)
     }
 
@@ -306,80 +309,84 @@ const Products = (props) => {
               </tr>
             </thead>
             <tbody>
-              {products.map((p) => (
-                // <tr key={p.code} className={"" + (checked ? "selectedTr" : "")}>
-                <tr key={p.code}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      className="products"
-                      value={p.code}
-                      onChange={enableOperations(p.nickname, p.price)}
-                    />
-                  </td>
-                  <td>
-                    <img onClick={() => previewImage(p.image, p.name)} src={p.image} width="35" height="35" />
-                  </td>
-                  <td>{p.code}</td>
-                  <td>{p.name}</td>
-                  <td>{p.nickname}</td>
-                  {/* <td>{p.brand}</td> */}
-                  <td><DisplayHtml text={p.brand} /></td>
-                  <td>{p.model}</td>
-                  <td>{p.category}</td>
-                  <td>{p.subcategory}</td>
-                  <td>{p.prtype.charAt(0).toUpperCase() + p.prtype.slice(1)}</td>
-                  <td>{p.unit}</td>
-                  {/* <td>{p.cost}</td> */}
-                  <td>{p.price}</td>
-                  <td>{p.quantity}</td>
-                  <td>{p.alert}</td>
-                  <td>
-                    <OverlayTrigger
-                      placement="top"
-                      overlay={
-                        <Tooltip id="button-tooltip-2">
-                          Update Product
-                        </Tooltip>
-                      }
-                    >
-                      <Link to="#" path="#" onClick={() => updateProduct(p.code, page)}>
-                        <CIcon icon={cilPen} className="cricon" />
-                      </Link>
-                    </OverlayTrigger>
-                    &nbsp;&nbsp;| &nbsp;&nbsp;
-                    <OverlayTrigger
-                      placement="top"
-                      overlay={
-                        <Tooltip id="button-tooltip-2">
-                          Print QR Codes
-                        </Tooltip>
-                      }
-                    >
-                      <Link to="#" path="#" onClick={() => gotoPrint(p.code, p.nickname, p.price)}>
-                        <CIcon icon={cilFingerprint} className="cricon" />
-                      </Link>
-                    </OverlayTrigger>
-                    &nbsp;&nbsp;| &nbsp;&nbsp;
-                    <OverlayTrigger
-                      placement="top"
-                      overlay={
-                        <Tooltip id="button-tooltip-2">
-                          Delete <b>{p.name}</b>
-                        </Tooltip>
-                      }
-                    >
-                      <Link to="#" path="#" onClick={() => deleteProd(p.code, p.name)}>
-                        <CIcon icon={cilDelete} className="cricon" />
-                      </Link>
-                    </OverlayTrigger>
-                  </td>
+              {
+                loading ?
+                  <tr><td colspan="15"><Loader /></td></tr>
+                  :
+                  products.map((p) => (
+                    // <tr key={p.code} className={"" + (checked ? "selectedTr" : "")}>
+                    <tr key={p.code}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          className="products"
+                          value={p.code}
+                          onChange={enableOperations(p.nickname, p.price)}
+                        />
+                      </td>
+                      <td>
+                        <img onClick={() => previewImage(p.image, p.name)} src={p.image} width="35" height="35" />
+                      </td>
+                      <td>{p.code}</td>
+                      <td>{p.name}</td>
+                      <td>{p.nickname}</td>
+                      {/* <td>{p.brand}</td> */}
+                      <td><DisplayHtml text={p.brand} /></td>
+                      <td>{p.model}</td>
+                      <td>{p.category}</td>
+                      <td>{p.subcategory}</td>
+                      <td>{p.prtype.charAt(0).toUpperCase() + p.prtype.slice(1)}</td>
+                      <td>{p.unit}</td>
+                      {/* <td>{p.cost}</td> */}
+                      <td>{p.price}</td>
+                      <td>{p.quantity}</td>
+                      <td>{p.alert}</td>
+                      <td>
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
+                              Update Product
+                            </Tooltip>
+                          }
+                        >
+                          <Link to="#" path="#" onClick={() => updateProduct(p.code, page)}>
+                            <CIcon icon={cilPen} className="cricon" />
+                          </Link>
+                        </OverlayTrigger>
+                        &nbsp;&nbsp;| &nbsp;&nbsp;
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
+                              Print QR Codes
+                            </Tooltip>
+                          }
+                        >
+                          <Link to="#" path="#" onClick={() => gotoPrint(p.code, p.nickname, p.price)}>
+                            <CIcon icon={cilFingerprint} className="cricon" />
+                          </Link>
+                        </OverlayTrigger>
+                        &nbsp;&nbsp;| &nbsp;&nbsp;
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
+                              Delete <b>{p.name}</b>
+                            </Tooltip>
+                          }
+                        >
+                          <Link to="#" path="#" onClick={() => deleteProd(p.code, p.name)}>
+                            <CIcon icon={cilDelete} className="cricon" />
+                          </Link>
+                        </OverlayTrigger>
+                      </td>
 
-                </tr>
-              ))}
+                    </tr>
+                  ))}
             </tbody>
           </table>
-        </div>
+        </div >
 
       </>
     )
