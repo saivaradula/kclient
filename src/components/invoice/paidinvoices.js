@@ -268,7 +268,7 @@ const PaidInvoices = () => {
                       </td>
                     </tr>
                   ))
-                  : <tr><td colspan="11"><NoDataComponent /></td></tr>
+                  : <tr><td colSpan="11"><NoDataComponent /></td></tr>
               }
             </tbody>
           </table>

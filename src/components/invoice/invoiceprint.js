@@ -139,15 +139,15 @@ const InvoicePrint = (props) => {
                                 </tr>
                                 {/* <tr>
                                     <th>Art Director:</th>
-                                    <td colspan="2">{invoiceDetails.data[0].art_director_name}</td>
+                                    <td colSpan="2">{invoiceDetails.data[0].art_director_name}</td>
                                     <th>Hero/Director:</th>
-                                    <td colspan="2">{invoiceDetails.data[0].name}({invoiceDetails.data[0].herodirector})</td>
+                                    <td colSpan="2">{invoiceDetails.data[0].name}({invoiceDetails.data[0].herodirector})</td>
                                 </tr>
                                 <tr>
                                     <th>Contact Name / Phone:</th>
-                                    <td colspan="2">{invoiceDetails.data[0].contactName} / {invoiceDetails.data[0].contactPhone}</td>
+                                    <td colSpan="2">{invoiceDetails.data[0].contactName} / {invoiceDetails.data[0].contactPhone}</td>
                                     <th>Received By / Phone:</th>
-                                    <td colspan="2">{invoiceDetails.data[0].prop_receiver_name}({invoiceDetails.data[0].prop_receiver}) / {invoiceDetails.data[0].art_phone}</td>
+                                    <td colSpan="2">{invoiceDetails.data[0].prop_receiver_name}({invoiceDetails.data[0].prop_receiver}) / {invoiceDetails.data[0].art_phone}</td>
                                 </tr> */}
                             </table>
                         </div>
@@ -183,7 +183,7 @@ const InvoicePrint = (props) => {
                             <table className="table table-striped">
                                 <tbody>
                                     <tr>
-                                        <td colspan="2">
+                                        <td colSpan="2">
                                             {inWords((invoiceDetails.payableamount / 1).toFixed(2))}
                                         </td>
                                         <td className="money">

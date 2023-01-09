@@ -16,8 +16,6 @@ const RetList = ({ type }) => {
     const handleClose = () => setShow(() => false)
     const handleShow = () => setShow(() => true)
 
-
-
     const ACTIONS = {
         ADD_NEW: 'new',
         UPDATE_ADDRESS: 'address',
@@ -144,7 +142,7 @@ const RetList = ({ type }) => {
                                         </td>
                                     </tr>)
                                 })
-                                : <tr><td colspan="8"><NoDataComponent /></td></tr>
+                                : <tr><td colSpan="8"><NoDataComponent /></td></tr>
                         }
                     </tbody>
                 </table>

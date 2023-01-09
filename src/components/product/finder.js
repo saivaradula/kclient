@@ -94,7 +94,7 @@ const ItemFinder = (props) => {
 
     const getItem = () => {
         axios.get(`${process.env.REACT_APP_API_URL}/items/find/${searchTerm}`).then((response) => {
-            console.log(response.data[0])
+
             setSearchR(() => response.data)
             setSearched(() => true)
         })
@@ -139,6 +139,7 @@ const ItemFinder = (props) => {
                                                     <th>Content</th>
                                                     <th>Sent On</th>
                                                     <th>Expected On</th>
+                                                    <th>Where</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -161,6 +162,20 @@ const ItemFinder = (props) => {
                                                             </td>
                                                             <td>
                                                                 {moment.utc(i.endDate).format('ddd - MMM Do, YYYY')}
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    (i.isBlocked) ? 'Booked'
+                                                                        :
+                                                                        (i.rstatus === 'NR') ? 'Pending'
+                                                                            :
+                                                                            (i.rstatus === 'R') ?
+                                                                                (i.code.indexOf('-D') > 0) ? 'Damaged'
+                                                                                    :
+                                                                                    (i.code.indexOf('-FULL_D') > 0) ? 'Fully Damaged' : 'Received'
+                                                                                :
+                                                                                ''
+                                                                }
                                                             </td>
                                                         </tr>
                                                     ))

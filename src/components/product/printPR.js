@@ -77,8 +77,8 @@ const printPR = (props) => {
             </td>
              
           <tr>
-            <td colspan="2">{qrCode ? <QrCode url={productId} /> : <></>}</td>
-            <td colspan="2">{barCode ? <Barcode value={productId} /> : <></>}</td>
+            <td colSpan="2">{qrCode ? <QrCode url={productId} /> : <></>}</td>
+            <td colSpan="2">{barCode ? <Barcode value={productId} /> : <></>}</td>
           </tr>
         </thead>
       </table> */}

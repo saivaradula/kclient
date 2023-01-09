@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-} from 'react-bootstrap';
+import React, { useEffect } from 'react'
+import useState from 'react-usestateref'
+import { CSVLink } from 'react-csv'
+
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 import { useHistory, Link } from 'react-router-dom'
@@ -29,30 +27,18 @@ require('dotenv').config()
 import DisplayHtml from './Displayhtml'
 import SearchOperation from './../common/SearchOperation'
 
-const parser = new DOMParser();
 
-ReactHTMLTableToExcel.format = (s, c) => {
-  if (c && c['table']) {
-    const html = c.table;
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-    const rows = doc.querySelectorAll('tr.selected');
-
-    for (const row of rows) row.removeChild(row.firstChild);
-    for (const row of rows) row.removeChild(row.firstChild);
-
-    c.table = doc.querySelector('table').outerHTML;
-  }
-
-  return s.replace(/{(\w+)}/g, (m, p) => c[p]);
-};
 
 const Products = (props) => {
   const history = useHistory()
   // const arrChecked = []
-  let [products, setProducts] = useState([])
+  let [products, setProducts, refProducts] = useState([])
   const [resultLoaded, setResultLoaded] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [chekBox, setChekBox, counterRef] = useState({
+    damaged: 0,
+    archieved: 0
+  })
 
   const [page, setPage] = useState(() =>
     props.match.params.p ? props.match.params.p : 1
@@ -67,19 +53,17 @@ const Products = (props) => {
   let [printingOptions, setPrintingOptions] = useState([])
   const [showPreview, setShowPreview] = useState(() => '')
   let [searchTerm, setSearchTerm] = useState(() => '')
-  const [checkbox, setCheckbox] = useState(() => [])
+  const [checked, setChecked] = useState(() => false)
 
-  let i = 0
-
-  const fetchData = (p, s = 1) => {
+  let i = 0;
+  const fetchData = (p) => {
     setLoading(true)
+    let { damaged, archieved } = counterRef.current
     try {
       let searchString = searchTerm;
-      // p = searchString == '' ? p : 1
-      console.log(p)
       setPage(p)
       setInputPage(p)
-      axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${s}/${searchString}`).then((data) => {
+      axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${archieved}/${damaged}/${searchString}`).then((data) => {
         let numOfProducts = data.data.products.total
         let p = data.data.products.data;
         setTotalProd(numOfProducts)
@@ -107,6 +91,7 @@ const Products = (props) => {
   const setPrinting = (event) => {
     printingOptions[event.target.value] = event.target.checked ? true : false
     let newArr = { ...printingOptions }
+    console.log(newArr)
     localStorage.setItem('printing_options', JSON.stringify(newArr))
   }
 
@@ -134,10 +119,6 @@ const Products = (props) => {
     localStorage.setItem('print', '')
     localStorage.setItem('print', JSON.stringify(newArr))
     history.push('/products/print')
-  }
-
-  const ExportToExcel = () => {
-
   }
 
   const resetActions = () => {
@@ -169,20 +150,31 @@ const Products = (props) => {
     history.push(`/products/${code}`)
   }
 
-  const enableOperations = (name, price) => (event) => {
+  const [excelIds, setExcelIds, excelsRef] = useState(() => [])
+
+  const enableOperations = (name, price, product, i) => (event) => {
+    // product = product.filter(i => i.image)
+    let p = { ...product };
+    delete (p.image)
+    delete (p.createdAt)
+    delete (p.updatedAt)
+    excelIds.push(p)
+    let excelRows = new Set(excelIds)
+    setExcelIds(Array.from(excelRows))
+
     if (event.target.checked) {
       arrChecked[event.target.value] = {
         code: event.target.value,
         doPrint: true,
         name: name,
-        price: price,
+        price: price
       }
     } else {
       arrChecked[event.target.value] = {
         code: '',
         doPrint: false,
         name: '',
-        price: '',
+        price: ''
       }
     }
     updateSelectedProductLength(document.querySelectorAll('input[class="products"]:checked').length)
@@ -243,17 +235,11 @@ const Products = (props) => {
                 </CButton>
               </div>
               <div className="col-sm-2">
-                {/* <CButton color="primary" type="button" onClick={ExportToExcel}>
-                  Export to Excel
-                </CButton> */}
-                <ReactHTMLTableToExcel
-                  id="test-table-xls-button"
-                  className="btn btn-primary"
-                  table="table-to-xls"
-                  filename="products"
-                  sheet="tablexls"
-                  buttonText="Export to Excel"
-                />
+                <CSVLink data={excelsRef.current} filename={'products'}>
+                  <CButton color="primary" type="button">
+                    Export to Excel
+                  </CButton>
+                </CSVLink>
               </div>
             </CRow>
             <hr />
@@ -311,17 +297,17 @@ const Products = (props) => {
             <tbody>
               {
                 loading ?
-                  <tr><td colspan="15"><Loader /></td></tr>
+                  <tr><td colSpan="15"><Loader /></td></tr>
                   :
-                  products.map((p) => (
-                    // <tr key={p.code} className={"" + (checked ? "selectedTr" : "")}>
-                    <tr key={p.code}>
+                  products.map((p, i) => (
+                    <tr key={p.code} >
+                      {/* <tr key={p.code}> */}
                       <td>
                         <input
                           type="checkbox"
                           className="products"
                           value={p.code}
-                          onChange={enableOperations(p.nickname, p.price)}
+                          onChange={enableOperations(p.nickname, p.price, p, i)}
                         />
                       </td>
                       <td>
@@ -428,9 +414,35 @@ const Products = (props) => {
     setInputPage(1)
   }
 
-  const changeView = (e) => {
-    console.log(e.target.checked)
-    e.target.checked ? fetchData(1, 0) : fetchData(1)
+  const showArchieved = (e) => {
+    if (e.target.checked) {
+      setChekBox(checkBox => ({
+        damaged: 0,
+        archieved: 1
+      }))
+    } else {
+      setChekBox(checkBox => ({
+        damaged: 0,
+        archieved: 0
+      }))
+    }
+    fetchData(1)
+  }
+
+  const showDamaged = (e) => {
+    if (e.target.checked) {
+      setChekBox(checkBox => ({
+        damaged: 1,
+        archieved: 0
+      }))
+    } else {
+      setChekBox(checkBox => ({
+        damaged: 0,
+        archieved: 0
+      }))
+    }
+    fetchData(1)
+    // e.target.checked ? fetchData(1, 1, 0) : fetchData(1, 0, 0)
   }
 
   return (
@@ -451,12 +463,24 @@ const Products = (props) => {
                 <CCol xs={6}><strong>Products</strong></CCol>
                 <CCol xs={6}>
                   <div className="alignright">
-                    <label>
-                      <input type="checkbox"
-                        onClick={e => changeView(e)} />
-                      &nbsp;&nbsp;
-                      Show Fully Damaged Products
-                    </label>
+                    <div style={{ "marginRight": '2px', 'float': 'left' }}>
+                      <label>
+                        <input type="checkbox"
+                          checked={chekBox.archieved}
+                          onClick={e => showArchieved(e)} />
+                        &nbsp;&nbsp;
+                        Show Archieved Products
+                      </label>
+                    </div>
+                    <div>
+                      <label>
+                        <input type="checkbox"
+                          checked={chekBox.damaged}
+                          onClick={e => showDamaged(e)} />
+                        &nbsp;&nbsp;
+                        Show Fully Damaged Products
+                      </label>
+                    </div>
                   </div>
                 </CCol>
               </CRow>

@@ -299,7 +299,7 @@ const DraftList = () => {
                           </td>
                         </tr>
                       ))
-                      : <tr><td colspan="9"><NoDataComponent /></td></tr>
+                      : <tr><td colSpan="9"><NoDataComponent /></td></tr>
                   }
                 </tbody>
               </table>

@@ -273,7 +273,7 @@ const Invoices = () => {
                       </td>
                     </tr>
                   ))
-                  : <tr><td colspan="10"><NoDataComponent /></td></tr>
+                  : <tr><td colSpan="10"><NoDataComponent /></td></tr>
               }
             </tbody>
           </table>
