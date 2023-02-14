@@ -66,6 +66,7 @@ const Products = (props) => {
       axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${archieved}/${damaged}/${searchString}`).then((data) => {
         let numOfProducts = data.data.products.total
         let p = data.data.products.data;
+        p.map(i => { i.isChecked = false })
         setTotalProd(numOfProducts)
         setProducts(p)
         setResultLoaded(true)
@@ -152,12 +153,36 @@ const Products = (props) => {
 
   const [excelIds, setExcelIds, excelsRef] = useState(() => [])
 
+  const enableAllOperations = async () => {
+    // let p = new Set(refProducts.current)
+    // p = Array.from(p);
+    p = [...refProducts.current]
+    p.map((i) => {
+      // delete (i.image)
+
+      excelIds.push(i)
+      arrChecked[i.code] = {
+        code: i.code,
+        doPrint: true,
+        name: i.name,
+        price: i.price
+      }
+    })
+
+
+    let excelRows = new Set(excelIds)
+    setExcelIds(Array.from(excelRows))
+    updateSelectedProductLength(document.querySelectorAll('input[class="products"]:checked').length)
+
+  }
+
   const enableOperations = (name, price, product, i) => (event) => {
     // product = product.filter(i => i.image)
     let p = { ...product };
     delete (p.image)
     delete (p.createdAt)
     delete (p.updatedAt)
+    delete (p.isChecked)
     excelIds.push(p)
     let excelRows = new Set(excelIds)
     setExcelIds(Array.from(excelRows))
@@ -167,14 +192,16 @@ const Products = (props) => {
         code: event.target.value,
         doPrint: true,
         name: name,
-        price: price
+        price: price,
+        isChecked: true
       }
     } else {
       arrChecked[event.target.value] = {
         code: '',
         doPrint: false,
         name: '',
-        price: ''
+        price: '',
+        isChecked: false
       }
     }
     updateSelectedProductLength(document.querySelectorAll('input[class="products"]:checked').length)
@@ -268,15 +295,37 @@ const Products = (props) => {
     setShowPreview(() => name + '&&&' + image)
   }
 
+  const checkAllCB = async (event) => {
+    console.log(event.target.checked)
+
+    let products = [...refProducts.current];
+    if (event.target.checked) {
+      await products.map(i => { i.isChecked = true })
+      enableAllOperations()
+    } else {
+      await products.map(i => { i.isChecked = false })
+      setExcelIds([])
+      updateSelectedProductLength(0)
+    }
+    console.log(products)
+    setProducts([])
+    setProducts([...products])
+  }
+
   const displayProducts = () => {
     return (
       <>
         <div>
-
           <table className="table prlist" id="table-to-xls">
             <thead>
               <tr>
-                <th>&nbsp;</th>
+                <th>
+                  <input
+                    type="checkbox"
+                    className="products"
+                    onChange={(e) => checkAllCB(e)}
+                  />
+                </th>
                 <th width="1%">Image</th>
                 <th width="5%">Code</th>
                 <th width="25%">Name</th>
@@ -299,11 +348,12 @@ const Products = (props) => {
                 loading ?
                   <tr><td colSpan="15"><Loader /></td></tr>
                   :
-                  products.map((p, i) => (
+                  refProducts.current.map((p, i) => (
                     <tr key={p.code} >
                       {/* <tr key={p.code}> */}
                       <td>
                         <input
+                          defaultChecked={p.isChecked}
                           type="checkbox"
                           className="products"
                           value={p.code}

@@ -9,6 +9,8 @@ import { CCard, CCardBody, CCardHeader, CCol, CFormInput, CRow } from '@coreui/r
 import 'react-datepicker/dist/react-datepicker.css'
 import NoDataComponent from '../common/NoDataComponent'
 import Loader from '../common/loading'
+import { cilDelete, cilFlipToBack } from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 
 const RetList = ({ type }) => {
 
@@ -71,9 +73,11 @@ const RetList = ({ type }) => {
         inventory: []
     }))
 
-    const getList = async () => {
+    const getList = async (isArchieved = 0) => {
+        isArchieved ? setArchieved(true) : setArchieved(false)
         let listOfInvoices = await axios.post(`${process.env.REACT_APP_API_URL}/invoice/return/list`, {
-            type: type ? type : ''
+            type: type ? type : '',
+            is_archieved: isArchieved
         })
         setState((p) => ({
             ...p,
@@ -94,6 +98,22 @@ const RetList = ({ type }) => {
         getList()
     }, [state.isLoaded])
 
+    const archieveInv = (inv, iType, doArchieve) => {
+        let payLoad = {
+            invoice: inv,
+            iType: iType,
+            archieve: doArchieve
+        }
+        axios
+            .post(`${process.env.REACT_APP_API_URL}/invoice/archieve`, payLoad)
+            .then(async (response) => {
+                getList(!doArchieve)
+            })
+    }
+
+    const [archieved, setArchieved] = useState(false)
+
+
     const display = inventory => {
         return (
             <>
@@ -111,6 +131,7 @@ const RetList = ({ type }) => {
                                 type === 'pending' ? 'Ordered' : type.charAt(0).toUpperCase() + type.slice(1)
                             } Date
                         </th>
+                        <th>Actions</th>
                     </thead>
                     <tbody>
                         {
@@ -140,6 +161,20 @@ const RetList = ({ type }) => {
                                                     moment.utc(inv.returned_date).format('DD/MM/yyyy')
                                             }
                                         </td>
+                                        <td>
+                                            {
+                                                !archieved ?
+                                                    <Link title="Archieve Invoice" to="#" path="#"
+                                                        onClick={() => archieveInv(inv.invoice, type, 1)}>
+                                                        <CIcon icon={cilDelete} className="cricon" />
+                                                    </Link>
+                                                    :
+                                                    <Link title="Active Invoice" to="#" path="#" onClick={() => archieveInv(inv.invoice, type, 0)}>
+                                                        <CIcon icon={cilFlipToBack} className="cricon" />
+                                                    </Link>
+                                            }
+
+                                        </td>
                                     </tr>)
                                 })
                                 : <tr><td colSpan="8"><NoDataComponent /></td></tr>
@@ -156,13 +191,30 @@ const RetList = ({ type }) => {
                     <CCard className="mb-4">
                         <CCardHeader>
                             <CRow className="align-middle p-2">
-                                <div className="col-sm-10">
+                                <div className="col-sm-9">
                                     <h4>
                                         {
                                             type.charAt(0).toUpperCase() + type.slice(1)
                                         }
                                         &nbsp;List
+                                        {
+                                            archieved ? <>(Archieved)</> : <>(Active)</>
+                                        }
                                     </h4>
+                                </div>
+                                <div className="col-sm-3" style={{ 'text-align': 'right' }}>
+                                    {
+                                        archieved ?
+                                            <button className="btn btn-primary"
+                                                onClick={() => getList()}
+                                            >View Active
+                                            </button> :
+                                            <button className="btn btn-secondary"
+                                                onClick={() => getList(1)}
+                                            >View Archieved
+                                            </button>
+                                    }
+
                                 </div>
                             </CRow>
                         </CCardHeader>
@@ -176,7 +228,10 @@ const RetList = ({ type }) => {
                                             {display(state.inventory)}
                                         </div>
                                         :
-                                        <div><NoDataComponent /></div>
+                                        <div>
+                                            <NoDataComponent />
+
+                                        </div>
                             }
                         </CCardBody>
                     </CCard>

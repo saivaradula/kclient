@@ -137,7 +137,12 @@ const ReturnPrint = (props) => {
                                         <th width="10%">From</th>
                                         <th width="10%">To</th>
                                         <th width="2%">Days</th>
-                                        {/* <th width="10%" className="money">Hire Cost</th> */}
+                                        {
+                                            (envType === 'damaged') ?
+                                                <th width="10%" className="money">Hire Cost</th> :
+                                                <></>
+                                        }
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -149,7 +154,13 @@ const ReturnPrint = (props) => {
                                             <td>{moment.utc(p.pStartDate).format('DD/MM/yyyy')}</td>
                                             <td>{moment.utc(p.pEndDate).format('DD/MM/yyyy')}</td>
                                             <td className="money">{p.rent_days}</td>
-                                            {/* <td className="money">{p.cost.toFixed(2)}</td> */}
+                                            {
+                                                (envType === 'damaged') ?
+                                                    <td className="money">{p.damage_cost}</td>
+                                                    :
+                                                    <></>
+                                            }
+                                            {/*  */}
                                         </tr>
                                     ))}
                                 </tbody>
