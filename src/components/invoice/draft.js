@@ -231,6 +231,7 @@ const DraftList = () => {
                     <th>Contact</th>
                     <th className="money">Products</th>
                     <th className="money">Cost</th>
+                    <th className="money">Picked On</th>
                     <th className="money">From</th>
                     <th className="money">To</th>
                     <th>Action</th>
@@ -253,6 +254,9 @@ const DraftList = () => {
                           </td>
                           <td className="money">{inv.totalProducts}</td>
                           <td className="money">{inv.payableamount}</td>
+                          <td className="money">
+                            {moment.utc(inv.pickedon).format('ddd - MMM Do, YYYY')}
+                          </td>
                           <td className="money">
                             {moment.utc(inv.startDate).format('ddd - MMM Do, YYYY')}
                           </td>

@@ -163,6 +163,11 @@ hr {
 
   .printtable {
     font-size: 16px;
+    
+  }
+
+  .addressTable {
+    line-height: 20px;
   }
 
 }
@@ -178,8 +183,10 @@ hr {
 
 .printdiv hr {
   color: #1b0aa7;
-  height:5px;
-  margin-top: -10px;
+    height: 5px;
+    /* margin-top: -71px; */
+    align-content: center;
+    width: 977px;
 }
 
 .columnLeft {

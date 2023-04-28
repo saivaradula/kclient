@@ -8,6 +8,7 @@ import { getPercentagesForNew, getPercentagesForOld } from './daycounter'
 import DatePicker from 'react-datepicker'
 import Alert from 'react-bootstrap/Alert'
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
+import { Archive } from 'react-bootstrap-icons';
 
 
 import 'react-datepicker/dist/react-datepicker.css'
@@ -66,6 +67,7 @@ const DraftInvoice = (props) => {
     propReceiverName: '',
     gst: '',
     showAddressForm: false,
+    pickedon: new Date(),
     startDate: new Date(),
     endDate: new Date(),
     totalCost: 0,
@@ -94,6 +96,7 @@ const DraftInvoice = (props) => {
       prtype: '',
       quantity: 0,
       prtype: '',
+      pickedon: new Date(),
       from: new Date(),
       to: new Date(),
       totalinstock: 0,
@@ -266,6 +269,15 @@ const DraftInvoice = (props) => {
     }
   }
 
+  const updatePickUpDate = (date, product, i) => {
+    let newFormValues = [...state.formValues]
+    newFormValues[i]['pickedon'] = date;
+    setState(prevState => ({
+      ...prevState,
+      formValues: [...newFormValues]
+    }));
+  }
+
   const updateStartDate = (date, product, i) => {
     let newFormValues = [...state.formValues]
     newFormValues[i]['from'] = date
@@ -348,6 +360,15 @@ const DraftInvoice = (props) => {
     return d
   }
 
+  const resetPickupDate = (date) => {
+    let newFormValues = [...state.formValues]
+    setState(prevState => ({
+      ...prevState,
+      pickupon: date,
+      formValues: [...newFormValues]
+    }));
+  }
+
   const resetEndDate = (date) => {
     // setStartDate(date)
     let endDate = '';
@@ -375,7 +396,6 @@ const DraftInvoice = (props) => {
     })
     let tcost = updateTotalCost();
     tcost = parseFloat(tcost).toFixed(2);
-    console.log('newValues', newFormValues)
     setState(prevState => ({
       ...prevState,
       initialDays: d,
@@ -458,12 +478,13 @@ const DraftInvoice = (props) => {
             name="code"
             autoComplete="off"
             type="text"
+            autoFocus
             id="productCode"
             onChange={(e) => changeCode(index, e, element)}
             placeholder="Code(Ex: PR-12345)"
           />
         </div>
-        <div className="col-sm-3">
+        <div className="col-sm-2">
           <CFormInput
             name="name"
             autoComplete="off"
@@ -574,14 +595,14 @@ const DraftInvoice = (props) => {
             readOnly
           />
         </div>
-        <div className="col-sm-1">
+        <div className="col-sm-1 mt-1">
           {element.code && index < state.formValues.length - 1 ? (
             <button
               type="button"
               className="button remove"
               onClick={() => removeFormFields(element.code, index)}
             >
-              Remove
+              <Archive title={`Remove the product`} size={10} />
             </button>
           ) : null}
         </div>
@@ -643,6 +664,18 @@ const DraftInvoice = (props) => {
                 <CRow>
                   <div className="row col-sm-3">
                     <div className="col-sm-4">
+                      <strong className="align-middle">Pickup Date :</strong>
+                    </div>
+                    <div className="col-sm-6">
+                      <DatePicker
+                        className="form-control"
+                        selected={state.startDate}
+                        onChange={(date: Date) => resetPickupDate(date)}
+                      />
+                    </div>
+                  </div>
+                  <div className="row col-sm-3">
+                    <div className="col-sm-4">
                       <strong className="align-middle">From Date :</strong>
                     </div>
                     <div className="col-sm-6">
@@ -686,13 +719,15 @@ const DraftInvoice = (props) => {
                   <div className="col-sm-2">
                     <strong>Code</strong>
                   </div>
-                  <div className="col-sm-3">
+                  <div className="col-sm-2">
                     <strong>Name</strong>
                   </div>
                   <div className="col-sm-1">
                     <strong>Type of Prop</strong>
                   </div>
-
+                  <div className="col-sm-1">
+                    <strong>Pickup Date</strong>
+                  </div>
                   <div className="col-sm-1">
                     <strong>From</strong>
                   </div>
@@ -1162,6 +1197,7 @@ const DraftInvoice = (props) => {
       payment_type: state.advancePay > 0 ? ADVANCE_PAY : 1,
       vendoraddress: state.vendoraddress,
       amt: state.advancePay ? state.advancePay : 0,
+      pickedon: state.pickedon.getFullYear() + '-' + (state.pickedon.getMonth() + 1) + '-' + state.pickedon.getDate(),
       startDate:
         state.startDate.getFullYear() + '-' + (state.startDate.getMonth() + 1) + '-' + state.startDate.getDate(),
       endDate: state.endDate.getFullYear() + '-' + (state.endDate.getMonth() + 1) + '-' + state.endDate.getDate(),
@@ -1183,6 +1219,7 @@ const DraftInvoice = (props) => {
         if (product.code !== '') {
           let s = product.from
           let t = product.to
+          let p = product.pickedon
           let payload = {
             invoice_id: response.data,
             code: product.code,
@@ -1190,6 +1227,7 @@ const DraftInvoice = (props) => {
             quantity: product.quantity,
             cost: product.tcost,
             isBlocked: state.isBlocked,
+            pickedon: p.getFullYear() + '-' + (p.getMonth() + 1) + '-' + p.getDate(),
             startDate: s.getFullYear() + '-' + (s.getMonth() + 1) + '-' + s.getDate(),
             endDate: t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate(),
           }

@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/Modal'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import CIcon from '@coreui/icons-react'
-import { cilPen, cilLocationPin, cilDelete } from '@coreui/icons'
+import { cilPen, cilLocationPin, cilControl, cilDelete } from '@coreui/icons'
 import InvoiceDetailsModal from './detailsModel'
 import UpdateForm from './invoiceupdateform'
 import NoDataComponent from '../common/NoDataComponent'
@@ -217,6 +217,7 @@ const Invoices = () => {
                 {/* <th>Contact</th> */}
                 <th className="money">Products</th>
                 <th className="money">Cost</th>
+                <th className="money">Picked</th>
                 <th className="money">From</th>
                 <th className="money">To</th>
                 <th className="money">Payment Status</th>
@@ -242,12 +243,31 @@ const Invoices = () => {
                       <td className="money">{inv.totalProducts}</td>
                       <td className="money">{inv.payableamount}</td>
                       <td className="money">
-                        {moment.utc(inv.startDate).format('ddd - MMM Do, YYYY')}
+                        {moment.utc(inv.pickupDate).format('ddd - MMM Do, YYYY')}
+                      </td>
+                      <td className="money">
+                        {moment.utc(inv.CreatedOn).format('ddd - MMM Do, YYYY')}
                       </td>
                       <td className="money">{moment.utc(inv.endDate).format('ddd - MMM Do, YYYY')}</td>
                       <td className="money">{inv.ip_value}</td>
                       <td className="money">{inv.is_value}</td>
                       <td>
+
+
+                        <OverlayTrigger
+                          placement="top"
+                          overlay={
+                            <Tooltip id="button-tooltip-2">
+                              Update Invoice Products
+                            </Tooltip>
+                          }
+                        >
+                          <Link to="#" path="#" onClick={() => updateInvoice(inv.invoice)}>
+                            <CIcon icon={cilControl} className="cricon" />
+                          </Link>
+                        </OverlayTrigger>
+                        &nbsp;&nbsp;| &nbsp;&nbsp;
+
                         <OverlayTrigger
                           placement="top"
                           overlay={

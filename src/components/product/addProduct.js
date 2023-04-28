@@ -31,7 +31,7 @@ const AddProducts = (props) => {
   const [category, setCategory] = useState('')
   const [subCategory, setSubCategory] = useState('')
   const [cost, setCost] = useState(0)
-  const [price, setPrice] = useState('')
+  const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState('')
   const [alertNum, setAlertNum] = useState(1)
   const [model, setModel] = useState('')
@@ -48,7 +48,7 @@ const AddProducts = (props) => {
     axios.get(`${process.env.REACT_APP_API_URL}/category`).then((data) => {
       setCategoryList(data.data)
       setResultLoaded(true)
-      setLoading(false)
+      // setLoading(false)
     })
   }
 
@@ -61,8 +61,6 @@ const AddProducts = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault()
     const form = event.currentTarget
-    console.clear();
-    console.log("Form validity : ", form.checkValidity())
     if (form.checkValidity() === false) {
       console.log("should be here...")
       console.log(event)
@@ -70,33 +68,35 @@ const AddProducts = (props) => {
       event.stopPropagation()
       setValidated(false)
     }
+
     setValidated(true)
     setLoading(true)
-    let payLoad = {
-      code: code,
-      name: name,
-      sname: sname,
-      brand: brand,
-      category: category,
-      subcategory: subCategory,
-      cost: cost,
-      price: price,
-      quantity: quantity,
-      alertNum: alertNum,
-      prodImage: prodImage,
-      model: model,
-      prtype: prType,
-      unit: unit,
-      godawan: godawn,
-    }
-    console.log("subbmitting.. why?")
-    axios.post(`${process.env.REACT_APP_API_URL}/products/add`, payLoad).then((response) => {
-      if (response.status === 200) {
-        history.push('/products/list/1')
+
+    if (code && name && sname && brand && category && subCategory && quantity) {
+      let payLoad = {
+        code: code,
+        name: name,
+        sname: sname,
+        brand: brand,
+        category: category,
+        subcategory: subCategory,
+        cost: cost,
+        price: price,
+        quantity: quantity,
+        alertNum: alertNum,
+        prodImage: prodImage,
+        model: model,
+        prtype: prType,
+        unit: unit,
+        godawan: godawn,
       }
-    })
 
-
+      axios.post(`${process.env.REACT_APP_API_URL}/products/add`, payLoad).then((response) => {
+        if (response.status === 200) {
+          history.push('/products/list/1')
+        }
+      })
+    }
   }
 
   const arrayBufferToBase64 = (buffer) => {
@@ -257,7 +257,7 @@ const AddProducts = (props) => {
                     autocomplete="off"
                     type="text"
                     id="productName"
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => { setLoading(false); setName(e.target.value) }}
                     placeholder="Enter Product Name"
                   />
                   <CFormFeedback invalid>Please enter product name.</CFormFeedback>
@@ -274,7 +274,7 @@ const AddProducts = (props) => {
                     type="text"
                     maxlength="25"
                     id="productName"
-                    onChange={(e) => setSName(e.target.value)}
+                    onChange={(e) => { setLoading(false); setSName(e.target.value) }}
                     placeholder="Enter Product Nick(Short) Name"
                   />
                   <CFormFeedback invalid>Please enter product name.</CFormFeedback>
@@ -285,7 +285,7 @@ const AddProducts = (props) => {
                   </CFormLabel>
                 </div>
                 <div className="col-sm-3">
-                  <CFormSelect required id="prtype" onChange={(e) => setPrType(e.target.value)}>
+                  <CFormSelect required id="prtype" onChange={(e) => { setLoading(false); setPrType(e.target.value) }}>
                     <option value="">Choose...</option>
                     <option value="new">New</option>
                     <option value="used">Used</option>
@@ -307,7 +307,7 @@ const AddProducts = (props) => {
                     autocomplete="off"
                     type="text"
                     id="model"
-                    onChange={(e) => setModel(e.target.value)}
+                    onChange={(e) => { setLoading(false); setModel(e.target.value) }}
                     placeholder="Enter Brand"
                   />
                   <CFormFeedback invalid>Please enter model.</CFormFeedback>
@@ -357,7 +357,7 @@ const AddProducts = (props) => {
                     id="cost"
                     required
                     value={cost}
-                    onChange={(e) => updateFinalPrice(e)}
+                    onChange={(e) => { setLoading(false); updateFinalPrice(e) }}
                     placeholder="Purchase Price"
                   />
                 </div>
@@ -378,7 +378,7 @@ const AddProducts = (props) => {
                     autocomplete="off"
                     required
                     id="quantity"
-                    onChange={(e) => setQuantity(e.target.value)}
+                    onChange={(e) => { setLoading(false); setQuantity(e.target.value) }}
                     placeholder="Enter Quantity"
                   />
                 </div>
@@ -386,7 +386,6 @@ const AddProducts = (props) => {
                   <CFormInput
                     type="number"
                     autocomplete="off"
-                    required
                     id="alert"
                     value={alertNum}
                     onChange={(e) => setAlertNum(e.target.value)}

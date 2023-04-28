@@ -3,6 +3,7 @@ import axios from 'axios'
 require('dotenv').config()
 import logo from '../../../src/assets/images/logop.png'
 var converter = require('number-to-words');
+import moment from 'moment'
 
 const FinalPrint = (props) => {
     const [id, setId] = useState(props.match.params.id)
@@ -23,6 +24,7 @@ const FinalPrint = (props) => {
                     address: action.payload.data[0].to_address,
                     gst: action.payload.data[0].gst,
                     dated: action.payload.data[0].rents_start_on,
+                    serialNo: action.payload.data[0].serial_no,
                     data: action.payload.data,
                     status: action.payload.data[0].is_value,
                     payment: action.payload.data[0].ip_value,
@@ -111,20 +113,20 @@ const FinalPrint = (props) => {
                             </div>
                             <div className="col-6 logo-color"></div>
                         </div>
-                        <div className="row">&nbsp;</div>
-                        <div>
+                        <hr />
+                        <div className="row">
                             <div className="addressclass">
                                 H.No: 3-517/1, ADITYA NAGAR, NEW HAFEEZPET, MEDCHAL MALKAJGIRI, HYDERABAD - 500049
                                 <br />
                                 Mobile: +91 8886112321, Mail ID: rightchoiceprops@gmail.com
                             </div>
-                            <hr />
-                            <div className="addressclass">
+
+                            <div className="addressclass mt-4 border">
                                 <h3>INVOICE DETAILS</h3>
                             </div>
                         </div>
-                        <div>
-                            <table className="addressTable">
+                        <div className="row">
+                            <table className="addressTable printtable">
                                 <tr>
                                     <td width="500">
                                         <div className="fbold">Right Choice</div>
@@ -135,8 +137,10 @@ const FinalPrint = (props) => {
                                         <div>GTIN: 36ATUPK0654P2ZV</div>
                                     </td>
                                     <td>
-                                        <div>Invoice Serial Number: 178</div>
-                                        <div>Invoice date: 02, May, 2022,</div>
+                                        <div>Invoice Serial Number:
+                                            {invoiceDetails.serialNo}
+                                        </div>
+                                        <div>Invoice date: {moment.utc(invoiceDetails.dated).format('DD, MMM, yyyy')}</div>
                                         <div>Place of Supply: Hyderabad.</div>
                                         <div>Description: Set Property Rent</div>
                                         <div>Terms of Payment: Immediate</div>
@@ -160,7 +164,7 @@ const FinalPrint = (props) => {
                                     </td>
                                 </tr>
                             </table>
-                            <table className="addressTable">
+                            <table className="addressTable printtable">
                                 <tr>
                                     <th>S.No</th>
                                     <th>Description</th>
@@ -200,7 +204,7 @@ const FinalPrint = (props) => {
                                     <td>{(invoiceDetails.payableamount / 1).toFixed(2)}</td>
                                 </tr>
                             </table>
-                            <table className="addressTable">
+                            <table className="addressTable printtable">
                                 <tr>
                                     <td>
                                         <span className="fbold">Rupees:</span>
@@ -240,7 +244,7 @@ const FinalPrint = (props) => {
                                     </td>
                                 </tr>
                             </table>
-                            <table className="addressTable">
+                            <table className="addressTable printtable">
                                 <tr>
                                     <td width="500">
                                         <div>Remarks: Set Property Rent From</div>
