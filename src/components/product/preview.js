@@ -56,7 +56,7 @@ const PrintPreview = (props) => {
                                 <div className="col-sm-1 text-center">
                                   <div className="caption">{po.name ? value.name : <></>}</div>
                                   <div>
-                                    <QrCode style={styles} url={key} options={defaultOptions} />
+                                    <QrCode size="20" style={styles} url={key} options={defaultOptions} />
                                   </div>
                                   <div className="caption">
                                     {po.code ? key + '-' : <></>}
@@ -79,15 +79,16 @@ const PrintPreview = (props) => {
                                   <div>
                                     <Barcode
                                       value={key}
-                                      displayValue="false"
-                                      width="1"
-                                      height="40"
+                                      width="2"
+                                      height="20"
+                                      textMargin="2"
+                                      fontSize="10"
                                     />
                                   </div>
-                                  <div className="caption">
+                                  {/* <div className="caption">
                                     {po.code ? key + '-' : <></>}
                                     {po.price ? value.price : <></>}
-                                  </div>
+                                  </div> */}
                                 </div>
                               )
                             })}

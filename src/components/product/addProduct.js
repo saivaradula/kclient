@@ -72,7 +72,7 @@ const AddProducts = (props) => {
     setValidated(true)
     setLoading(true)
 
-    if (code && name && sname && brand && category && subCategory && quantity) {
+    if (code && name && sname && category && subCategory && quantity) {
       let payLoad = {
         code: code,
         name: name,
@@ -303,14 +303,13 @@ const AddProducts = (props) => {
                 </div>
                 <div className="col-sm-3">
                   <CFormInput
-                    required
                     autocomplete="off"
                     type="text"
                     id="model"
                     onChange={(e) => { setLoading(false); setModel(e.target.value) }}
                     placeholder="Enter Brand"
                   />
-                  <CFormFeedback invalid>Please enter model.</CFormFeedback>
+                  <CFormFeedback invalid>Please enter Brand.</CFormFeedback>
                 </div>
                 <div className="col-sm-1">
                   <CFormLabel htmlFor="brandName" className="col-form-label">
@@ -325,7 +324,7 @@ const AddProducts = (props) => {
                     onChange={(e) => setBrand(e.target.value)}
                     placeholder="Enter Size"
                   />
-                  <CFormFeedback invalid>Please enter Brand.</CFormFeedback>
+                  <CFormFeedback invalid>Please enter size.</CFormFeedback>
                 </div>
                 <div className="col-sm-1">
                   <CFormLabel htmlFor="unitchange" className="col-form-label">
