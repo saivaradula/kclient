@@ -79,7 +79,7 @@ const PrintPreview = (props) => {
                                 <div>
                                   <Barcode
                                     value={key}
-                                    width="6"
+                                    width="2"
                                     height="50"
                                     textMargin="2"
                                     fontSize="10"
