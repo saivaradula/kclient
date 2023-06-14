@@ -41,74 +41,73 @@ const PrintPreview = (props) => {
             </button>
           </div>
 
-          <CRow>
+          <div>
             <CCol xs={12}>
-              <CCard className="mb-4">
-                <CCardBody>
-                  {Object.entries(JSON.parse(localStorage.getItem('print'))).map(([key, value]) => {
-                    let n = parseInt(value.num)
-                    let d = value.doPrint ? (
-                      <>
-                        {po.qr ? (
-                          <CRow key={key} className="mb-4">
-                            {[...Array(n)].map((i) => {
-                              return (
-                                <div className="col-sm-1 text-center">
-                                  <div className="caption">{po.name ? value.name : <></>}</div>
-                                  <div>
-                                    <QrCode size="20" style={styles} url={key} options={defaultOptions} />
-                                  </div>
-                                  <div className="caption">
-                                    {po.code ? key + '-' : <></>}
-                                    {po.price ? value.price : <></>}
-                                  </div>
-                                </div>
-                              )
-                            })}
-                          </CRow>
-                        ) : (
-                          <></>
-                        )}
+              <div className="mb-1">
 
-                        {po.bar ? (
-                          <CRow key={key} className="mb-4">
-                            {[...Array(n)].map((i) => {
-                              return (
-                                <div className="col-sm-2 text-center">
-                                  <div className="caption">{po.name ? value.name : <></>}</div>
-                                  <div>
-                                    <Barcode
-                                      value={key}
-                                      width="2"
-                                      height="20"
-                                      textMargin="2"
-                                      fontSize="10"
-                                    />
-                                  </div>
-                                  {/* <div className="caption">
+                {Object.entries(JSON.parse(localStorage.getItem('print'))).map(([key, value]) => {
+                  let n = parseInt(value.num)
+                  let d = value.doPrint ? (
+                    <>
+                      {po.qr ? (
+                        <CRow key={key} className="mb-4">
+                          {[...Array(n)].map((i) => {
+                            return (
+                              <div className="col-sm-1 text-center">
+                                <div className="caption">{po.name ? value.name : <></>}</div>
+                                <div>
+                                  <QrCode size="20" style={styles} url={key} options={defaultOptions} />
+                                </div>
+                                <div className="caption">
+                                  {po.code ? key + '-' : <></>}
+                                  {po.price ? value.price : <></>}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </CRow>
+                      ) : (
+                        <></>
+                      )}
+
+                      {po.bar ? (
+                        <CRow key={key} className="mb-4">
+                          {[...Array(n)].map((i) => {
+                            return (
+                              <div className="col-sm-2 text-center">
+                                <div className="caption">{po.name ? value.name : <></>}</div>
+                                <div>
+                                  <Barcode
+                                    value={key}
+                                    width="4"
+                                    height="100"
+                                    textMargin="2"
+                                    fontSize="10"
+                                  />
+                                </div>
+                                {/* <div className="caption">
                                     {po.code ? key + '-' : <></>}
                                     {po.price ? value.price : <></>}
                                   </div> */}
-                                </div>
-                              )
-                            })}
-                          </CRow>
-                        ) : (
-                          <></>
-                        )}
-                        <hr />
-                        {i == 4 ? <div className="pagebreak"></div> : null}
-                      </>
-                    ) : (
-                      <></>
-                    )
-                    i = i + 1
-                    return d
-                  })}
-                </CCardBody>
-              </CCard>
+                              </div>
+                            )
+                          })}
+                        </CRow>
+                      ) : (
+                        <></>
+                      )}
+                      <hr />
+                      {i == 4 ? <div className="pagebreak"></div> : null}
+                    </>
+                  ) : (
+                    <></>
+                  )
+                  i = i + 1
+                  return d
+                })}
+              </div>
             </CCol>
-          </CRow>
+          </div>
         </>
       ) : (
         <></>
