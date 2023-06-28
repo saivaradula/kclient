@@ -2,6 +2,8 @@ import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
 
+const qrscanner = React.lazy(() => import('./components/invoice/scanner'))
+
 // Products
 const Products = React.lazy(() => import('./components/product/Products'))
 const AddProduct = React.lazy(() => import('./components/product/addProduct'))
@@ -31,6 +33,7 @@ const routes = [
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
 
   // invoices
+  { path: '/scanner', name: 'Scanner', component: qrscanner },
   { path: '/invoice/booked', name: 'Booked Invoice', component: BlockedInvoice },
   { path: '/invoice/draft', name: 'Rent Product', component: DraftInvoice },
   { path: '/invoice/updatedraft', name: 'Rent Product', component: UpdateDraftInvoice },

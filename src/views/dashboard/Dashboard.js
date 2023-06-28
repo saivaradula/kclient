@@ -1,5 +1,5 @@
 import React, { lazy } from 'react'
-
+import { useHistory, Link } from 'react-router-dom'
 import {
   CAvatar,
   CButton,
@@ -55,6 +55,7 @@ const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
 const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
 
 const Dashboard = () => {
+  const history = useHistory()
   const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min)
   }
@@ -180,9 +181,29 @@ const Dashboard = () => {
     },
   ]
 
+  const gotoScanQuotationPage = () => {
+    history.push('/scanner')
+  }
+
   return (
     <>
+      <CCard className="mb-4">
+        <CCardBody>
+          <CRow>
+            <CCol sm={5}>
+              <h4>
+                <div className="small text-medium-emphasis">
+                  <Link to="#" path="#" onClick={() => gotoScanQuotationPage()}>
+                    Scan Items for new Quotations
+                  </Link>
+                </div>
+              </h4>
+            </CCol>
+          </CRow>
+        </CCardBody>
+      </CCard>
       <WidgetsDropdown />
+
       <CCard className="mb-4">
         <CCardBody>
           <CRow>
