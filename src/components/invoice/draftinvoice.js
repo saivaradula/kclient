@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useReducer } from 'react'
-import { useHistory } from 'react-router-dom'
+import React, { useEffect, useReducer } from 'react'
+import { useHistory } from 'react-router-dom';
+import useState from 'react-usestateref'
 require('dotenv').config()
 import axios from 'axios'
 import Modal from 'react-bootstrap/Modal'
@@ -9,12 +10,13 @@ import DatePicker from 'react-datepicker'
 import Alert from 'react-bootstrap/Alert'
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
 import { Archive } from 'react-bootstrap-icons';
-
+import { useLocation } from 'react-router-dom';
 
 import 'react-datepicker/dist/react-datepicker.css'
 
 const DraftInvoice = (props) => {
   const history = useHistory()
+  const location = useLocation();
   const PRTYPES = {
     NEW: 'new',
     OLD: 'used',
@@ -52,7 +54,7 @@ const DraftInvoice = (props) => {
 
   const ADVANCE_PAY = 4 // PAYMENT TYPE FROM DB. 1. NOT PAID, 2. PAID, 3. PARTIALLY PAID, 4. ADVANCE PAY
 
-  const [items, setItems] = useState([]);
+  const [items, setItems, refItems] = useState([])
 
   const [state, setState] = useState({
     toName: '',
@@ -106,9 +108,19 @@ const DraftInvoice = (props) => {
     }]
   })
 
+  const getScannedItems = async () => {
+    const results = await axios.get(`${process.env.REACT_APP_API_URL}/items/scanned`);
+    setItems(results.data)
+    console.log(refItems)
+  }
 
   useEffect(() => {
-    // perform some action which will get fired everytime when myArr gets updated
+    // get if any scanned items. 
+    getScannedItems();
+  }, [location])
+
+
+  useEffect(() => {
     console.log('Updated State', state.formValues)
     setState(prevState => ({
       ...prevState,
@@ -651,16 +663,51 @@ const DraftInvoice = (props) => {
     }));
   }
 
+  const updateForm = () => {
+    // refItems
+  }
+
   const renderResults = () => {
     return (
       <>
         <CRow>
+          {
+            refItems.current.length &&
+            <CCol xs={12}>
+              <CCard className="mb-4">
+                <CCardBody>
+                  <CRow>
+                    <div className="col-sm-2">
+                      <strong>Select Scanned Items</strong>
+                    </div>
+                    <div className="col-sm-4">
+                      <select className="form-control"
+                        onChange={updateForm}
+                      >
+                        <option>Select</option>
+                        {
+                          refItems.current.map(i => (
+                            <option>
+                              {i.company}
+                            </option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                  </CRow>
+                </CCardBody>
+              </CCard>
+            </CCol>
+          }
+
+
           <CCol xs={12}>
             <CCard className="mb-4">
               <CCardHeader>
                 <strong>Create Quotation Invoice</strong>
               </CCardHeader>
               <CCardBody>
+
                 <CRow>
                   <div className="row col-sm-3">
                     <div className="col-sm-4">
@@ -1245,6 +1292,7 @@ const DraftInvoice = (props) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
+
         {renderResults()}
         <CRow className="mb-12">
           <div className="col-sm-10 text-right">Total Cost:</div>
