@@ -168,10 +168,17 @@ float: right;
     
     text-align: center;
   }
-.printqr {
-  width: 350px;
-  margin-top: 2px;
-  font-size: 18px;
+
+  .printqr-td {
+    margin-top: 15px;
+  }
+
+
+.printqr {    
+  width: 250px;
+  margin-top: 10px;
+  font-size: 13px;
+  height: 5px;
 }
  .preview-qrcode {
     float: left;

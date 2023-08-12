@@ -11,17 +11,18 @@ const PrintPreview = (props) => {
   const [po, setPO] = useState({})
   let [i, setI] = useState(1)
   const defaultOptions = {
-    size: 80,
+    size: 90,
     ecLevel: 'Q',
     enableCORS: false,
-    quietZone: 1,
+    quietZone: 8,
     bgColor: '#FFFFFF',
     fgColor: '#000000',
     logoImage: '',
-    logoWidth: 40,
-    logoHeight: 20,
+    logoWidth: 0,
+    logoHeight: 0,
     logoOpacity: 1,
-    qrStyle: 'squares',
+    qrStyle: 'square',
+
   }
 
   useEffect(() => {
@@ -37,42 +38,44 @@ const PrintPreview = (props) => {
     window.print()
   }
 
-  const styles = {
-    border: '1px solid',
+  const styles = { 
+    'marginLeft': '3px',
+    'marginTop': '5px'
   }
 
   return (
     <>
       {isPCodePicked ? (
         <>
-          <div className="mt-4 mb-4" style={{ textAlign: 'right', marginRight: '30px' }}>
+                   <div className="mt-4 mb-4" style={{ textAlign: 'right', marginRight: '30px' }}>
             <button type="button" className="primary noprint" onClick={printThisPage}>
               Print
             </button>
           </div>
 
-          <div>
-            <CCol xs={12}>
-              <div className="mb-1">
+          {
+            Object.entries(JSON.parse(localStorage.getItem('print'))).map(([key, value]) => {
+              let n = parseInt(value.num)
+              return value.doPrint ?
+                <>
+                  {
+                    po.qr ? (
+                      <>
 
-                {Object.entries(JSON.parse(localStorage.getItem('print'))).map(([key, value]) => {
-                  let n = parseInt(value.num)
-                  let d = value.doPrint ? (
-                    <>
-                      {po.qr ? (
-                        <CRow key={key} className="mb-4">
-                          {[...Array(n)].map((i) => {
+                        {
+                          [...Array(n)].map((i) => {
                             return (
-                              <div className="row automargin col-sm-12 mb-4">
-                                <div className="col-sm-2 ">
-                                  <table className='printqr'>
+                              <>
+                                <div className='automargin'>  
+                                  <table key={key} className='printqr'>
                                     <tr>
-                                      <td align='left'>
-                                        <QrCode size="20"
-                                          style={styles}
+                                      <td width={30}>&nbsp;</td>
+                                      <td width={90} style={styles} align='left'>
+                                        <QrCode
                                           url={key}
                                           options={defaultOptions} />
                                       </td>
+                                      <td width={3}>&nbsp;</td>
                                       <td align='left'>
                                         <table>
                                           <tr><td align='left'>{po.name ? value.name : <></>}</td></tr>
@@ -82,75 +85,57 @@ const PrintPreview = (props) => {
                                       </td>
                                     </tr>
                                   </table>
-
-                                  {/* <div className='preview-qrcode'>
-
-                                  </div>
-                                  <div className='preview-qrdata'>
-
-                                  </div> */}
-
-
-                                </div>
-                                {/* <div className="col-sm-2 caption">
-                                  <div></div>
-                                  <div>
-                                    
-                                  </div>
-                                </div> */}
-                              </div>
+                                </div >
+                              </>
                             )
-                          })}
-                        </CRow>
-                      ) : (
-                        <></>
-                      )
-                      }
+                          })
+                        }
 
-                      {
-                        po.bar ? (
-                          <CRow key={key} className="mb-4">
-                            {[...Array(n)].map((i) => {
-                              return (
-                                <div className="col-sm-2 text-center">
-                                  <div className="caption">{po.name ? value.name : <></>}</div>
-                                  <div>
-                                    <Barcode
-                                      value={key}
-                                      width="2"
-                                      height="50"
-                                      textMargin="2"
-                                      fontSize="10"
-                                    />
-                                  </div>
-                                  {/* <div className="caption">
+                      </>) : (
+                      <></>
+                    )
+                  }
+
+                  {
+                    po.bar ? (
+                      <CRow key={key} className="mb-4">
+                        {[...Array(n)].map((i) => {
+                          return (
+                            <div className="col-sm-2 text-center">
+                              {/* <div className="caption">{po.name ? value.name : <></>}</div> */}
+                              <div>
+                                <Barcode
+                                  value={`${value.name} / ${key}`}
+                                  width="1.5"
+                                  height="50"
+                                  textMargin="2"
+                                  fontSize="8"
+                                />
+                              </div>
+                              {/* <div className="caption">
                                     {po.code ? key + '-' : <></>}
                                     {po.price ? value.price : <></>}
                                   </div> */}
-                                </div>
-                              )
-                            })}
-                          </CRow>
-                        ) : (
-                          <></>
-                        )
-                      }
-                      < hr />
-                      {i == 4 ? <div className="pagebreak"></div> : null}
-                    </>
-                  ) : (
-                    <></>
-                  )
-                  i = i + 1
-                  return d
-                })}
-              </div>
-            </CCol>
-          </div>
+                            </div>
+                          )
+                        })}
+                      </CRow>
+                    ) : (
+                      <></>
+                    )
+                  }
+
+                </>
+                :
+                <></>
+            })
+          }
+
         </>
       ) : (
         <></>
-      )}
+      )
+      }
     </>
   )
 }

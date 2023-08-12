@@ -13,7 +13,7 @@ export default function QrCode(props) {
     logoWidth: 30,
     logoHeight: 30,
     logoOpacity: 1,
-    qrStyle: 'squares',
+    qrStyle: 'square',
   }
 
   const options = { ...defaultOptions, ...props.options }
