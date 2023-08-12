@@ -41,6 +41,13 @@ const Scanner = () => {
         });
     }
 
+    const resetScanner = () => {
+        setQrScanData('')
+        setIsLoading(false)
+        setOpenScanner(false)
+        setCompanyName('')
+    }
+
     const addScannedItems = () => {
         let ids = refItems.current.map((item) => item.code).join(',')
         let params = {
@@ -80,10 +87,11 @@ const Scanner = () => {
                             openScanner && !stopStream ?
                                 <>
                                     <BarcodeScannerComponent
-                                        width={300}
-                                        height={300}
+                                        width={250}
+                                        height={250}
                                         stopStream={stopStream}
                                         onUpdate={(err, result) => {
+                                            console.log('error', err)
                                             if (result) {
                                                 setQrScanData(result.text);
                                                 setIsLoading(true)
@@ -156,7 +164,9 @@ const Scanner = () => {
                                             Add
                                         </CButton>
                                         &nbsp;&nbsp;
-                                        <CButton color="secondary" type="button">
+                                        <CButton color="secondary"
+                                            onClick={() => resetScanner()}
+                                            type="button">
                                             Cancel
                                         </CButton>
                                     </div>

@@ -41,7 +41,7 @@ div.printRight {
 }
 
 div.caption {
-  font-size: 10px;
+  font-size: 12px;
   font-family: 'Helvetica Neue', Helvetica, Arial;
 }
 
@@ -150,8 +150,36 @@ hr {
   color: #fff;
 }
 
+.automargin {
+  margin: auto;
+}
+
+.preview-qrcode {
+float: left;
+}
+
+.preview-qrdata {
+float: right;
+}
+
 @media print {
-  body {-webkit-print-color-adjust: exact; font-size: 20px;}
+  body {
+    -webkit-print-color-adjust: exact; 
+    
+    text-align: center;
+  }
+.printqr {
+  width: 350px;
+  margin-top: 2px;
+  font-size: 18px;
+}
+ .preview-qrcode {
+    float: left;
+   }
+    
+   .preview-qrdata {
+    float: right;
+   }
 
   .hideinprint {
     display: none;

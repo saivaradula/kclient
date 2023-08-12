@@ -521,6 +521,22 @@ const DraftInvoice = (props) => {
           {element.price ? (
             <DatePicker
               className="form-control"
+              selected={element.pickedon}
+              onChange={(date: Date) => updatePickUpDate(date, element, index)}
+            />
+          ) : (
+            <DatePicker
+              disabled={true}
+              className="form-control"
+              selected={element.pickedon}
+            />
+          )}
+        </div>
+
+        <div className="col-sm-1">
+          {element.price ? (
+            <DatePicker
+              className="form-control"
               selected={element.from}
               onChange={(date: Date) => updateStartDate(date, element, index)}
             />

@@ -11,7 +11,17 @@ const PrintPreview = (props) => {
   const [po, setPO] = useState({})
   let [i, setI] = useState(1)
   const defaultOptions = {
-    size: 50,
+    size: 80,
+    ecLevel: 'Q',
+    enableCORS: false,
+    quietZone: 1,
+    bgColor: '#FFFFFF',
+    fgColor: '#000000',
+    logoImage: '',
+    logoWidth: 40,
+    logoHeight: 20,
+    logoOpacity: 1,
+    qrStyle: 'squares',
   }
 
   useEffect(() => {
@@ -53,50 +63,79 @@ const PrintPreview = (props) => {
                         <CRow key={key} className="mb-4">
                           {[...Array(n)].map((i) => {
                             return (
-                              <div className="col-sm-1 text-center">
-                                <div className="caption">{po.name ? value.name : <></>}</div>
-                                <div>
-                                  <QrCode size="20" style={styles} url={key} options={defaultOptions} />
+                              <div className="row automargin col-sm-12 mb-4">
+                                <div className="col-sm-2 ">
+                                  <table className='printqr'>
+                                    <tr>
+                                      <td align='left'>
+                                        <QrCode size="20"
+                                          style={styles}
+                                          url={key}
+                                          options={defaultOptions} />
+                                      </td>
+                                      <td align='left'>
+                                        <table>
+                                          <tr><td align='left'>{po.name ? value.name : <></>}</td></tr>
+                                          <tr><td align='left'>{po.code ? key : <></>}</td></tr>
+                                          <tr><td align='left'>{po.price ? value.price : <></>}</td></tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </table>
+
+                                  {/* <div className='preview-qrcode'>
+
+                                  </div>
+                                  <div className='preview-qrdata'>
+
+                                  </div> */}
+
+
                                 </div>
-                                <div className="caption">
-                                  {po.code ? key + '-' : <></>}
-                                  {po.price ? value.price : <></>}
-                                </div>
+                                {/* <div className="col-sm-2 caption">
+                                  <div></div>
+                                  <div>
+                                    
+                                  </div>
+                                </div> */}
                               </div>
                             )
                           })}
                         </CRow>
                       ) : (
                         <></>
-                      )}
+                      )
+                      }
 
-                      {po.bar ? (
-                        <CRow key={key} className="mb-4">
-                          {[...Array(n)].map((i) => {
-                            return (
-                              <div className="col-sm-2 text-center">
-                                <div className="caption">{po.name ? value.name : <></>}</div>
-                                <div>
-                                  <Barcode
-                                    value={key}
-                                    width="2"
-                                    height="50"
-                                    textMargin="2"
-                                    fontSize="10"
-                                  />
-                                </div>
-                                {/* <div className="caption">
+                      {
+                        po.bar ? (
+                          <CRow key={key} className="mb-4">
+                            {[...Array(n)].map((i) => {
+                              return (
+                                <div className="col-sm-2 text-center">
+                                  <div className="caption">{po.name ? value.name : <></>}</div>
+                                  <div>
+                                    <Barcode
+                                      value={key}
+                                      width="2"
+                                      height="50"
+                                      textMargin="2"
+                                      fontSize="10"
+                                    />
+                                  </div>
+                                  {/* <div className="caption">
                                     {po.code ? key + '-' : <></>}
                                     {po.price ? value.price : <></>}
                                   </div> */}
-                              </div>
-                            )
-                          })}
-                        </CRow>
-                      ) : (
-                        <></>
-                      )}
-                      <hr />
+                                </div>
+                              )
+                            })}
+                          </CRow>
+                        ) : (
+                          <></>
+                        )
+                      }
+                      < hr />
                       {i == 4 ? <div className="pagebreak"></div> : null}
                     </>
                   ) : (

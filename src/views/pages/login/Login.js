@@ -39,7 +39,6 @@ const Login = ({ setToken }) => {
     }
 
     let response = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, payLoad)
-    console.log(response)
     if (response.data.results.length) {
       let user = response.data.results[0];
       localStorage.setItem("user", JSON.stringify(user))
