@@ -39,9 +39,9 @@ const AppHeader = (props) => {
     isPermitted = true;
   }
 
-  if (!isPermitted) { 
-    return <Redirect to='/dashboard'  />
-  }
+  // if (!isPermitted) { 
+  //   return <Redirect to='/dashboard'  />
+  // }
 
   return (
     <CHeader position="sticky" className="mb-4">
