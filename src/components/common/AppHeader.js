@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, Redirect, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
   CContainer,
@@ -17,10 +17,31 @@ import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './HeaderDD'
 import { logo } from 'src/assets/brand/logo'
+import pages from '../../shared/permissions'
 
-const AppHeader = () => {
+const AppHeader = (props) => {
   const dispatch = useDispatch()
+  // const navigate = useNavigate();
+  const location = useLocation()
   const sidebarShow = useSelector((state) => state.sidebarShow)
+
+  // check if user has this page permission.
+  let isPermitted = false;
+  let path = location.pathname.split('/').join('_')
+  if (path.search('_products_list') > -1) {
+    path = '_products_list'
+  }
+  if (!pages.includes(path)) { 
+    isPermitted = false;
+  }
+
+  if(pages.includes('all')) {
+    isPermitted = true;
+  }
+
+  if (!isPermitted) { 
+    return <Redirect to='/dashboard'  />
+  }
 
   return (
     <CHeader position="sticky" className="mb-4">
