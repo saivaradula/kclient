@@ -1,52 +1,45 @@
 import React, { useEffect } from 'react'
 import useState from 'react-usestateref'
 import { CSVLink } from 'react-csv'
+import { jsPDF } from 'jspdf'
 
-import ReactHTMLTableToExcel from "react-html-table-to-excel";
+import ReactHTMLTableToExcel from 'react-html-table-to-excel'
 
 import { useHistory, Link } from 'react-router-dom'
 import ImageComponent from './ImageComponent'
 
-import {
-  CButton,
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CCol,
-  CRow,
-} from '@coreui/react'
+import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import CIcon from '@coreui/icons-react'
 import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
-import Loader from '../common/loading'
+import Loader  from '../common/loading';
+import FullScreenLoader  from '../common/fullscreenloading';
 
 import axios from 'axios'
 require('dotenv').config()
 import DisplayHtml from './Displayhtml'
 import SearchOperation from './../common/SearchOperation'
 
-
-
 const Products = (props) => {
   const history = useHistory()
   // const arrChecked = []
   let [products, setProducts, refProducts] = useState([])
+  const [ex2Pdf, setEx2Pdf, refEx2Pdf] = useState(false)
   const [resultLoaded, setResultLoaded] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [fullLoading, setFullLoading] = useState(false)
   const [chekBox, setChekBox, counterRef] = useState({
     damaged: 0,
-    archieved: 0
+    archieved: 0,
   })
 
-  const [page, setPage] = useState(() =>
-    props.match.params.p ? props.match.params.p : 1
-  )
+  const [page, setPage] = useState(() => (props.match.params.p ? props.match.params.p : 1))
   const [totalProd, setTotalProd] = useState(0)
   const [pages, setPages] = useState(1)
   const [inputPage, setInputPage] = useState(() =>
-    props.match.params.p ? props.match.params.p : 1
+    props.match.params.p ? props.match.params.p : 1,
   )
   let [selectedProductLength, updateSelectedProductLength] = useState(0)
   let [arrChecked, setArrChecked] = useState([])
@@ -55,29 +48,59 @@ const Products = (props) => {
   let [searchTerm, setSearchTerm] = useState(() => '')
   const [checked, setChecked] = useState(() => false)
 
-  let i = 0;
+  let i = 0
   const fetchData = (p) => {
     setLoading(true)
     let { damaged, archieved } = counterRef.current
     try {
-      let searchString = searchTerm;
+      let searchString = searchTerm
       setPage(p)
       setInputPage(p)
-      axios.get(`${process.env.REACT_APP_API_URL}/rchoice/${p}/${archieved}/${damaged}/${searchString}`).then((data) => {
-        let numOfProducts = data.data.products.total
-        let p = data.data.products.data;
-        p.map(i => { i.isChecked = false })
-        setTotalProd(numOfProducts)
-        setProducts(p)
-        setResultLoaded(true)
-        setLoading(false)
-        setPages(Math.ceil(numOfProducts / 25))
-      })
+      axios
+        .get(
+          `${process.env.REACT_APP_API_URL}/rchoice/${p}/${archieved}/${damaged}/${searchString}`,
+        )
+        .then((data) => {
+          let numOfProducts = data.data.products.total
+          let p = data.data.products.data
+          p.map((i) => {
+            i.isChecked = false
+          })
+          setTotalProd(numOfProducts)
+          setProducts(p)
+          setResultLoaded(true)
+          setLoading(false)
+          setPages(Math.ceil(numOfProducts / 25))
+        })
     } catch (error) {
       setLoading(false)
       console.log(error.message)
     }
+  }
 
+  const exportToPdf = async () => {
+    setFullLoading(true)
+    setEx2Pdf(true)
+    const doc = new jsPDF()
+    setTimeout(() => {
+      var htmlElement = document.getElementById('table-to-pdf')
+      const opt = {
+        callback: function (jsPdf) {
+          jsPdf.save('products.pdf')
+          setEx2Pdf(false)
+          setFullLoading(false)
+        },
+        margin: [10, 10, 10, 10],
+        html2canvas: {
+          allowTaint: true,
+          dpi: 300,
+          letterRendering: true,
+          logging: false,
+          scale: 0.1,
+        },
+      }
+      doc.html(htmlElement, opt)
+    }, 3000)
   }
 
   const changePage = (e) => {
@@ -85,14 +108,13 @@ const Products = (props) => {
     if (e.target.value !== '') {
       setTimeout(() => {
         gotoPage(e.target.value)
-      }, 500);
+      }, 500)
     }
   }
 
   const setPrinting = (event) => {
     printingOptions[event.target.value] = event.target.checked ? true : false
     let newArr = { ...printingOptions }
-    console.log(newArr)
     localStorage.setItem('printing_options', JSON.stringify(newArr))
   }
 
@@ -165,24 +187,22 @@ const Products = (props) => {
         code: i.code,
         doPrint: true,
         name: i.name,
-        price: i.price
+        price: i.price,
       }
     })
-
 
     let excelRows = new Set(excelIds)
     setExcelIds(Array.from(excelRows))
     updateSelectedProductLength(document.querySelectorAll('input[class="products"]:checked').length)
-
   }
 
   const enableOperations = (name, price, product, i) => (event) => {
     // product = product.filter(i => i.image)
-    let p = { ...product };
-    delete (p.image)
-    delete (p.createdAt)
-    delete (p.updatedAt)
-    delete (p.isChecked)
+    let p = { ...product }
+    delete p.image
+    delete p.createdAt
+    delete p.updatedAt
+    delete p.isChecked
     excelIds.push(p)
     let excelRows = new Set(excelIds)
     setExcelIds(Array.from(excelRows))
@@ -193,7 +213,7 @@ const Products = (props) => {
         doPrint: true,
         name: name,
         price: price,
-        isChecked: true
+        isChecked: true,
       }
     } else {
       arrChecked[event.target.value] = {
@@ -201,7 +221,7 @@ const Products = (props) => {
         doPrint: false,
         name: '',
         price: '',
-        isChecked: false
+        isChecked: false,
       }
     }
     updateSelectedProductLength(document.querySelectorAll('input[class="products"]:checked').length)
@@ -268,6 +288,11 @@ const Products = (props) => {
                   </CButton>
                 </CSVLink>
               </div>
+              <div className="col-sm-2">
+                <CButton color="primary" type="button" onClick={() => exportToPdf()}>
+                  Export to PDF
+                </CButton>
+              </div>
             </CRow>
             <hr />
             <CRow>
@@ -298,18 +323,78 @@ const Products = (props) => {
   const checkAllCB = async (event) => {
     console.log(event.target.checked)
 
-    let products = [...refProducts.current];
+    let products = [...refProducts.current]
     if (event.target.checked) {
-      await products.map(i => { i.isChecked = true })
+      await products.map((i) => {
+        i.isChecked = true
+      })
       enableAllOperations()
     } else {
-      await products.map(i => { i.isChecked = false })
+      await products.map((i) => {
+        i.isChecked = false
+      })
       setExcelIds([])
       updateSelectedProductLength(0)
     }
     console.log(products)
     setProducts([])
     setProducts([...products])
+  }
+
+  const pdfProducts = () => {
+    return (
+      <>
+        {refEx2Pdf.current ? (
+          <>
+            <table className="table prlist" id="table-to-pdf">
+              <thead>
+                <tr>
+                  <th width="1%">Image</th>
+                  <th width="5%">Code</th>
+                  <th width="25%">Name</th>
+                  <th width="10%">NickName</th>
+                  <th>Size</th>
+                  <th>Brand</th>
+                  <th>Category</th>
+                  <th>Sub-Category</th>
+                  <th>Type</th>
+                  <th>Unit</th>
+                  <th>Price</th>
+                  <th>Qty</th>
+                  <th>Alert</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {refProducts.current.map((p, i) => (
+                  <tr key={p.code}>
+                    <td>
+                      <img src={p.image} width="35" height="35" />
+                    </td>
+                    <td>{p.code}</td>
+                    <td>{p.name}</td>
+                    <td>{p.nickname}</td>
+                    <td>
+                      <DisplayHtml text={p.brand} />
+                    </td>
+                    <td>{p.model}</td>
+                    <td>{p.category}</td>
+                    <td>{p.subcategory}</td>
+                    <td>{p.prtype.charAt(0).toUpperCase() + p.prtype.slice(1)}</td>
+                    <td>{p.unit}</td>
+                    <td>{p.price}</td>
+                    <td>{p.quantity}</td>
+                    <td>{p.alert}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </>
+        ) : (
+          <></>
+        )}
+      </>
+    )
   }
 
   const displayProducts = () => {
@@ -320,11 +405,7 @@ const Products = (props) => {
             <thead>
               <tr>
                 <th>
-                  <input
-                    type="checkbox"
-                    className="products"
-                    onChange={(e) => checkAllCB(e)}
-                  />
+                  <input type="checkbox" className="products" onChange={(e) => checkAllCB(e)} />
                 </th>
                 <th width="1%">Image</th>
                 <th width="5%">Code</th>
@@ -344,86 +425,91 @@ const Products = (props) => {
               </tr>
             </thead>
             <tbody>
-              {
-                loading ?
-                  <tr><td colSpan="15"><Loader /></td></tr>
-                  :
-                  refProducts.current.map((p, i) => (
-                    <tr key={p.code} >
-                      {/* <tr key={p.code}> */}
-                      <td>
-                        <input
-                          defaultChecked={p.isChecked}
-                          type="checkbox"
-                          className="products"
-                          value={p.code}
-                          onChange={enableOperations(p.nickname, p.price, p, i)}
-                        />
-                      </td>
-                      <td>
-                        <img onClick={() => previewImage(p.image, p.name)} src={p.image} width="35" height="35" />
-                      </td>
-                      <td>{p.code}</td>
-                      <td>{p.name}</td>
-                      <td>{p.nickname}</td>
-                      {/* <td>{p.brand}</td> */}
-                      <td><DisplayHtml text={p.brand} /></td>
-                      <td>{p.model}</td>
-                      <td>{p.category}</td>
-                      <td>{p.subcategory}</td>
-                      <td>{p.prtype.charAt(0).toUpperCase() + p.prtype.slice(1)}</td>
-                      <td>{p.unit}</td>
-                      {/* <td>{p.cost}</td> */}
-                      <td>{p.price}</td>
-                      <td>{p.quantity}</td>
-                      <td>{p.alert}</td>
-                      <td>
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={
-                            <Tooltip id="button-tooltip-2">
-                              Update Product
-                            </Tooltip>
-                          }
+              {loading ? (
+                <tr>
+                  <td colSpan="15">
+                    <Loader />
+                  </td>
+                </tr>
+              ) : (
+                refProducts.current.map((p, i) => (
+                  <tr key={p.code}>
+                    {/* <tr key={p.code}> */}
+                    <td>
+                      <input
+                        defaultChecked={p.isChecked}
+                        type="checkbox"
+                        className="products"
+                        value={p.code}
+                        onChange={enableOperations(p.nickname, p.price, p, i)}
+                      />
+                    </td>
+                    <td>
+                      <img
+                        onClick={() => previewImage(p.image, p.name)}
+                        src={p.image}
+                        width="35"
+                        height="35"
+                      />
+                    </td>
+                    <td>{p.code}</td>
+                    <td>{p.name}</td>
+                    <td>{p.nickname}</td>
+                    {/* <td>{p.brand}</td> */}
+                    <td>
+                      <DisplayHtml text={p.brand} />
+                    </td>
+                    <td>{p.model}</td>
+                    <td>{p.category}</td>
+                    <td>{p.subcategory}</td>
+                    <td>{p.prtype.charAt(0).toUpperCase() + p.prtype.slice(1)}</td>
+                    <td>{p.unit}</td>
+                    {/* <td>{p.cost}</td> */}
+                    <td>{p.price}</td>
+                    <td>{p.quantity}</td>
+                    <td>{p.alert}</td>
+                    <td>
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip id="button-tooltip-2">Update Product</Tooltip>}
+                      >
+                        <Link to="#" path="#" onClick={() => updateProduct(p.code, page)}>
+                          <CIcon icon={cilPen} className="cricon" />
+                        </Link>
+                      </OverlayTrigger>
+                      &nbsp;&nbsp;| &nbsp;&nbsp;
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={<Tooltip id="button-tooltip-2">Print QR Codes</Tooltip>}
+                      >
+                        <Link
+                          to="#"
+                          path="#"
+                          onClick={() => gotoPrint(p.code, p.nickname, p.price)}
                         >
-                          <Link to="#" path="#" onClick={() => updateProduct(p.code, page)}>
-                            <CIcon icon={cilPen} className="cricon" />
-                          </Link>
-                        </OverlayTrigger>
-                        &nbsp;&nbsp;| &nbsp;&nbsp;
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={
-                            <Tooltip id="button-tooltip-2">
-                              Print QR Codes
-                            </Tooltip>
-                          }
-                        >
-                          <Link to="#" path="#" onClick={() => gotoPrint(p.code, p.nickname, p.price)}>
-                            <CIcon icon={cilFingerprint} className="cricon" />
-                          </Link>
-                        </OverlayTrigger>
-                        &nbsp;&nbsp;| &nbsp;&nbsp;
-                        <OverlayTrigger
-                          placement="top"
-                          overlay={
-                            <Tooltip id="button-tooltip-2">
-                              Delete <b>{p.name}</b>
-                            </Tooltip>
-                          }
-                        >
-                          <Link to="#" path="#" onClick={() => deleteProd(p.code, p.name)}>
-                            <CIcon icon={cilDelete} className="cricon" />
-                          </Link>
-                        </OverlayTrigger>
-                      </td>
-
-                    </tr>
-                  ))}
+                          <CIcon icon={cilFingerprint} className="cricon" />
+                        </Link>
+                      </OverlayTrigger>
+                      &nbsp;&nbsp;| &nbsp;&nbsp;
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={
+                          <Tooltip id="button-tooltip-2">
+                            Delete <b>{p.name}</b>
+                          </Tooltip>
+                        }
+                      >
+                        <Link to="#" path="#" onClick={() => deleteProd(p.code, p.name)}>
+                          <CIcon icon={cilDelete} className="cricon" />
+                        </Link>
+                      </OverlayTrigger>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
-        </div >
-
+        </div>
       </>
     )
   }
@@ -466,14 +552,14 @@ const Products = (props) => {
 
   const showArchieved = (e) => {
     if (e.target.checked) {
-      setChekBox(checkBox => ({
+      setChekBox((checkBox) => ({
         damaged: 0,
-        archieved: 1
+        archieved: 1,
       }))
     } else {
-      setChekBox(checkBox => ({
+      setChekBox((checkBox) => ({
         damaged: 0,
-        archieved: 0
+        archieved: 0,
       }))
     }
     fetchData(1)
@@ -481,28 +567,31 @@ const Products = (props) => {
 
   const showDamaged = (e) => {
     if (e.target.checked) {
-      setChekBox(checkBox => ({
+      setChekBox((checkBox) => ({
         damaged: 1,
-        archieved: 0
+        archieved: 0,
       }))
     } else {
-      setChekBox(checkBox => ({
+      setChekBox((checkBox) => ({
         damaged: 0,
-        archieved: 0
+        archieved: 0,
       }))
     }
     fetchData(1)
     // e.target.checked ? fetchData(1, 1, 0) : fetchData(1, 0, 0)
-  }
+  } 
 
   return (
     <>
-      <CRow>
+      { fullLoading ? <FullScreenLoader  /> : <></>}
 
+      <CRow>
         <CCol xs={12}>
           <SearchOperation
-            searchName={"Name / NickName / Code / Category / SubCateory"}
-            name="Products" actBy={addFilters} />
+            searchName={'Name / NickName / Code / Category / SubCateory'}
+            name="Products"
+            actBy={addFilters}
+          />
         </CCol>
         <CCol xs={12}>
           {selectedProductLength ? operationsTab() : <></>}
@@ -510,35 +599,38 @@ const Products = (props) => {
           <CCard className="mb-4">
             <CCardHeader>
               <CRow>
-                <CCol xs={6}><strong>Products</strong></CCol>
+                <CCol xs={6}>
+                  <strong>Products</strong>
+                </CCol>
                 <CCol xs={6}>
                   <div className="alignright">
-                    <div style={{ "marginRight": '2px', 'float': 'left' }}>
+                    <div style={{ marginRight: '2px', float: 'left' }}>
                       <label>
-                        <input type="checkbox"
+                        <input
+                          type="checkbox"
                           checked={chekBox.archieved}
-                          onClick={e => showArchieved(e)} />
-                        &nbsp;&nbsp;
-                        Show Archieved Products
+                          onClick={(e) => showArchieved(e)}
+                        />
+                        &nbsp;&nbsp; Show Archieved Products
                       </label>
                     </div>
                     <div>
                       <label>
-                        <input type="checkbox"
+                        <input
+                          type="checkbox"
                           checked={chekBox.damaged}
-                          onClick={e => showDamaged(e)} />
-                        &nbsp;&nbsp;
-                        Show Fully Damaged Products
+                          onClick={(e) => showDamaged(e)}
+                        />
+                        &nbsp;&nbsp; Show Fully Damaged Products
                       </label>
                     </div>
                   </div>
                 </CCol>
               </CRow>
-
-
             </CCardHeader>
             <CCardBody>
               {displayProducts()}
+              {pdfProducts()}
               <table className="table table">
                 <tbody>
                   <tr>
@@ -559,17 +651,10 @@ const Products = (props) => {
             </CCardBody>
           </CCard>
         </CCol>
-
       </CRow>
       <CRow>
         <div className="row">
-          {
-            showPreview &&
-            <ImageComponent
-              src={showPreview}
-              handleClose={stopPreviewImage}
-            />
-          }
+          {showPreview && <ImageComponent src={showPreview} handleClose={stopPreviewImage} />}
         </div>
       </CRow>
     </>
