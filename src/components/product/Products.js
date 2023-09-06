@@ -81,25 +81,29 @@ const Products = (props) => {
   const exportToPdf = async () => {
     setFullLoading(true)
     setEx2Pdf(true)
-    const doc = new jsPDF()
+    const doc = new jsPDF("p", "mm", "a4", true);
     setTimeout(() => {
       var htmlElement = document.getElementById('table-to-pdf')
       const opt = {
-        callback: function (jsPdf) {
-          jsPdf.save('products.pdf')
+        
+        callback: function (jsPdf) {          
+          // jsPdf.save('products.pdf')
           setEx2Pdf(false)
           setFullLoading(false)
         },
-        margin: [10, 10, 10, 10],
+        margin: [15, 5, 5, 5],
         html2canvas: {
-          allowTaint: true,
-          dpi: 300,
-          letterRendering: true,
+          async: true,
+          allowTaint: false,
+          dpi: 800,
+          letterRendering: false,
           logging: false,
-          scale: 0.1,
+          scale: 0.15,
+          autoPaging: false,
+          removeContainer: true
         },
       }
-      doc.html(htmlElement, opt)
+      doc.html(htmlElement, opt).then( () => doc.save('products.pdf'))
     }, 3000)
   }
 
@@ -174,13 +178,16 @@ const Products = (props) => {
   }
 
   const [excelIds, setExcelIds, excelsRef] = useState(() => [])
-
   const enableAllOperations = async () => {
-    // let p = new Set(refProducts.current)
-    // p = Array.from(p);
-    p = [...refProducts.current]
+
+    const json = JSON.stringify(refProducts.current);
+    let p = JSON.parse(json);
+ 
     p.map((i) => {
-      // delete (i.image)
+      delete i.image;
+      delete i.createdAt
+      delete i.updatedAt
+      delete i.isChecked
 
       excelIds.push(i)
       arrChecked[i.code] = {
@@ -197,7 +204,6 @@ const Products = (props) => {
   }
 
   const enableOperations = (name, price, product, i) => (event) => {
-    // product = product.filter(i => i.image)
     let p = { ...product }
     delete p.image
     delete p.createdAt
@@ -249,7 +255,7 @@ const Products = (props) => {
               <div className="col-sm-1">
                 <label>
                   <input type="checkbox" onChange={setPrinting} value="name" />
-                  &nbsp; Name
+                  &nbsp; Nick Name
                 </label>
               </div>
               <div className="col-sm-1">
@@ -336,7 +342,6 @@ const Products = (props) => {
       setExcelIds([])
       updateSelectedProductLength(0)
     }
-    console.log(products)
     setProducts([])
     setProducts([...products])
   }
@@ -362,7 +367,6 @@ const Products = (props) => {
                   <th>Price</th>
                   <th>Qty</th>
                   <th>Alert</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -405,7 +409,9 @@ const Products = (props) => {
             <thead>
               <tr>
                 <th>
-                  <input type="checkbox" className="products" onChange={(e) => checkAllCB(e)} />
+                  <input type="checkbox" 
+                    className="products" 
+                    onChange={(e) => checkAllCB(e)} />
                 </th>
                 <th width="1%">Image</th>
                 <th width="5%">Code</th>
