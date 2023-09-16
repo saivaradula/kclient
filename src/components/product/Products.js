@@ -70,7 +70,7 @@ const Products = (props) => {
           setProducts(p)
           setResultLoaded(true)
           setLoading(false)
-          setPages(Math.ceil(numOfProducts / 25))
+          setPages(Math.ceil(numOfProducts / process.env.REACT_APP_TOTAL_COUNT))
         })
     } catch (error) {
       setLoading(false)
@@ -91,11 +91,11 @@ const Products = (props) => {
           setEx2Pdf(false)
           setFullLoading(false)
         },
-        margin: [15, 5, 5, 5],
+        margin: [15, 5, 10, 5],
         html2canvas: {
           async: true,
           allowTaint: false,
-          dpi: 800,
+          dpi: 300,
           letterRendering: false,
           logging: false,
           scale: 0.15,
@@ -373,7 +373,7 @@ const Products = (props) => {
                 {refProducts.current.map((p, i) => (
                   <tr key={p.code}>
                     <td>
-                      <img src={p.image} width="35" height="35" />
+                      <img src={p.image} width="50" height="50" />
                     </td>
                     <td>{p.code}</td>
                     <td>{p.name}</td>
@@ -642,7 +642,7 @@ const Products = (props) => {
                   <tr>
                     <td>
                       Showing &nbsp;
-                      {(page - 1) * 25 + 1} to {totalProd < page * 25 ? totalProd : page * 25}
+                      {(page - 1) *  `${process.env.REACT_APP_TOTAL_COUNT}` + 1} to {totalProd < page * `${process.env.REACT_APP_TOTAL_COUNT}` ? totalProd : page * `${process.env.REACT_APP_TOTAL_COUNT}`}
                       &nbsp; of {totalProd} Products
                     </td>
                     <td style={{ textAlign: 'center' }}>

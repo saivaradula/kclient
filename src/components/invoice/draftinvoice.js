@@ -186,8 +186,8 @@ const DraftInvoice = (props) => {
     let p = e.target.value.toLowerCase();
     const details = await getProductDetails(p)
     let remaining = 0;
-    let consumed = 0;
-    if (details) {
+    let consumed = 0; 
+    if (details?.status) {
       consumed = await getProductAvailiablity(p, state.startDate, state.endDate);
       remaining = parseInt(details.quantity - consumed);
       remaining = (remaining < 1) ? 0 : remaining;
@@ -203,8 +203,7 @@ const DraftInvoice = (props) => {
     newFormValues[i]['from'] = state.startDate
     newFormValues[i]['to'] = state.endDate
 
-
-    if (details) {
+    if (details?.status) {
       newFormValues[i][e.target.name] = e.target.value
       newFormValues[i]['name'] = details.name
       newFormValues[i]['price'] = details.price
@@ -213,6 +212,13 @@ const DraftInvoice = (props) => {
       newFormValues[i]['consumed'] = consumed
       newFormValues[i]['remaining'] = details.quantity - consumed;
       newFormValues[i]['showalert'] = remaining > 0 ? false : true;
+      newFormValues[i]['message'] = `There are only <strong>{element.remaining}</strong> items remaining between <strong>{state.startDate.toLocaleDateString()}</strong> and <strong>{state.endDate.toLocaleDateString()}</strong>`
+      
+    } else {
+      if(details !== undefined)  {
+        newFormValues[i]['showalert'] = true;
+        newFormValues[i]['message'] = 'This item is inactive. This item cannot be added to invoice.'
+      }
     }
 
     newFormValues[i].tcost = calculateCostByType(newFormValues[i])
@@ -818,7 +824,8 @@ const DraftInvoice = (props) => {
                         element.showalert === true ?
                           <Alert variant="danger"
                             onClose={() => closeAlert(index)} dismissible>
-                            There are only <strong>{element.remaining}</strong> items remaining between <strong>{state.startDate.toLocaleDateString()}</strong> and <strong>{state.endDate.toLocaleDateString()}</strong>
+                            {element.message}
+                            
                           </Alert>
                           : <></>
                       }
