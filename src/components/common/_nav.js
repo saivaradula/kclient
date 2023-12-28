@@ -7,7 +7,7 @@ import {
   cibProbot,
   cilFactory,
   cibBitcoin,
-  cilFlagAlt,
+  cilFlagAlt,cilFile
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 import pages from '../../shared/permissions'
@@ -134,6 +134,16 @@ const _nav = [
                 name: 'Item Finder',
                 to: '/products/find',
                 icon: <CIcon icon={cibProbot} customClassName="nav-icon" />,
+              },
+            ]
+          : []),
+          ...(pages.includes('_products_find') || pages.includes('all')
+          ? [
+              {
+                component: CNavItem,
+                name: 'Print PDF',
+                to: '/products/category/pdf',
+                icon: <CIcon icon={cilFile} customClassName="nav-icon" />,
               },
             ]
           : []),

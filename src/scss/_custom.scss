@@ -1,5 +1,15 @@
 // Here you can add other styles
 
+.pdfclass {
+  height: 320px;
+  border: 1px solid;
+  padding: 5px;
+  float: left;
+  margin-right: 25px;
+  margin-bottom: 15px;
+  width: 300px;
+}
+
 table.table th {
   font-weight: 700;
 }
@@ -150,8 +160,10 @@ hr {
   color: #fff;
 }
 
+
 .automargin {
   margin: auto;
+  float: left;
 }
 
 .preview-qrcode {

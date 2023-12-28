@@ -16,7 +16,15 @@ export default function QrCode(props) {
     qrStyle: 'square',
   }
 
+  console.log(props.options)
+
   const options = { ...defaultOptions, ...props.options }
 
-  return <QRCode value={props.url} {...options} />
+  return (
+    <>
+      <div style={{ marginTop: '-10px' }}>
+        <QRCode value={props.url} {...options} />
+      </div>
+    </>
+  )
 }

@@ -23,7 +23,6 @@ const PrintPreview = (props) => {
     logoHeight: 0,
     logoOpacity: 1,
     qrStyle: 'square',
-    style: { 'margin-top': '-12px' },
   }
 
   useEffect(() => {
@@ -40,18 +39,19 @@ const PrintPreview = (props) => {
   }
 
   const styles = {
-    marginTop: '-12px',
+    marginLeft: '3px',
+    marginTop: '30px',
   }
 
   return (
     <>
       {isPCodePicked ? (
         <>
-          {/* <div className="mt-4 mb-4" style={{ textAlign: 'right', marginRight: '30px' }}>
+          <div className="mt-4 mb-4" style={{ textAlign: 'right', marginRight: '30px' }}>
             <button type="button" className="primary noprint" onClick={printThisPage}>
               Print
             </button>
-          </div> */}
+          </div>
 
           {Object.entries(JSON.parse(localStorage.getItem('print'))).map(([key, value]) => {
             let n = parseInt(value.num)
@@ -62,8 +62,29 @@ const PrintPreview = (props) => {
                     {[...Array(n)].map((i) => {
                       return (
                         <>
-                          <div className="printqr automargin">
-                            <QrCode url={key} options={defaultOptions} />
+                          <div className="automargin">
+                            <table key={key} className="printqr">
+                              <tr>
+                                <td width={30}>&nbsp;</td>
+                                <td width={90} style={styles} align="left">
+                                  <QrCode url={key} options={defaultOptions} />
+                                </td>
+                                <td width={3}>&nbsp;</td>
+                                <td align="left">
+                                  <table>
+                                    <tr>
+                                      <td align="left">{po.name ? value.name : <></>}</td>
+                                    </tr>
+                                    <tr>
+                                      <td align="left">{po.code ? key : <></>}</td>
+                                    </tr>
+                                    <tr>
+                                      <td align="left">{po.price ? value.price : <></>}</td>
+                                    </tr>
+                                  </table>
+                                </td>
+                              </tr>
+                            </table>
                           </div>
                         </>
                       )

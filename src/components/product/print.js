@@ -8,6 +8,7 @@ import {
   CFormInput,
   CFormLabel,
   CRow,
+  CFormSelect,
 } from '@coreui/react'
 import { useHistory } from 'react-router-dom'
 
@@ -26,7 +27,8 @@ const Print = (props) => {
     if (!isPCodePicked) {
       setIsCodePicked(true)
     }
-  })
+    localStorage.setItem('print_size', JSON.stringify('90'))
+  }, [])
 
   const printPreview = () => {
     window.open('#/products/print/preview', '_blank')
@@ -36,6 +38,10 @@ const Print = (props) => {
     let newPrint = JSON.parse(localStorage.getItem('print'))
     newPrint[k].num = event.target.value
     localStorage.setItem('print', JSON.stringify(newPrint))
+  }
+
+  const selectSize = (event) => {
+    localStorage.setItem('print_size', JSON.stringify(event.target.value))
   }
 
   return (
@@ -66,6 +72,12 @@ const Print = (props) => {
                             onChange={getThisPrint(key)}
                             placeholder="Enter Print numbers"
                           />
+                        </div>
+                        <div className="col-sm-3">
+                          <CFormSelect required onChange={(event) => selectSize(event)}>
+                            <option value="90">70px</option>
+                            <option value="35">35px</option>
+                          </CFormSelect>
                         </div>
                       </CRow>
                     ) : (
