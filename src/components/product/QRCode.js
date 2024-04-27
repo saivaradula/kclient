@@ -22,7 +22,7 @@ export default function QrCode(props) {
 
   return (
     <>
-      <div style={{ marginTop: '-10px' }}>
+      <div style={{ marginTop: '-10px', marginRight: '40px' }}>
         <QRCode value={props.url} {...options} />
       </div>
     </>

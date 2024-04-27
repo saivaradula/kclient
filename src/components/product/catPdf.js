@@ -20,7 +20,7 @@ import DisplayHtml from './Displayhtml'
 require('dotenv').config()
 
 const CategoryListPDF = (props) => {
-    // const [ex2Pdf, setEx2Pdf, refEx2Pdf] = useState(false)
+  // const [ex2Pdf, setEx2Pdf, refEx2Pdf] = useState(false)
   const [categoryList, setCategoryList] = React.useState([])
   const [products, setProduct] = React.useState([])
   const [category, setCategory] = React.useState('')
@@ -36,12 +36,11 @@ const CategoryListPDF = (props) => {
     })
   }
 
-  const getListByCategory = () => {
+  const getListByCategory = async (prtype) => {
     setLoading(true)
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/category/products`, { category: category })
+    await axios
+      .post(`${process.env.REACT_APP_API_URL}/category/products`, { category: prtype })
       .then((data) => {
-        console.log(data)
         setProduct(data.data)
         setLoading(false)
       })
@@ -57,23 +56,21 @@ const CategoryListPDF = (props) => {
     return categoryList.map((c) => <option value={c.name}>{c.name}</option>)
   }
 
-  const setC = (e) => {
-    setCategory(e.target.value)
-    getListByCategory()
+  const setC = async (e) => {
+    await getListByCategory(e.target.value)
   }
 
   const exportToPdf = async () => {
     // setFullLoading(true)
     // setEx2Pdf(true)
-    const doc = new jsPDF("p", "mm", "a4", true);
+    const doc = new jsPDF('p', 'mm', 'a4', true)
     setTimeout(() => {
       var htmlElement = document.getElementById('table-to-pdf')
       const opt = {
-        
-        callback: function (jsPdf) {          
-        //   jsPdf.save('products.pdf')
-        //   setEx2Pdf(false)
-        //   setFullLoading(false)
+        callback: function (jsPdf) {
+          //   jsPdf.save('products.pdf')
+          //   setEx2Pdf(false)
+          //   setFullLoading(false)
         },
         margin: [2, 2, 2, 2],
         html2canvas: {
@@ -84,10 +81,10 @@ const CategoryListPDF = (props) => {
           logging: false,
           scale: 0.125,
           autoPaging: false,
-          removeContainer: true
+          removeContainer: true,
         },
       }
-      doc.html(htmlElement, opt).then( () => doc.save('products.pdf'))
+      doc.html(htmlElement, opt).then(() => doc.save('products.pdf'))
     }, 3000)
   }
 
@@ -114,13 +111,13 @@ const CategoryListPDF = (props) => {
                     </CFormSelect>
                   ) : (
                     <></>
-                  )}                  
+                  )}
                 </div>
                 <div className="col-sm-4"></div>
                 <div className="col-sm-2">
-                <CButton color="primary" type="button" onClick={() => exportToPdf()}>
-                  Export to PDF
-                </CButton>
+                  <CButton color="primary" type="button" onClick={() => exportToPdf()}>
+                    Export to PDF
+                  </CButton>
                 </div>
               </CRow>
             </CCol>
@@ -141,7 +138,7 @@ const CategoryListPDF = (props) => {
                 <div>No Products found under {category} Category</div>
               ) : (
                 //  displayProducts()
-                <table id='table-to-pdf' className="table table-striped">
+                <table id="table-to-pdf" className="table table-striped">
                   <tr>
                     {products.map((p, i) => {
                       return (
@@ -152,10 +149,17 @@ const CategoryListPDF = (props) => {
                             </div>
                             <div style={{ marginLeft: '33px', marginTop: '10px' }}>
                               <div>
-                                Name: <strong>{p.name}/{p.nickname}</strong>
+                                Name:{' '}
+                                <strong>
+                                  {p.name}/{p.nickname}
+                                </strong>
                               </div>
-                              <div>Code: <strong>{p.code}</strong></div>
-                              <div>Price: <strong>{p.price}</strong></div>
+                              <div>
+                                Code: <strong>{p.code}</strong>
+                              </div>
+                              <div>
+                                Price: <strong>{p.price}</strong>
+                              </div>
                             </div>
                           </div>
                         </td>

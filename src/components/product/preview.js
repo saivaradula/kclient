@@ -77,21 +77,24 @@ const PrintPreview = (props) => {
                   <CRow key={key} className="mb-4">
                     {[...Array(n)].map((i) => {
                       return (
-                        <div className="col-sm-2 text-center">
-                          <div className="caption">{po.name ? value.name : <></>}</div>
-                          <div>
+                        <div>
+                          {/* <div className="caption">{po.name ? value.name : <></>}</div> */}
+                          <div
+                            className="col-sm-2"
+                            style={{
+                              textAlign: 'left',
+                              marginLeft: '62px',
+                              marginTop: '-2px',
+                            }}
+                          >
                             <Barcode
                               value={`${key}`}
-                              width="1.5"
-                              height="50"
-                              textMargin="2"
-                              fontSize="8"
+                              width={0.6}
+                              height={35}
+                              displayValue="false"
+                              renderer="img"
                             />
                           </div>
-                          {/* <div className="caption">
-                                    {po.code ? key + '-' : <></>}
-                                    {po.price ? value.price : <></>}
-                                  </div> */}
                         </div>
                       )
                     })}

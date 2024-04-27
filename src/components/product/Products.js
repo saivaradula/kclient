@@ -14,8 +14,8 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Tooltip from 'react-bootstrap/Tooltip'
 import CIcon from '@coreui/icons-react'
 import { cilPen, cilFingerprint, cilDelete } from '@coreui/icons'
-import Loader  from '../common/loading';
-import FullScreenLoader  from '../common/fullscreenloading';
+import Loader from '../common/loading'
+import FullScreenLoader from '../common/fullscreenloading'
 
 import axios from 'axios'
 require('dotenv').config()
@@ -81,12 +81,11 @@ const Products = (props) => {
   const exportToPdf = async () => {
     setFullLoading(true)
     setEx2Pdf(true)
-    const doc = new jsPDF("p", "mm", "a4", true);
+    const doc = new jsPDF('p', 'mm', 'a4', true)
     setTimeout(() => {
       var htmlElement = document.getElementById('table-to-pdf')
       const opt = {
-        
-        callback: function (jsPdf) {          
+        callback: function (jsPdf) {
           // jsPdf.save('products.pdf')
           setEx2Pdf(false)
           setFullLoading(false)
@@ -100,10 +99,10 @@ const Products = (props) => {
           logging: false,
           scale: 0.15,
           autoPaging: false,
-          removeContainer: true
+          removeContainer: true,
         },
       }
-      doc.html(htmlElement, opt).then( () => doc.save('products.pdf'))
+      doc.html(htmlElement, opt).then(() => doc.save('products.pdf'))
     }, 3000)
   }
 
@@ -179,12 +178,11 @@ const Products = (props) => {
 
   const [excelIds, setExcelIds, excelsRef] = useState(() => [])
   const enableAllOperations = async () => {
+    const json = JSON.stringify(refProducts.current)
+    let p = JSON.parse(json)
 
-    const json = JSON.stringify(refProducts.current);
-    let p = JSON.parse(json);
- 
     p.map((i) => {
-      delete i.image;
+      delete i.image
       delete i.createdAt
       delete i.updatedAt
       delete i.isChecked
@@ -409,9 +407,7 @@ const Products = (props) => {
             <thead>
               <tr>
                 <th>
-                  <input type="checkbox" 
-                    className="products" 
-                    onChange={(e) => checkAllCB(e)} />
+                  <input type="checkbox" className="products" onChange={(e) => checkAllCB(e)} />
                 </th>
                 <th width="1%">Image</th>
                 <th width="5%">Code</th>
@@ -508,6 +504,9 @@ const Products = (props) => {
                         <Link to="#" path="#" onClick={() => deleteProd(p.code, p.name)}>
                           <CIcon icon={cilDelete} className="cricon" />
                         </Link>
+                        {/* <Link to="#" path="#">
+                          <CIcon disable icon={cilDelete} className="cricon" />
+                        </Link> */}
                       </OverlayTrigger>
                     </td>
                   </tr>
@@ -585,11 +584,11 @@ const Products = (props) => {
     }
     fetchData(1)
     // e.target.checked ? fetchData(1, 1, 0) : fetchData(1, 0, 0)
-  } 
+  }
 
   return (
     <>
-      { fullLoading ? <FullScreenLoader  /> : <></>}
+      {fullLoading ? <FullScreenLoader /> : <></>}
 
       <CRow>
         <CCol xs={12}>
@@ -642,7 +641,10 @@ const Products = (props) => {
                   <tr>
                     <td>
                       Showing &nbsp;
-                      {(page - 1) *  `${process.env.REACT_APP_TOTAL_COUNT}` + 1} to {totalProd < page * `${process.env.REACT_APP_TOTAL_COUNT}` ? totalProd : page * `${process.env.REACT_APP_TOTAL_COUNT}`}
+                      {(page - 1) * `${process.env.REACT_APP_TOTAL_COUNT}` + 1} to{' '}
+                      {totalProd < page * `${process.env.REACT_APP_TOTAL_COUNT}`
+                        ? totalProd
+                        : page * `${process.env.REACT_APP_TOTAL_COUNT}`}
                       &nbsp; of {totalProd} Products
                     </td>
                     <td style={{ textAlign: 'center' }}>

@@ -162,8 +162,9 @@ hr {
 
 
 .automargin {
-  margin: auto;
-  float: left;
+  // margin: auto;
+  // float: left;
+  page-break-after: always;
 }
 
 .preview-qrcode {
