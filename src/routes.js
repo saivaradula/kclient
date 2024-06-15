@@ -43,7 +43,7 @@ const routes = [
   { path: '/invoice/paid', name: 'Rent Product', component: PaidInvoices },
   { path: '/invoice/printed', name: 'Rent Product', component: PrintedInvoices },
 
-  // returns invoices. 
+  // returns invoices.
 
   { path: '/returns/', name: 'Return Invoice', exact: true, component: ReturnInvoice },
   { path: '/returns/pending', name: 'Pending Invoice', exact: true, component: PendingInvoice },
@@ -53,7 +53,9 @@ const routes = [
   // products
   // { path: '/products/:p', exact: true, name: 'Products', component: Products },
   { path: '/products/:id/edit/:p', exact: true, name: 'Edit Product', component: EditProduct },
+  { path: '/products/:id/edit/:p/:s', exact: true, name: 'Edit Product', component: EditProduct },
   { path: '/products/list/:p', exact: true, name: 'List', component: Products },
+  { path: '/products/list/:p/:s', exact: true, name: 'List', component: Products },
   { path: '/products/add', exact: true, name: 'Add', component: AddProduct },
   { path: '/products/print', exact: true, name: 'Print', component: ProductsPrint },
   { path: '/products/find', exact: true, name: 'Find', component: ItemFinder },

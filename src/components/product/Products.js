@@ -35,6 +35,7 @@ const Products = (props) => {
     archieved: 0,
   })
 
+  console.log(props.match.params)
   const [page, setPage] = useState(() => (props.match.params.p ? props.match.params.p : 1))
   const [totalProd, setTotalProd] = useState(0)
   const [pages, setPages] = useState(1)
@@ -45,7 +46,9 @@ const Products = (props) => {
   let [arrChecked, setArrChecked] = useState([])
   let [printingOptions, setPrintingOptions] = useState([])
   const [showPreview, setShowPreview] = useState(() => '')
-  let [searchTerm, setSearchTerm] = useState(() => '')
+  let [searchTerm, setSearchTerm] = useState(() =>
+    props.match.params.s ? props.match.params.s : '',
+  )
   const [checked, setChecked] = useState(() => false)
 
   let i = 0
@@ -313,7 +316,7 @@ const Products = (props) => {
   }
 
   const updateProduct = (id, p) => {
-    history.push(`/products/${id}/edit/${p}`)
+    history.push(`/products/${id}/edit/${p}/${searchTerm}`)
   }
 
   const stopPreviewImage = () => {
@@ -325,8 +328,6 @@ const Products = (props) => {
   }
 
   const checkAllCB = async (event) => {
-    console.log(event.target.checked)
-
     let products = [...refProducts.current]
     if (event.target.checked) {
       await products.map((i) => {
@@ -596,6 +597,7 @@ const Products = (props) => {
             searchName={'Name / NickName / Code / Category / SubCateory'}
             name="Products"
             actBy={addFilters}
+            value={searchTerm}
           />
         </CCol>
         <CCol xs={12}>
