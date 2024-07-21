@@ -100,7 +100,12 @@ const EditProduct = (props) => {
 
     axios.post(`${process.env.REACT_APP_API_URL}/products/update`, state).then((response) => {
       if (response.status === 200) {
-        history.push(`/products/list/${props.match.params.p}/${props.match.params.s}`)
+        console.log(props.match.params)
+        if (props.match.params.s !== '') {
+          history.push(`/products/list/${props.match.params.p}/${props.match.params.s}`)
+        } else {
+          history.push(`/products/list/${props.match.params.p}`)
+        }
       }
     })
   }

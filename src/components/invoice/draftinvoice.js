@@ -126,6 +126,8 @@ const DraftInvoice = (props) => {
 
     let newFormValues = []
 
+    console.log(sItems)
+
     let i = 0
     await sItems.map(async (s) => {
       let p = s.toLowerCase()
@@ -296,7 +298,6 @@ const DraftInvoice = (props) => {
     newFormValues[i]['quantity'] = 0
     newFormValues[i]['from'] = state.startDate
     newFormValues[i]['to'] = state.endDate
- 
 
     if (details?.status) {
       newFormValues[i][e.target.name] = e.target.value
@@ -624,7 +625,7 @@ const DraftInvoice = (props) => {
               name="prtype"
               autoComplete="off"
               type="text"
-              value={element.prtype.charAt(0).toUpperCase() + element.prtype.slice(1) || ''}
+              value={element.prtype?.charAt(0).toUpperCase() + element.prtype?.slice(1) || ''}
             />
           </div>
 

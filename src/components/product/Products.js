@@ -3,7 +3,7 @@ import useState from 'react-usestateref'
 import { CSVLink } from 'react-csv'
 import { jsPDF } from 'jspdf'
 
-import ReactHTMLTableToExcel from 'react-html-table-to-excel'
+// import ReactHTMLTableToExcel from 'react-html-table-to-excel'
 
 import { useHistory, Link } from 'react-router-dom'
 import ImageComponent from './ImageComponent'
@@ -35,7 +35,6 @@ const Products = (props) => {
     archieved: 0,
   })
 
-  console.log(props.match.params)
   const [page, setPage] = useState(() => (props.match.params.p ? props.match.params.p : 1))
   const [totalProd, setTotalProd] = useState(0)
   const [pages, setPages] = useState(1)
@@ -47,7 +46,11 @@ const Products = (props) => {
   let [printingOptions, setPrintingOptions] = useState([])
   const [showPreview, setShowPreview] = useState(() => '')
   let [searchTerm, setSearchTerm] = useState(() =>
-    props.match.params.s ? props.match.params.s : '',
+    props.match.params.s
+      ? props.match.params.s !== '' || props.match.params.s !== 'undefined'
+        ? props.match.params.s
+        : ''
+      : '',
   )
   const [checked, setChecked] = useState(() => false)
 

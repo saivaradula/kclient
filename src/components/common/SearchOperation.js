@@ -15,7 +15,9 @@ import {
 } from '@coreui/react'
 
 const SearchOperation = (props) => {
-  let [searchTerm, setSearchTerm] = useState(() => (props.value ? props.value : ''))
+  let [searchTerm, setSearchTerm] = useState(() =>
+    props.value ? (props.value !== undefined ? props.value : '') : '',
+  )
 
   const changeTerm = (event) => {
     setSearchTerm(event.target.value)
